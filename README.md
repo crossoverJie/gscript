@@ -14,8 +14,10 @@ This is a small script language, and helps beginners to learn compilation princi
 
 # Installation
 
-```go
+```shell
 go get github.com/crossoverJie/gscript
+
+gscript -h
 ```
 
 Or download the [binary file](https://github.com/crossoverJie/gscript/releases) directly
