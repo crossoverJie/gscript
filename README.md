@@ -25,6 +25,7 @@ Or download the [binary file](https://github.com/crossoverJie/gscript/releases) 
 # Features
 
 - [x] Basic quadratic operations
+- [ ] More basic type
 - [ ] Support scope and function
 - [ ] Support closure
 - [ ] OOP
