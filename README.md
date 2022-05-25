@@ -3,9 +3,13 @@ This is a small script language, and helps beginners to learn compilation princi
 
 > It is called Gscript because it is written with Go.
 
+# Installation
 
-![](doc/run.jpg)
-![](doc/debug-ast.jpg)
+```go
+go get github.com/crossoverJie/gscript
+```
+
+
 
 # Features
 
@@ -13,3 +17,7 @@ This is a small script language, and helps beginners to learn compilation princi
 - [ ] Support scope and function.
 - [ ] Support closure.
 - [ ] OOP.
+
+![](doc/run.jpg)
+![](doc/debug-ast.jpg)
+
