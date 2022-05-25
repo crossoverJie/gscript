@@ -27,6 +27,6 @@ Or download the [binary file](https://github.com/crossoverJie/gscript/releases) 
 - [ ] Support closure
 - [ ] OOP
 
-![](doc/run.jpg)
-![](doc/debug-ast.jpg)
+![](doc/run2.jpg)
+![](doc/debug2.jpg)
 
