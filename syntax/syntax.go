@@ -2,8 +2,19 @@ package syntax
 
 import (
 	"errors"
+	"fmt"
 	"github.com/crossoverJie/gscript/token"
-	"log"
+)
+
+const (
+	App    = "gscript"
+	Indent = "├"
+	Logo   = ` _     _   
+ ___ ___ ___ ___|_|___| |_ 
+| . |_ -|  _|  _| | . |  _|
+|_  |___|___|_| |_|  _|_|  
+|___|             |_|   v0.0.1      
+`
 )
 
 // ASTNode AST tree
@@ -49,9 +60,9 @@ func (a *ASTNode) GetChildren() []*ASTNode {
 }
 
 func (a *ASTNode) Print(indent string) {
-	log.Printf("%s %s %s", indent, a.GetNodeType(), a.GetText())
+	fmt.Printf("%s %s %s \n", indent, a.GetNodeType(), a.GetText())
 	for _, astNode := range a.GetChildren() {
-		astNode.Print(indent + "\t")
+		astNode.Print(indent + "──")
 	}
 }
 
@@ -99,7 +110,7 @@ func (t *TokenReader) SetPos(pos uint64) {
 	}
 }
 
-// IntDeclare 整形声明
+// IntDeclare int a=10+1*2
 func IntDeclare(tokenReader *TokenReader) (*ASTNode, error) {
 	var node *ASTNode
 	tokenType := tokenReader.Peek()
@@ -108,40 +119,39 @@ func IntDeclare(tokenReader *TokenReader) (*ASTNode, error) {
 	}
 	tokenType = tokenReader.Read()
 
-	// 解析标识符
+	// parse identifier
 	tokenType = tokenReader.Peek()
 	if tokenType == nil {
 		return nil, errors.New("invalid statement, miss Identifier")
 	}
 	tokenType = tokenReader.Read()
-	// 加入 AST 节点
+	// add into AST node
 	node = NewASTNode(IntDeclaration, tokenType.Value())
 
-	// 解析 Assignment=
+	// parse Assignment=
 	tokenType = tokenReader.Peek()
 	if tokenType == nil || tokenType.TokenType() != token.Assignment {
 		return nil, errors.New("syntax err: invalid statement, miss Assignment")
 	}
 	tokenType = tokenReader.Read()
-	// 匹配后续的表达式
+	// parse Additive
 	child, err := AdditiveLoop(tokenReader)
 	if err != nil {
 		return nil, err
 	}
 	node.AddChild(child)
 
-	// 解析最后的结束符
+	// parse end
 	tokenType = tokenReader.Peek()
 	if tokenType == nil || tokenType.TokenType() != token.Enter {
 		return nil, errors.New("syntax err: invalid statement, miss enter")
 	}
 	tokenType = tokenReader.Read()
-	// 加入 AST
 
 	return node, nil
 }
 
-// AdditiveLoop 加法循环解析，解决结合性问题
+// AdditiveLoop Additive -> Multiplicative ( (+ | -) Multiplicative)*
 func AdditiveLoop(tokenReader *TokenReader) (*ASTNode, error) {
 	child1, err := MultiplicativeLoop(tokenReader)
 	node := child1
@@ -149,12 +159,12 @@ func AdditiveLoop(tokenReader *TokenReader) (*ASTNode, error) {
 		return nil, err
 	}
 	for {
-		// 应用 add' 规则
+		// add'
 		tokenType := tokenReader.Peek()
 		if tokenType != nil && (tokenType.TokenType() == token.Plus || tokenType.TokenType() == token.Minus) {
-			tokenType = tokenReader.Read() //消耗加号
+			tokenType = tokenReader.Read()
 
-			child2, err := MultiplicativeLoop(tokenReader) // 读取下一个节点
+			child2, err := MultiplicativeLoop(tokenReader)
 			if err != nil {
 				return nil, err
 			}
@@ -175,9 +185,9 @@ func AdditiveLoop(tokenReader *TokenReader) (*ASTNode, error) {
 
 }
 
-// MultiplicativeLoop 乘法解析，解决结合性问题
+// MultiplicativeLoop Multiplicative -> Primary ((* | /) Primary)*
 func MultiplicativeLoop(tokenReader *TokenReader) (*ASTNode, error) {
-	child1, err := Primary(tokenReader) // 先做一次基础解析，只会往后解析一位
+	child1, err := Primary(tokenReader)
 	node := child1
 	if err != nil {
 		return nil, err
@@ -192,7 +202,7 @@ func MultiplicativeLoop(tokenReader *TokenReader) (*ASTNode, error) {
 				return nil, err
 			}
 			node = NewASTNode(MultiplicativeType, tokenType.Value())
-			node.AddChild(child1) // 新节点在顶层，保证了结合性
+			node.AddChild(child1)
 			node.AddChild(child2)
 			child1 = node
 		} else {
@@ -206,26 +216,24 @@ func MultiplicativeLoop(tokenReader *TokenReader) (*ASTNode, error) {
 	}
 }
 
-// Primary Analyze primary  1+2->1;
+// Primary  Analyze primary  1+2->1; IntLiteral | Id | Additive
 func Primary(tokenReader *TokenReader) (*ASTNode, error) {
 	var node *ASTNode
-	tokenType := tokenReader.Peek() // 预读
+	tokenType := tokenReader.Peek()
 	if tokenType == nil {
 		return nil, errors.New("syntax err, invalid primary")
 	}
 
 	if tokenType.TokenType() == token.IntLiteral {
-		// 整形字面量
-		tokenType = tokenReader.Read() // 真正读取
+		tokenType = tokenReader.Read()
 		node = NewASTNode(IntLiteralType, tokenType.Value())
 		return node, nil
 	} else if tokenType.TokenType() == token.Identifier {
-		// 标识符
-		tokenType = tokenReader.Read() // 真正读取
+		// Identifier
+		tokenType = tokenReader.Read()
 		node = NewASTNode(IdentifierType, tokenType.Value())
 		return node, nil
 	} else if tokenType.TokenType() == token.LeftParen {
-		// 左括号，需要重头解析加法表达式
 		tokenType = tokenReader.Read()
 		var err error
 		node, err = AdditiveLoop(tokenReader)

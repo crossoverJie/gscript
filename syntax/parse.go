@@ -19,8 +19,7 @@ func Parse(script string) (*ASTNode, error) {
 	tokenTypes := token.Tokenize(script)
 	reader := NewTokenReader(tokenTypes)
 
-	// todo crossoverJie 常量
-	root := NewASTNode(Program, "gscript")
+	root := NewASTNode(Program, App)
 	var err error
 	for reader.Peek() != nil {
 		child, _ := IntDeclare(reader)
@@ -58,7 +57,7 @@ func ExpressionStatement(reader *TokenReader) (*ASTNode, error) {
 			reader.Read()
 		} else {
 			node = nil
-			reader.SetPos(pos) //重置，不确定在 AdditiveLoop 消耗了多少
+			reader.SetPos(pos) // reset pos
 		}
 	}
 	return node, nil
@@ -73,8 +72,8 @@ func AssignmentStatement(reader *TokenReader) (*ASTNode, error) {
 	}
 
 	if tokenType.TokenType() == token.Identifier {
-		tokenType = reader.Read()                            // 读入标识符
-		node = NewASTNode(AssignmentStmt, tokenType.Value()) //写入标识符
+		tokenType = reader.Read()
+		node = NewASTNode(AssignmentStmt, tokenType.Value())
 
 		tokenType = reader.Peek()
 		if tokenType == nil {
@@ -82,7 +81,7 @@ func AssignmentStatement(reader *TokenReader) (*ASTNode, error) {
 		}
 
 		if tokenType.TokenType() == token.Assignment {
-			tokenType = reader.Read() // 取出等号
+			tokenType = reader.Read()
 
 			child1, err := AdditiveLoop(reader)
 			if err != nil {
@@ -90,7 +89,7 @@ func AssignmentStatement(reader *TokenReader) (*ASTNode, error) {
 			}
 			node.AddChild(child1)
 
-			// 解析最后的结束符
+			// parse end
 			tokenType = reader.Peek()
 			if tokenType == nil || tokenType.TokenType() != token.Enter {
 				return nil, errors.New("syntax err: invalid statement, miss enter")
@@ -104,7 +103,7 @@ func AssignmentStatement(reader *TokenReader) (*ASTNode, error) {
 	return node, nil
 }
 
-// EvaluateWithRuntime 使用递归深度遍历 AST
+// EvaluateWithRuntime deep recursion loop AST
 func EvaluateWithRuntime(node *ASTNode, indent string) int {
 	result := 0
 	switch node.GetNodeType() {
@@ -136,7 +135,7 @@ func EvaluateWithRuntime(node *ASTNode, indent string) int {
 	case IntLiteralType:
 		result, _ = strconv.Atoi(node.GetText())
 	case IntDeclaration:
-		// int a= 10 声明语句
+		// int a= 10
 		varName := node.GetText()
 		var value int
 		if len(node.GetChildren()) > 0 {
@@ -145,13 +144,13 @@ func EvaluateWithRuntime(node *ASTNode, indent string) int {
 		}
 		runtime.Vars()[varName] = value
 	case AssignmentStmt:
-		// age =20 赋值语句
+		// age =20
 		_, ok := runtime.Vars()[node.GetText()]
 		if !ok {
 			fmt.Printf("syntax err: var %s not exit\n", node.GetText())
 		}
 	case IdentifierType:
-		// age 给标识符赋值，查询变量值
+		// age, query age and assigment
 		value, ok := runtime.Vars()[node.GetText()]
 		if ok {
 			result = value.(int)
@@ -195,4 +194,8 @@ var runtime *Runtime
 
 func InitRuntime(verbose bool) {
 	runtime = NewRuntime(verbose)
+}
+
+func GetRuntime() *Runtime {
+	return runtime
 }

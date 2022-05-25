@@ -15,7 +15,7 @@ func TestCalculator(t *testing.T) {
 	declare, err := IntDeclare(reader)
 	assert.Nil(t, err)
 	log.Println("==============")
-	declare.Print("")
+	declare.Print(Indent)
 }
 func TestCalculator2(t *testing.T) {
 	script := "int a = 2+3*5\n"
@@ -24,7 +24,7 @@ func TestCalculator2(t *testing.T) {
 	declare, err := IntDeclare(reader)
 	assert.Nil(t, err)
 	log.Println("==============")
-	declare.Print("")
+	declare.Print(Indent)
 }
 func TestCalculator3(t *testing.T) {
 	script := "int a = "
@@ -56,7 +56,7 @@ func TestCalculator6(t *testing.T) {
 	reader := NewTokenReader(types)
 	node, err := IntDeclare(reader)
 	assert.Nil(t, err)
-	node.Print("")
+	node.Print(Indent)
 }
 func TestCalculator7(t *testing.T) {
 	script := "int a = 45+100\n"
@@ -64,7 +64,7 @@ func TestCalculator7(t *testing.T) {
 	reader := NewTokenReader(types)
 	node, err := IntDeclare(reader)
 	assert.Nil(t, err)
-	node.Print("")
+	node.Print(Indent)
 }
 
 func TestCalculator8(t *testing.T) {
