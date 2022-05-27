@@ -145,10 +145,16 @@ func EvaluateWithRuntime(node *ASTNode, indent string) int {
 		runtime.Vars()[varName] = value
 	case AssignmentStmt:
 		// age =20
-		_, ok := runtime.Vars()[node.GetText()]
+		value, ok := runtime.Vars()[node.GetText()]
 		if !ok {
 			fmt.Printf("syntax err: var %s not exit\n", node.GetText())
 		}
+		varName := node.GetText()
+		if len(node.GetChildren()) > 0 {
+			// int a = 45+2
+			value = EvaluateWithRuntime(node.GetChildren()[0], indent+"\t")
+		}
+		runtime.Vars()[varName] = value
 	case IdentifierType:
 		// age, query age and assigment
 		value, ok := runtime.Vars()[node.GetText()]
