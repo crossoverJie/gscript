@@ -1,5 +1,7 @@
 package token
 
+import "fmt"
+
 type Type string
 
 const (
@@ -8,6 +10,7 @@ const (
 	GT                = "GT"
 	GE                = "GE"
 	IntLiteral        = "IntLiteral"
+	Float             = "Float"
 	Int               = "Int"
 	Int1              = "Int1"
 	Int2              = "Int2"
@@ -131,11 +134,33 @@ func Tokenize(str string) []*TokenType {
 			status, values = InitStatus(b, values)
 			break
 		case IntLiteral:
+			if b == '.' {
+				values = append(values, b)
+				status = Float
+				break
+			}
 			if isDigit(b) {
 				values = append(values, b)
 			} else {
 				t := &TokenType{
 					tokenType: IntLiteral,
+					value:     string(values),
+				}
+				result = append(result, t)
+				values = nil
+				status, values = InitStatus(b, values)
+				break
+			}
+		case Float:
+			if b == '.' {
+				fmt.Println("invalid float")
+				return nil
+			}
+			if isDigit(b) {
+				values = append(values, b)
+			} else {
+				t := &TokenType{
+					tokenType: Float,
 					value:     string(values),
 				}
 				result = append(result, t)

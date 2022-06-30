@@ -36,6 +36,7 @@ const (
 	MultiplicativeType ASTNodeType = "Multiplicative"
 	AdditiveType       ASTNodeType = "Additive"
 	IdentifierType     ASTNodeType = "Identifier"
+	FloatType          ASTNodeType = "FloatType"
 	IntLiteralType     ASTNodeType = "IntLiteral"
 )
 
@@ -232,6 +233,11 @@ func Primary(tokenReader *TokenReader) (*ASTNode, error) {
 		// Identifier
 		tokenType = tokenReader.Read()
 		node = NewASTNode(IdentifierType, tokenType.Value())
+		return node, nil
+	} else if tokenType.TokenType() == token.Float {
+		// Identifier
+		tokenType = tokenReader.Read()
+		node = NewASTNode(FloatType, tokenType.Value())
 		return node, nil
 	} else if tokenType.TokenType() == token.LeftParen {
 		tokenType = tokenReader.Read()
