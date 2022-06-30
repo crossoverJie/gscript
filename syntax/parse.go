@@ -7,6 +7,23 @@ import (
 	"strconv"
 )
 
+func ArithmeticOperators(script string) interface{} {
+	tokenTypes := token.Tokenize(script)
+	reader := NewTokenReader(tokenTypes)
+
+	root := NewASTNode(Program, App)
+	child, err := ExpressionStatement(reader)
+	if err != nil {
+		return 0
+	}
+	if child != nil {
+		root.AddChild(child)
+	} else {
+		return 0
+	}
+	return EvaluateWithRuntime(root, "\t")
+}
+
 // Parse syntax parsing.
 // Program -> IntDeclaration | ExpressionStatement | AssignmentStatement
 // IntDeclaration -> 'int' Id ( = Additive) '\n'
@@ -104,8 +121,8 @@ func AssignmentStatement(reader *TokenReader) (*ASTNode, error) {
 }
 
 // EvaluateWithRuntime deep recursion loop AST
-func EvaluateWithRuntime(node *ASTNode, indent string) int {
-	result := 0
+func EvaluateWithRuntime(node *ASTNode, indent string) interface{} {
+	var result interface{}
 	switch node.GetNodeType() {
 	case Program:
 		for _, astNode := range node.GetChildren() {
@@ -116,28 +133,117 @@ func EvaluateWithRuntime(node *ASTNode, indent string) int {
 		val1 := EvaluateWithRuntime(ch01, indent+"\t")
 		ch02 := node.GetChildren()[1]
 		val2 := EvaluateWithRuntime(ch02, indent+"\t")
+		var (
+			v1i int
+			v1f float64
+			v2i int
+			v2f float64
+		)
+		switch val1.(type) {
+		case int:
+			v1i = val1.(int)
+		case float64:
+			v1f = val1.(float64)
+		}
+
+		switch val2.(type) {
+		case int:
+			v2i = val2.(int)
+		case float64:
+			v2f = val2.(float64)
+		}
 
 		if node.GetText() == "+" {
-			result = val1 + val2
+			if v1i != 0 && v2i != 0 {
+				result = v1i + v2i
+			}
+			if v1i != 0 && v2f != 0 {
+				result = float64(v1i) + v2f
+			}
+			if v1f != 0 && v2i != 0 {
+				result = v1f + float64(v2i)
+			}
+			if v1f != 0 && v2f != 0 {
+				result = v1f + v2f
+			}
+
 		} else {
-			result = val1 - val2
+			if v1i != 0 && v2i != 0 {
+				result = v1i - v2i
+			}
+			if v1i != 0 && v2f != 0 {
+				result = float64(v1i) - v2f
+			}
+			if v1f != 0 && v2i != 0 {
+				result = v1f - float64(v2i)
+			}
+			if v1f != 0 && v2f != 0 {
+				result = v1f - v2f
+			}
 		}
 	case MultiplicativeType:
 		ch01 := node.GetChildren()[0]
 		val1 := EvaluateWithRuntime(ch01, indent+"\t")
 		ch02 := node.GetChildren()[1]
 		val2 := EvaluateWithRuntime(ch02, indent+"\t")
-		if node.GetText() == "*" {
-			result = val1 * val2
-		} else {
-			result = val1 / val2
+
+		var (
+			v1i int
+			v1f float64
+			v2i int
+			v2f float64
+		)
+		switch val1.(type) {
+		case int:
+			v1i = val1.(int)
+		case float64:
+			v1f = val1.(float64)
 		}
+
+		switch val2.(type) {
+		case int:
+			v2i = val2.(int)
+		case float64:
+			v2f = val2.(float64)
+		}
+
+		if node.GetText() == "*" {
+			if v1i != 0 && v2i != 0 {
+				result = v1i * v2i
+			}
+			if v1i != 0 && v2f != 0 {
+				result = float64(v1i) * v2f
+			}
+			if v1f != 0 && v2i != 0 {
+				result = v1f * float64(v2i)
+			}
+			if v1f != 0 && v2f != 0 {
+				result = v1f * v2f
+			}
+
+		} else {
+			if v1i != 0 && v2i != 0 {
+				result = v1i / v2i
+			}
+			if v1i != 0 && v2f != 0 {
+				result = float64(v1i) / v2f
+			}
+			if v1f != 0 && v2i != 0 {
+				result = v1f / float64(v2i)
+			}
+			if v1f != 0 && v2f != 0 {
+				result = v1f / v2f
+			}
+		}
+
 	case IntLiteralType:
 		result, _ = strconv.Atoi(node.GetText())
+	case FloatType:
+		result, _ = strconv.ParseFloat(node.GetText(), 64)
 	case IntDeclaration:
 		// int a= 10
 		varName := node.GetText()
-		var value int
+		var value interface{}
 		if len(node.GetChildren()) > 0 {
 			// int a = 45+2
 			value = EvaluateWithRuntime(node.GetChildren()[0], indent+"\t")
