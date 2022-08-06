@@ -9,7 +9,7 @@ blockStatements
     ;
 
 blockStatement
-    : variableDeclarators ';'#BlockVarDeclar
+    : variableDeclarators #BlockVarDeclar
     | statement # BlockStm
    // | localTypeDeclaration
     //| functionDeclaration
@@ -41,8 +41,8 @@ statement
     : blockLabel=block #blockLabel
     | IF parExpression statement (ELSE statement)? #IfElse
     //| FOR '(' forControl ')' statement #For
-    | RETURN expr? ';' #Return
-    | statementExpression=expr ';'#StmExpr
+    | RETURN expr?  #Return
+    | statementExpression=expr #StmExpr
     ;
 
 forControl

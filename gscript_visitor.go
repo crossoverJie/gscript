@@ -1,4 +1,4 @@
-package main
+package gscript
 
 import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
@@ -8,6 +8,15 @@ import (
 
 type GScriptVisitor struct {
 	parser.BaseGScriptVisitor
+}
+
+func ArithmeticOperators(script string) interface{} {
+	input := antlr.NewInputStream(script)
+	lexer := parser.NewGScriptLexer(input)
+	stream := antlr.NewCommonTokenStream(lexer, 0)
+	tree := parser.NewGScriptParser(stream).Prog()
+	visitor := GScriptVisitor{}
+	return visitor.Visit(tree)
 }
 
 func (v *GScriptVisitor) Visit(tree antlr.ParseTree) interface{} {
@@ -89,25 +98,111 @@ func (v *GScriptVisitor) VisitParse(ctx *parser.ParseContext) interface{} {
 }
 
 func (v *GScriptVisitor) VisitMultDivExpr(ctx *parser.MultDivExprContext) interface{} {
-	lhs := v.Visit(ctx.GetLhs())
-	rhs := v.Visit(ctx.GetRhs())
+	val1 := v.Visit(ctx.GetLhs())
+	val2 := v.Visit(ctx.GetRhs())
+
+	var (
+		v1i int
+		v1f float64
+		v2i int
+		v2f float64
+	)
+	switch val1.(type) {
+	case int:
+		v1i = val1.(int)
+	case float64:
+		v1f = val1.(float64)
+	}
+
+	switch val2.(type) {
+	case int:
+		v2i = val2.(int)
+	case float64:
+		v2f = val2.(float64)
+	}
 
 	if ctx.GetBop().GetTokenType() == parser.GScriptLexerMULT {
-		return lhs.(int64) * rhs.(int64)
+		if v1i != 0 && v2i != 0 {
+			return v1i * v2i
+		}
+		if v1i != 0 && v2f != 0 {
+			return float64(v1i) * v2f
+		}
+		if v1f != 0 && v2i != 0 {
+			return v1f * float64(v2i)
+		}
+		if v1f != 0 && v2f != 0 {
+			return v1f * v2f
+		}
 	} else {
-		return lhs.(int64) / rhs.(int64)
+		if v1i != 0 && v2i != 0 {
+			return v1i / v2i
+		}
+		if v1i != 0 && v2f != 0 {
+			return float64(v1i) / v2f
+		}
+		if v1f != 0 && v2i != 0 {
+			return v1f / float64(v2i)
+		}
+		if v1f != 0 && v2f != 0 {
+			return v1f / v2f
+		}
 	}
+	return 0
 }
 
 func (v *GScriptVisitor) VisitPlusSubExpr(ctx *parser.PlusSubExprContext) interface{} {
-	lhs := v.Visit(ctx.GetLhs())
-	rhs := v.Visit(ctx.GetRhs())
+	val1 := v.Visit(ctx.GetLhs())
+	val2 := v.Visit(ctx.GetRhs())
+
+	var (
+		v1i int
+		v1f float64
+		v2i int
+		v2f float64
+	)
+	switch val1.(type) {
+	case int:
+		v1i = val1.(int)
+	case float64:
+		v1f = val1.(float64)
+	}
+
+	switch val2.(type) {
+	case int:
+		v2i = val2.(int)
+	case float64:
+		v2f = val2.(float64)
+	}
 
 	if ctx.GetBop().GetTokenType() == parser.GScriptLexerPLUS {
-		return lhs.(int64) + rhs.(int64)
+		if v1i != 0 && v2i != 0 {
+			return v1i + v2i
+		}
+		if v1i != 0 && v2f != 0 {
+			return float64(v1i) + v2f
+		}
+		if v1f != 0 && v2i != 0 {
+			return v1f + float64(v2i)
+		}
+		if v1f != 0 && v2f != 0 {
+			return v1f + v2f
+		}
 	} else {
-		return lhs.(int64) - rhs.(int64)
+		if v1i != 0 && v2i != 0 {
+			return v1i - v2i
+		}
+		if v1i != 0 && v2f != 0 {
+			return float64(v1i) - v2f
+		}
+		if v1f != 0 && v2i != 0 {
+			return v1f - float64(v2i)
+		}
+		if v1f != 0 && v2f != 0 {
+			return v1f - v2f
+		}
 	}
+	return 0
 }
 
 func (v *GScriptVisitor) VisitLiter(ctx *parser.LiterContext) interface{} {
@@ -115,12 +210,12 @@ func (v *GScriptVisitor) VisitLiter(ctx *parser.LiterContext) interface{} {
 }
 
 func (v *GScriptVisitor) VisitInt(ctx *parser.IntContext) interface{} {
-	val, _ := strconv.ParseInt(ctx.GetText(), 32, 10)
+	val, _ := strconv.Atoi(ctx.GetText())
 	return val
 }
 
 func (v *GScriptVisitor) VisitFloat(ctx *parser.FloatContext) interface{} {
-	val, _ := strconv.ParseFloat(ctx.GetText(), 10)
+	val, _ := strconv.ParseFloat(ctx.GetText(), 0)
 	return val
 }
 
@@ -142,18 +237,18 @@ func (v *GScriptVisitor) VisitNestedExpr(ctx *parser.NestedExprContext) interfac
 }
 
 func (v *GScriptVisitor) VisitUnaryExpr(ctx *parser.UnaryExprContext) interface{} {
-	return -v.Visit(ctx.Expr()).(int64)
+	return -v.Visit(ctx.Expr()).(int)
 }
 
 func (v *GScriptVisitor) VisitModExpr(ctx *parser.ModExprContext) interface{} {
 	lhs := v.Visit(ctx.GetLhs())
 	rhs := v.Visit(ctx.GetRhs())
-	return lhs.(int64) % rhs.(int64)
+	return lhs.(int) % rhs.(int)
 }
 
 func (v *GScriptVisitor) VisitGLe(ctx *parser.GLeContext) interface{} {
-	left := v.Visit(ctx.Expr(0)).(int64)
-	right := v.Visit(ctx.Expr(1)).(int64)
+	left := v.Visit(ctx.Expr(0)).(int)
+	right := v.Visit(ctx.Expr(1)).(int)
 	switch ctx.GetBop().GetTokenType() {
 	case parser.GScriptParserGT:
 		return left > right
@@ -169,8 +264,8 @@ func (v *GScriptVisitor) VisitGLe(ctx *parser.GLeContext) interface{} {
 }
 
 func (v *GScriptVisitor) VisitEqualOrNot(ctx *parser.EqualOrNotContext) interface{} {
-	left := v.Visit(ctx.Expr(0)).(int64)
-	right := v.Visit(ctx.Expr(1)).(int64)
+	left := v.Visit(ctx.Expr(0)).(int)
+	right := v.Visit(ctx.Expr(1)).(int)
 	switch ctx.GetBop().GetTokenType() {
 	case parser.GScriptParserEQUAL:
 		return left == right
