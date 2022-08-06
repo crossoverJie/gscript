@@ -40,3 +40,6 @@ release:
 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 $(GOBUILD).exe
 	tar czvf ${BINARY}-win64-${VERSION}.tar.gz ./${BINARY}.exe
 	$(GOCLEAN)
+
+antlr:
+	antlr -Dlanguage=Go -o parser -visitor -no-listener GScript.g4
