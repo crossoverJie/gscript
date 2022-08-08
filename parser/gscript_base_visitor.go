@@ -68,10 +68,6 @@ func (v *BaseGScriptVisitor) VisitUnaryExpr(ctx *UnaryExprContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitPrefixExpr(ctx *PrefixExprContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BaseGScriptVisitor) VisitBlock(ctx *BlockContext) interface{} {
 	return v.VisitChildren(ctx)
 }

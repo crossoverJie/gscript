@@ -53,9 +53,6 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#UnaryExpr.
 	VisitUnaryExpr(ctx *UnaryExprContext) interface{}
 
-	// Visit a parse tree produced by GScriptParser#PrefixExpr.
-	VisitPrefixExpr(ctx *PrefixExprContext) interface{}
-
 	// Visit a parse tree produced by GScriptParser#block.
 	VisitBlock(ctx *BlockContext) interface{}
 

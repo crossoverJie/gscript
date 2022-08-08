@@ -97,7 +97,7 @@ typeType
     ;
 
 primitiveType
-    : NUMBER
+    : INT
     | STRING
     ;
 
@@ -173,7 +173,7 @@ fragment Digits
 NUMBER
  : ( D* '.' )? D+
  ;
-
+INT:                'int';
 STRING:             'string';
 
 SPACES
