@@ -32,6 +32,10 @@ func (v *BaseGScriptVisitor) VisitMultDivExpr(ctx *MultDivExprContext) interface
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseGScriptVisitor) VisitPostfixExpr(ctx *PostfixExprContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseGScriptVisitor) VisitGLe(ctx *GLeContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -48,6 +52,10 @@ func (v *BaseGScriptVisitor) VisitNestedExpr(ctx *NestedExprContext) interface{}
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseGScriptVisitor) VisitNotExpr(ctx *NotExprContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseGScriptVisitor) VisitModExpr(ctx *ModExprContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -60,6 +68,10 @@ func (v *BaseGScriptVisitor) VisitUnaryExpr(ctx *UnaryExprContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseGScriptVisitor) VisitPrefixExpr(ctx *PrefixExprContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseGScriptVisitor) VisitBlock(ctx *BlockContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -69,6 +81,10 @@ func (v *BaseGScriptVisitor) VisitBlockLabel(ctx *BlockLabelContext) interface{}
 }
 
 func (v *BaseGScriptVisitor) VisitIfElse(ctx *IfElseContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitFor(ctx *ForContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

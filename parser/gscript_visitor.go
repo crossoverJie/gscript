@@ -26,6 +26,9 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#MultDivExpr.
 	VisitMultDivExpr(ctx *MultDivExprContext) interface{}
 
+	// Visit a parse tree produced by GScriptParser#PostfixExpr.
+	VisitPostfixExpr(ctx *PostfixExprContext) interface{}
+
 	// Visit a parse tree produced by GScriptParser#GLe.
 	VisitGLe(ctx *GLeContext) interface{}
 
@@ -38,6 +41,9 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#NestedExpr.
 	VisitNestedExpr(ctx *NestedExprContext) interface{}
 
+	// Visit a parse tree produced by GScriptParser#NotExpr.
+	VisitNotExpr(ctx *NotExprContext) interface{}
+
 	// Visit a parse tree produced by GScriptParser#ModExpr.
 	VisitModExpr(ctx *ModExprContext) interface{}
 
@@ -47,14 +53,20 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#UnaryExpr.
 	VisitUnaryExpr(ctx *UnaryExprContext) interface{}
 
+	// Visit a parse tree produced by GScriptParser#PrefixExpr.
+	VisitPrefixExpr(ctx *PrefixExprContext) interface{}
+
 	// Visit a parse tree produced by GScriptParser#block.
 	VisitBlock(ctx *BlockContext) interface{}
 
-	// Visit a parse tree produced by GScriptParser#blockLabel.
+	// Visit a parse tree produced by GScriptParser#BlockLabel.
 	VisitBlockLabel(ctx *BlockLabelContext) interface{}
 
 	// Visit a parse tree produced by GScriptParser#IfElse.
 	VisitIfElse(ctx *IfElseContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#For.
+	VisitFor(ctx *ForContext) interface{}
 
 	// Visit a parse tree produced by GScriptParser#Return.
 	VisitReturn(ctx *ReturnContext) interface{}

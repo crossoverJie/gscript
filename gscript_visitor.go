@@ -1,6 +1,7 @@
 package gscript
 
 import (
+	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/crossoverJie/gscript/parser"
 	"strconv"
@@ -29,6 +30,10 @@ func (v *GScriptVisitor) Visit(tree antlr.ParseTree) interface{} {
 		return v.VisitBlockLabel(ctx)
 	case *parser.ParseContext:
 		return v.VisitParse(ctx)
+	case *parser.PostfixExprContext:
+		return v.VisitPostfixExpr(ctx)
+	case *parser.NotExprContext:
+		return v.VisitNotExpr(ctx)
 	case *parser.MultDivExprContext:
 		return v.VisitMultDivExpr(ctx)
 	case *parser.LiterContext:
@@ -97,6 +102,38 @@ func (v *GScriptVisitor) VisitParse(ctx *parser.ParseContext) interface{} {
 	return nil
 }
 
+func (v *GScriptVisitor) VisitPostfixExpr(ctx *parser.PostfixExprContext) interface{} {
+	lhs := ctx.GetLhs()
+	value := v.Visit(lhs)
+	switch ctx.GetPostfix().GetTokenType() {
+	case parser.GScriptParserINC:
+		switch value.(type) {
+		case int:
+			value = value.(int) + 1
+			return value
+		}
+	case parser.GScriptParserDEC:
+		switch value.(type) {
+		case int:
+			value = value.(int) - 1
+			return value
+		}
+	}
+	panic("invalid postfix")
+}
+
+func (v *GScriptVisitor) VisitNotExpr(ctx *parser.NotExprContext) interface{} {
+	rhs := ctx.GetRhs()
+	value := v.Visit(rhs)
+	switch value.(type) {
+	case bool:
+		return !value.(bool)
+	}
+	line := ctx.GetStop().GetLine()
+	column := ctx.GetStop().GetColumn()
+	panic(fmt.Sprintf("invalid ! symbol in line:%d and column:%d", line, column))
+}
+
 func (v *GScriptVisitor) VisitMultDivExpr(ctx *parser.MultDivExprContext) interface{} {
 	val1 := v.Visit(ctx.GetLhs())
 	val2 := v.Visit(ctx.GetRhs())
@@ -121,7 +158,7 @@ func (v *GScriptVisitor) VisitMultDivExpr(ctx *parser.MultDivExprContext) interf
 		v2f = val2.(float64)
 	}
 
-	if ctx.GetBop().GetTokenType() == parser.GScriptLexerMULT {
+	if ctx.GetBop().GetTokenType() == parser.GScriptParserMULT {
 		if v1i != 0 && v2i != 0 {
 			return v1i * v2i
 		}

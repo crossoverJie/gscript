@@ -25,6 +25,8 @@ expr
     : '(' expr ')'                        #NestedExpr
     | liter=literal #Liter
     | SUB expr                            #UnaryExpr
+    | lhs=expr postfix=('++' | '--') #PostfixExpr
+    | prefix=('~'|'!') rhs=expr #NotExpr
     | lhs=expr bop=( MULT | DIV ) rhs=expr #MultDivExpr
     | lhs=expr bop=MOD rhs=expr            #ModExpr
     | lhs=expr bop=( PLUS | SUB ) rhs=expr #PlusSubExpr
@@ -37,9 +39,9 @@ block
     ;
 
 statement
-    : blockLabel=block #blockLabel
+    : blockLabel=block #BlockLabel
     | IF parExpression statement (ELSE statement)? #IfElse
-    //| FOR '(' forControl ')' statement #For
+    | FOR '(' forControl ')' statement #For
     | RETURN expr?  #Return
     | statementExpression=expr #StmExpr
     ;
@@ -125,14 +127,18 @@ parExpression
     : '(' expr ')'
     ;
 
+ASSIGN:             '=';
+GT:                 '>';
+LT:                 '<';
+BANG:               '!';
+TILDE:              '~';
+INC:                '++';
+DEC:                '--';
 MULT : '*';
 DIV  : '/';
 PLUS : '+';
 SUB  : '-';
 MOD  : '%';
-ASSIGN:             '=';
-GT:                 '>';
-LT:                 '<';
 EQUAL:              '==';
 LE:                 '<=';
 GE:                 '>=';

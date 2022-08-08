@@ -221,3 +221,54 @@ if ( (10 +10 ) == 20 ) {
 	assert.Equal(t, ret, true)
 
 }
+func TestArithmeticOperators5(t *testing.T) {
+	expression := `
+if ( (10 +10 ) == 20 ) {
+	return 10++ 
+} else {
+	return 20 
+}
+`
+	ret := ArithmeticOperators(expression)
+	fmt.Println(ret)
+	assert.Equal(t, ret, 11)
+}
+func TestArithmeticOperators6(t *testing.T) {
+	expression := `
+if ( (10 +10 ) == 20 ) {
+	return !(1+1==2) 
+} else {
+	return 20 
+}
+`
+	ret := ArithmeticOperators(expression)
+	fmt.Println(ret)
+	assert.Equal(t, ret, false)
+	expression = `
+if ( (10 +10 ) == 20 ) {
+	return !(1+1!=2) 
+} else {
+	return 20 
+}
+`
+	ret = ArithmeticOperators(expression)
+	fmt.Println(ret)
+	assert.Equal(t, ret, true)
+}
+func TestArithmeticOperators7(t *testing.T) {
+	defer func() {
+		if r := recover(); r != nil {
+			t.Log(r)
+		}
+	}()
+	expression := `
+if ( (10 +10 ) == 20 ) {
+	return !10 
+} else {
+	return 20 
+}
+`
+	ret := ArithmeticOperators(expression)
+	fmt.Println(ret)
+	assert.Equal(t, ret, false)
+}
