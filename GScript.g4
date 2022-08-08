@@ -28,7 +28,6 @@ expr
     | lhs=expr bop=( MULT | DIV ) rhs=expr #MultDivExpr
     | lhs=expr bop=MOD rhs=expr            #ModExpr
     | lhs=expr bop=( PLUS | SUB ) rhs=expr #PlusSubExpr
-//    | NUMBER                              #NumberExpr
     | expr bop=(LE | GE | GT | LT ) expr # GLe
     | expr bop=(EQUAL | NOTEQUAL) expr # EqualOrNot
     ;

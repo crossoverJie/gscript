@@ -9,6 +9,19 @@ import (
 	"testing"
 )
 
+func TestGScriptVisitor_Visit_Lexer(t *testing.T) {
+	expression := "(2+3) * 2"
+	input := antlr.NewInputStream(expression)
+	lexer := parser.NewGScriptLexer(input)
+	for {
+		t := lexer.NextToken()
+		if t.GetTokenType() == antlr.TokenEOF {
+			break
+		}
+		fmt.Printf("%s (%q) %d\n",
+			lexer.SymbolicNames[t.GetTokenType()], t.GetText(), t.GetColumn())
+	}
+}
 func TestGScriptVisitor_Visit(t *testing.T) {
 	expression := "(2+3) * 2"
 	input := antlr.NewInputStream(expression)
@@ -205,5 +218,6 @@ if ( (10 +10 ) == 20 ) {
 `
 	ret := ArithmeticOperators(expression)
 	fmt.Println(ret)
+	assert.Equal(t, ret, true)
 
 }
