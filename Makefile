@@ -41,5 +41,6 @@ release:
 	tar czvf ${BINARY}-win64-${VERSION}.tar.gz ./${BINARY}.exe
 	$(GOCLEAN)
 
+# ANTLR Parser Generator  Version 4.9.2
 antlr:
 	antlr -Dlanguage=Go -o parser -visitor -no-listener GScript.g4

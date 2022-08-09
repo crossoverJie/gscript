@@ -4,6 +4,10 @@ prog
     : blockStatements
     ;
 
+block
+    : '{' blockStatements '}'
+    ;
+
 blockStatements
     : blockStatement* #BlockStms
     ;
@@ -12,7 +16,7 @@ blockStatement
     : variableDeclarators #BlockVarDeclar
     | statement # BlockStm
    // | localTypeDeclaration
-    //| functionDeclaration
+    | functionDeclaration #BlockFunc
     //| classDeclaration
     ;
 
@@ -22,9 +26,7 @@ parse
  ;
 
 expr
-    : '(' expr ')'                        #NestedExpr
-    | liter=literal #Liter
-    | SUB expr                            #UnaryExpr
+    : primary #PrimaryExpr
     | lhs=expr postfix=('++' | '--') #PostfixExpr
     | prefix=('~'|'!') rhs=expr #NotExpr
     | lhs=expr bop=( MULT | DIV ) rhs=expr #MultDivExpr
@@ -34,9 +36,15 @@ expr
     | expr bop=(EQUAL | NOTEQUAL) expr # EqualOrNot
     ;
 
-block
-    : '{' blockStatements '}'
+primary
+    : '(' expr ')' #ExprPrimary
+    //| THIS
+    //| SUPER
+    | literal #LiterPrimary
+    | IDENTIFIER #IdentifierPrimay
+    // | typeTypeOrVoid '.' CLASS
     ;
+
 
 statement
     : blockLabel=block #BlockLabel
@@ -54,6 +62,48 @@ forInit
     : variableDeclarators
     | expressionList
     ;
+
+functionDeclaration
+    : typeTypeOrVoid? IDENTIFIER formalParameters ('[' ']')*
+      (THROWS qualifiedNameList)?
+      functionBody
+    ;
+
+functionBody
+    : block
+    ;
+
+qualifiedNameList
+    : qualifiedName (',' qualifiedName)*
+    ;
+
+formalParameters
+    : '(' formalParameterList? ')'
+    ;
+
+formalParameterList
+    : formalParameter (',' formalParameter)* (',' lastFormalParameter)?
+    | lastFormalParameter
+    ;
+
+formalParameter
+    : variableModifier* typeType variableDeclaratorId
+    ;
+
+lastFormalParameter
+    : variableModifier* typeType '...' variableDeclaratorId
+    ;
+
+qualifiedName
+    : IDENTIFIER ('.' IDENTIFIER)*
+    ;
+
+variableModifier
+// todo final require?
+    : FINAL
+    //| annotation
+    ;
+
 variableDeclarators
     : typeType variableDeclarator (',' variableDeclarator)*
     ;
@@ -67,7 +117,12 @@ variableDeclaratorId
     ;
 
 variableInitializer
-    : expr
+    : arrayInitializer
+    | expr
+    ;
+
+arrayInitializer
+    : '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
     ;
 
 literal
@@ -99,6 +154,8 @@ typeType
 primitiveType
     : INT
     | STRING
+    | FLOAT
+    | BOOLEAN
     ;
 
 functionType
@@ -126,6 +183,24 @@ expressionList
 parExpression
     : '(' expr ')'
     ;
+
+// Keywords
+FINAL:              'final';
+THROWS:             'throws';
+INT:                'int';
+STRING:             'string';
+FLOAT:              'float';
+BOOLEAN:            'bool';
+
+
+// Separators
+
+LPAREN:             '(';
+RPAREN:             ')';
+LBRACE:             '{';
+RBRACE:             '}';
+LBRACK:             '[';
+RBRACK:             ']';
 
 ASSIGN:             '=';
 GT:                 '>';
@@ -155,6 +230,8 @@ BOOL_LITERAL:       'true'
             |       'false'
             ;
 
+
+
 //CHAR_LITERAL:       '\'' (~['\\\r\n] | EscapeSequence) '\'';
 
 STRING_LITERAL:     '"' (~["\\\r\n] | EscapeSequence)* '"';
@@ -170,11 +247,7 @@ fragment Digits
     : [0-9] ([0-9_]* [0-9])?
     ;
 
-NUMBER
- : ( D* '.' )? D+
- ;
-INT:                'int';
-STRING:             'string';
+
 
 SPACES
  : [ \t\r\n] -> skip

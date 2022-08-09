@@ -11,6 +11,9 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#prog.
 	VisitProg(ctx *ProgContext) interface{}
 
+	// Visit a parse tree produced by GScriptParser#block.
+	VisitBlock(ctx *BlockContext) interface{}
+
 	// Visit a parse tree produced by GScriptParser#BlockStms.
 	VisitBlockStms(ctx *BlockStmsContext) interface{}
 
@@ -19,6 +22,9 @@ type GScriptVisitor interface {
 
 	// Visit a parse tree produced by GScriptParser#BlockStm.
 	VisitBlockStm(ctx *BlockStmContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#BlockFunc.
+	VisitBlockFunc(ctx *BlockFuncContext) interface{}
 
 	// Visit a parse tree produced by GScriptParser#parse.
 	VisitParse(ctx *ParseContext) interface{}
@@ -32,14 +38,11 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#GLe.
 	VisitGLe(ctx *GLeContext) interface{}
 
-	// Visit a parse tree produced by GScriptParser#Liter.
-	VisitLiter(ctx *LiterContext) interface{}
-
 	// Visit a parse tree produced by GScriptParser#PlusSubExpr.
 	VisitPlusSubExpr(ctx *PlusSubExprContext) interface{}
 
-	// Visit a parse tree produced by GScriptParser#NestedExpr.
-	VisitNestedExpr(ctx *NestedExprContext) interface{}
+	// Visit a parse tree produced by GScriptParser#PrimaryExpr.
+	VisitPrimaryExpr(ctx *PrimaryExprContext) interface{}
 
 	// Visit a parse tree produced by GScriptParser#NotExpr.
 	VisitNotExpr(ctx *NotExprContext) interface{}
@@ -50,11 +53,14 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#EqualOrNot.
 	VisitEqualOrNot(ctx *EqualOrNotContext) interface{}
 
-	// Visit a parse tree produced by GScriptParser#UnaryExpr.
-	VisitUnaryExpr(ctx *UnaryExprContext) interface{}
+	// Visit a parse tree produced by GScriptParser#ExprPrimary.
+	VisitExprPrimary(ctx *ExprPrimaryContext) interface{}
 
-	// Visit a parse tree produced by GScriptParser#block.
-	VisitBlock(ctx *BlockContext) interface{}
+	// Visit a parse tree produced by GScriptParser#LiterPrimary.
+	VisitLiterPrimary(ctx *LiterPrimaryContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#IdentifierPrimay.
+	VisitIdentifierPrimay(ctx *IdentifierPrimayContext) interface{}
 
 	// Visit a parse tree produced by GScriptParser#BlockLabel.
 	VisitBlockLabel(ctx *BlockLabelContext) interface{}
@@ -77,6 +83,33 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#forInit.
 	VisitForInit(ctx *ForInitContext) interface{}
 
+	// Visit a parse tree produced by GScriptParser#functionDeclaration.
+	VisitFunctionDeclaration(ctx *FunctionDeclarationContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#functionBody.
+	VisitFunctionBody(ctx *FunctionBodyContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#qualifiedNameList.
+	VisitQualifiedNameList(ctx *QualifiedNameListContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#formalParameters.
+	VisitFormalParameters(ctx *FormalParametersContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#formalParameterList.
+	VisitFormalParameterList(ctx *FormalParameterListContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#formalParameter.
+	VisitFormalParameter(ctx *FormalParameterContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#lastFormalParameter.
+	VisitLastFormalParameter(ctx *LastFormalParameterContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#qualifiedName.
+	VisitQualifiedName(ctx *QualifiedNameContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#variableModifier.
+	VisitVariableModifier(ctx *VariableModifierContext) interface{}
+
 	// Visit a parse tree produced by GScriptParser#variableDeclarators.
 	VisitVariableDeclarators(ctx *VariableDeclaratorsContext) interface{}
 
@@ -88,6 +121,9 @@ type GScriptVisitor interface {
 
 	// Visit a parse tree produced by GScriptParser#variableInitializer.
 	VisitVariableInitializer(ctx *VariableInitializerContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#arrayInitializer.
+	VisitArrayInitializer(ctx *ArrayInitializerContext) interface{}
 
 	// Visit a parse tree produced by GScriptParser#Int.
 	VisitInt(ctx *IntContext) interface{}

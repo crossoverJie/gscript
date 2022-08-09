@@ -28,6 +28,10 @@ func (v *GScriptVisitor) Visit(tree antlr.ParseTree) interface{} {
 		return v.VisitBlockStm(ctx)
 	case *parser.BlockLabelContext:
 		return v.VisitBlockLabel(ctx)
+	case *parser.BlockVarDeclarContext:
+		return v.VisitBlockVarDeclar(ctx)
+	case *parser.VariableDeclaratorsContext:
+		return v.VisitVariableDeclarators(ctx)
 	case *parser.ParseContext:
 		return v.VisitParse(ctx)
 	case *parser.PostfixExprContext:
@@ -36,8 +40,10 @@ func (v *GScriptVisitor) Visit(tree antlr.ParseTree) interface{} {
 		return v.VisitNotExpr(ctx)
 	case *parser.MultDivExprContext:
 		return v.VisitMultDivExpr(ctx)
-	case *parser.LiterContext:
-		return v.VisitLiter(ctx)
+	case *parser.PrimaryExprContext:
+		return v.VisitPrimaryExpr(ctx)
+	case *parser.LiterPrimaryContext:
+		return v.VisitLiterPrimary(ctx)
 	case *parser.IntContext:
 		return v.VisitInt(ctx)
 	case *parser.FloatContext:
@@ -50,10 +56,10 @@ func (v *GScriptVisitor) Visit(tree antlr.ParseTree) interface{} {
 		return v.VisitNull(ctx)
 	case *parser.PlusSubExprContext:
 		return v.VisitPlusSubExpr(ctx)
-	case *parser.NestedExprContext:
-		return v.VisitNestedExpr(ctx)
-	case *parser.UnaryExprContext:
-		return v.VisitUnaryExpr(ctx)
+	case *parser.ExprPrimaryContext:
+		return v.VisitExprPrimary(ctx)
+	//case *parser.UnaryExprContext:
+	//	return v.VisitUnaryExpr(ctx)
 	case *parser.ModExprContext:
 		return v.VisitModExpr(ctx)
 	case *parser.GLeContext:
@@ -83,6 +89,37 @@ func (v *GScriptVisitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{
 	return ret
 }
 
+func (v *GScriptVisitor) VisitBlockVarDeclar(ctx *parser.BlockVarDeclarContext) interface{} {
+	return v.Visit(ctx.VariableDeclarators())
+}
+
+func (v *GScriptVisitor) VisitVariableDeclarators(ctx *parser.VariableDeclaratorsContext) interface{} {
+	var ret interface{}
+	for _, context := range ctx.AllVariableDeclarator() {
+		ret = v.VisitVariableDeclarator(context.(*parser.VariableDeclaratorContext))
+	}
+	return ret
+}
+
+func (v *GScriptVisitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext) interface{} {
+	v.VisitVariableDeclaratorId(ctx.VariableDeclaratorId().(*parser.VariableDeclaratorIdContext))
+	if ctx.VariableInitializer() != nil {
+		v.VisitVariableInitializer(ctx.VariableInitializer().(*parser.VariableInitializerContext))
+	}
+	return v.VisitChildren(ctx)
+}
+
+func (v *GScriptVisitor) VisitVariableDeclaratorId(ctx *parser.VariableDeclaratorIdContext) interface{} {
+	return ""
+}
+func (v *GScriptVisitor) VisitVariableInitializer(ctx *parser.VariableInitializerContext) interface{} {
+	// todo array init
+	if ctx.Expr() != nil {
+		return v.Visit(ctx.Expr())
+	}
+	return nil
+}
+
 func (v *GScriptVisitor) VisitBlockStm(ctx *parser.BlockStmContext) interface{} {
 	return v.Visit(ctx.Statement())
 }
@@ -100,6 +137,10 @@ func (v *GScriptVisitor) VisitParse(ctx *parser.ParseContext) interface{} {
 		return v.Visit(expr)
 	}
 	return nil
+}
+
+func (v *GScriptVisitor) VisitPrimaryExpr(ctx *parser.PrimaryExprContext) interface{} {
+	return v.Visit(ctx.Primary())
 }
 
 func (v *GScriptVisitor) VisitPostfixExpr(ctx *parser.PostfixExprContext) interface{} {
@@ -129,8 +170,8 @@ func (v *GScriptVisitor) VisitNotExpr(ctx *parser.NotExprContext) interface{} {
 	case bool:
 		return !value.(bool)
 	}
-	line := ctx.GetStop().GetLine()
-	column := ctx.GetStop().GetColumn()
+	line := ctx.GetStart().GetLine()
+	column := ctx.GetStart().GetColumn()
 	panic(fmt.Sprintf("invalid ! symbol in line:%d and column:%d", line, column))
 }
 
@@ -242,8 +283,12 @@ func (v *GScriptVisitor) VisitPlusSubExpr(ctx *parser.PlusSubExprContext) interf
 	return 0
 }
 
-func (v *GScriptVisitor) VisitLiter(ctx *parser.LiterContext) interface{} {
+func (v *GScriptVisitor) VisitLiterPrimary(ctx *parser.LiterPrimaryContext) interface{} {
 	return v.Visit(ctx.Literal())
+}
+
+func (v *GScriptVisitor) VisitIdentifierPrimary(ctx *parser.IdentifierPrimayContext) interface{} {
+	return ctx.IDENTIFIER().GetText()
 }
 
 func (v *GScriptVisitor) VisitInt(ctx *parser.IntContext) interface{} {
@@ -269,13 +314,13 @@ func (v *GScriptVisitor) VisitNull(ctx *parser.NullContext) interface{} {
 	return nil
 }
 
-func (v *GScriptVisitor) VisitNestedExpr(ctx *parser.NestedExprContext) interface{} {
+func (v *GScriptVisitor) VisitExprPrimary(ctx *parser.ExprPrimaryContext) interface{} {
 	return v.Visit(ctx.Expr())
 }
 
-func (v *GScriptVisitor) VisitUnaryExpr(ctx *parser.UnaryExprContext) interface{} {
-	return -v.Visit(ctx.Expr()).(int)
-}
+//func (v *GScriptVisitor) VisitUnaryExpr(ctx *parser.UnaryExprContext) interface{} {
+//	return -v.Visit(ctx.Expr()).(int)
+//}
 
 func (v *GScriptVisitor) VisitModExpr(ctx *parser.ModExprContext) interface{} {
 	lhs := v.Visit(ctx.GetLhs())

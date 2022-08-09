@@ -272,3 +272,9 @@ if ( (10 +10 ) == 20 ) {
 	fmt.Println(ret)
 	assert.Equal(t, ret, false)
 }
+
+func TestDeclare(t *testing.T) {
+	expression := `int a=100`
+	ret := ArithmeticOperators(expression)
+	fmt.Println(ret)
+}
