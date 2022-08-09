@@ -2,7 +2,7 @@ package gscript
 
 import "fmt"
 
-type Stack []*stackFrame
+type Stack []interface{}
 
 // IsEmpty  check if Stack is empty
 func (s *Stack) IsEmpty() bool {
@@ -10,12 +10,12 @@ func (s *Stack) IsEmpty() bool {
 }
 
 // Push a new value onto the Stack
-func (s *Stack) Push(val *stackFrame) {
+func (s *Stack) Push(val interface{}) {
 	*s = append(*s, val) // Simply append the new value to the end of the Stack
 }
 
 // Pop Remove and return top element of Stack. Return false if Stack is empty.
-func (s *Stack) Pop() *stackFrame {
+func (s *Stack) Pop() interface{} {
 	index := len(*s) - 1   // Get the index of the top most element.
 	element := (*s)[index] // Index into the slice and obtain the element.
 	*s = (*s)[:index]      // Remove it from the Stack by slicing it off.
@@ -24,7 +24,7 @@ func (s *Stack) Pop() *stackFrame {
 }
 
 // Peek Peek value, not remove element.
-func (s *Stack) Peek() *stackFrame {
+func (s *Stack) Peek() interface{} {
 	index := len(*s) - 1
 	element := (*s)[index] // Index into the slice and obtain the element.
 	return element

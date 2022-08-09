@@ -12,14 +12,14 @@ func TestStack_Peek(t *testing.T) {
 	s.Push(NewStackFrame("sex"))
 
 	peek := s.Peek()
-	assert.Equal(t, peek.String(), "sex")
+	assert.Equal(t, peek.(*stackFrame).String(), "sex")
 
 	pop := s.Pop()
-	assert.Equal(t, pop.String(), "sex")
+	assert.Equal(t, pop.(*stackFrame).String(), "sex")
 	pop = s.Pop()
-	assert.Equal(t, pop.String(), "age")
+	assert.Equal(t, pop.(*stackFrame).String(), "age")
 	pop = s.Pop()
-	assert.Equal(t, pop.String(), "name")
+	assert.Equal(t, pop.(*stackFrame).String(), "name")
 
 	empty := s.IsEmpty()
 	assert.Equal(t, empty, true)

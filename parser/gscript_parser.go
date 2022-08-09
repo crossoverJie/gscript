@@ -376,13 +376,15 @@ func (s *ProgContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) s
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *ProgContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitProg(s)
+func (s *ProgContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterProg(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *ProgContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitProg(s)
 	}
 }
 
@@ -479,13 +481,15 @@ func (s *BlockContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) 
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *BlockContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitBlock(s)
+func (s *BlockContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterBlock(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *BlockContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitBlock(s)
 	}
 }
 
@@ -617,13 +621,15 @@ func (s *BlockStmsContext) BlockStatement(i int) IBlockStatementContext {
 	return t.(IBlockStatementContext)
 }
 
-func (s *BlockStmsContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitBlockStms(s)
+func (s *BlockStmsContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterBlockStms(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *BlockStmsContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitBlockStms(s)
 	}
 }
 
@@ -746,13 +752,15 @@ func (s *BlockStmContext) Statement() IStatementContext {
 	return t.(IStatementContext)
 }
 
-func (s *BlockStmContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitBlockStm(s)
+func (s *BlockStmContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterBlockStm(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *BlockStmContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitBlockStm(s)
 	}
 }
 
@@ -784,13 +792,15 @@ func (s *BlockFuncContext) FunctionDeclaration() IFunctionDeclarationContext {
 	return t.(IFunctionDeclarationContext)
 }
 
-func (s *BlockFuncContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitBlockFunc(s)
+func (s *BlockFuncContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterBlockFunc(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *BlockFuncContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitBlockFunc(s)
 	}
 }
 
@@ -822,13 +832,15 @@ func (s *BlockVarDeclarContext) VariableDeclarators() IVariableDeclaratorsContex
 	return t.(IVariableDeclaratorsContext)
 }
 
-func (s *BlockVarDeclarContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitBlockVarDeclar(s)
+func (s *BlockVarDeclarContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterBlockVarDeclar(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *BlockVarDeclarContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitBlockVarDeclar(s)
 	}
 }
 
@@ -979,13 +991,15 @@ func (s *ParseContext) ToStringTree(ruleNames []string, recog antlr.Recognizer) 
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *ParseContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitParse(s)
+func (s *ParseContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterParse(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *ParseContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitParse(s)
 	}
 }
 
@@ -1151,13 +1165,15 @@ func (s *MultDivExprContext) DIV() antlr.TerminalNode {
 	return s.GetToken(GScriptParserDIV, 0)
 }
 
-func (s *MultDivExprContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitMultDivExpr(s)
+func (s *MultDivExprContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterMultDivExpr(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *MultDivExprContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitMultDivExpr(s)
 	}
 }
 
@@ -1207,13 +1223,15 @@ func (s *PostfixExprContext) DEC() antlr.TerminalNode {
 	return s.GetToken(GScriptParserDEC, 0)
 }
 
-func (s *PostfixExprContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitPostfixExpr(s)
+func (s *PostfixExprContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterPostfixExpr(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *PostfixExprContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitPostfixExpr(s)
 	}
 }
 
@@ -1279,13 +1297,15 @@ func (s *GLeContext) LT() antlr.TerminalNode {
 	return s.GetToken(GScriptParserLT, 0)
 }
 
-func (s *GLeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitGLe(s)
+func (s *GLeContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterGLe(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *GLeContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitGLe(s)
 	}
 }
 
@@ -1353,13 +1373,15 @@ func (s *PlusSubExprContext) SUB() antlr.TerminalNode {
 	return s.GetToken(GScriptParserSUB, 0)
 }
 
-func (s *PlusSubExprContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitPlusSubExpr(s)
+func (s *PlusSubExprContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterPlusSubExpr(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *PlusSubExprContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitPlusSubExpr(s)
 	}
 }
 
@@ -1391,13 +1413,15 @@ func (s *PrimaryExprContext) Primary() IPrimaryContext {
 	return t.(IPrimaryContext)
 }
 
-func (s *PrimaryExprContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitPrimaryExpr(s)
+func (s *PrimaryExprContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterPrimaryExpr(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *PrimaryExprContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitPrimaryExpr(s)
 	}
 }
 
@@ -1447,13 +1471,15 @@ func (s *NotExprContext) BANG() antlr.TerminalNode {
 	return s.GetToken(GScriptParserBANG, 0)
 }
 
-func (s *NotExprContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitNotExpr(s)
+func (s *NotExprContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterNotExpr(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *NotExprContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitNotExpr(s)
 	}
 }
 
@@ -1517,13 +1543,15 @@ func (s *ModExprContext) MOD() antlr.TerminalNode {
 	return s.GetToken(GScriptParserMOD, 0)
 }
 
-func (s *ModExprContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitModExpr(s)
+func (s *ModExprContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterModExpr(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *ModExprContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitModExpr(s)
 	}
 }
 
@@ -1581,13 +1609,15 @@ func (s *EqualOrNotContext) NOTEQUAL() antlr.TerminalNode {
 	return s.GetToken(GScriptParserNOTEQUAL, 0)
 }
 
-func (s *EqualOrNotContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitEqualOrNot(s)
+func (s *EqualOrNotContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterEqualOrNot(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *EqualOrNotContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitEqualOrNot(s)
 	}
 }
 
@@ -1970,13 +2000,15 @@ func (s *ExprPrimaryContext) RPAREN() antlr.TerminalNode {
 	return s.GetToken(GScriptParserRPAREN, 0)
 }
 
-func (s *ExprPrimaryContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitExprPrimary(s)
+func (s *ExprPrimaryContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterExprPrimary(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *ExprPrimaryContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitExprPrimary(s)
 	}
 }
 
@@ -2008,13 +2040,15 @@ func (s *LiterPrimaryContext) Literal() ILiteralContext {
 	return t.(ILiteralContext)
 }
 
-func (s *LiterPrimaryContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitLiterPrimary(s)
+func (s *LiterPrimaryContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterLiterPrimary(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *LiterPrimaryContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitLiterPrimary(s)
 	}
 }
 
@@ -2040,13 +2074,15 @@ func (s *IdentifierPrimayContext) IDENTIFIER() antlr.TerminalNode {
 	return s.GetToken(GScriptParserIDENTIFIER, 0)
 }
 
-func (s *IdentifierPrimayContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitIdentifierPrimay(s)
+func (s *IdentifierPrimayContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterIdentifierPrimay(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *IdentifierPrimayContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitIdentifierPrimay(s)
 	}
 }
 
@@ -2195,13 +2231,15 @@ func (s *ReturnContext) Expr() IExprContext {
 	return t.(IExprContext)
 }
 
-func (s *ReturnContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitReturn(s)
+func (s *ReturnContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterReturn(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *ReturnContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitReturn(s)
 	}
 }
 
@@ -2264,13 +2302,15 @@ func (s *IfElseContext) ELSE() antlr.TerminalNode {
 	return s.GetToken(GScriptParserELSE, 0)
 }
 
-func (s *IfElseContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitIfElse(s)
+func (s *IfElseContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterIfElse(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *IfElseContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitIfElse(s)
 	}
 }
 
@@ -2324,13 +2364,15 @@ func (s *ForContext) Statement() IStatementContext {
 	return t.(IStatementContext)
 }
 
-func (s *ForContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitFor(s)
+func (s *ForContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterFor(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *ForContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitFor(s)
 	}
 }
 
@@ -2367,13 +2409,15 @@ func (s *StmExprContext) Expr() IExprContext {
 	return t.(IExprContext)
 }
 
-func (s *StmExprContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitStmExpr(s)
+func (s *StmExprContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterStmExpr(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *StmExprContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitStmExpr(s)
 	}
 }
 
@@ -2410,13 +2454,15 @@ func (s *BlockLabelContext) Block() IBlockContext {
 	return t.(IBlockContext)
 }
 
-func (s *BlockLabelContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitBlockLabel(s)
+func (s *BlockLabelContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterBlockLabel(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *BlockLabelContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitBlockLabel(s)
 	}
 }
 
@@ -2632,13 +2678,15 @@ func (s *ForControlContext) ToStringTree(ruleNames []string, recog antlr.Recogni
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *ForControlContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitForControl(s)
+func (s *ForControlContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterForControl(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *ForControlContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitForControl(s)
 	}
 }
 
@@ -2778,13 +2826,15 @@ func (s *ForInitContext) ToStringTree(ruleNames []string, recog antlr.Recognizer
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *ForInitContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitForInit(s)
+func (s *ForInitContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterForInit(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *ForInitContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitForInit(s)
 	}
 }
 
@@ -2940,13 +2990,15 @@ func (s *FunctionDeclarationContext) ToStringTree(ruleNames []string, recog antl
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *FunctionDeclarationContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitFunctionDeclaration(s)
+func (s *FunctionDeclarationContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterFunctionDeclaration(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *FunctionDeclarationContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitFunctionDeclaration(s)
 	}
 }
 
@@ -3087,13 +3139,15 @@ func (s *FunctionBodyContext) ToStringTree(ruleNames []string, recog antlr.Recog
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *FunctionBodyContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitFunctionBody(s)
+func (s *FunctionBodyContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterFunctionBody(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *FunctionBodyContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitFunctionBody(s)
 	}
 }
 
@@ -3195,13 +3249,15 @@ func (s *QualifiedNameListContext) ToStringTree(ruleNames []string, recog antlr.
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *QualifiedNameListContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitQualifiedNameList(s)
+func (s *QualifiedNameListContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterQualifiedNameList(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *QualifiedNameListContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitQualifiedNameList(s)
 	}
 }
 
@@ -3317,13 +3373,15 @@ func (s *FormalParametersContext) ToStringTree(ruleNames []string, recog antlr.R
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *FormalParametersContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitFormalParameters(s)
+func (s *FormalParametersContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterFormalParameters(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *FormalParametersContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitFormalParameters(s)
 	}
 }
 
@@ -3451,13 +3509,15 @@ func (s *FormalParameterListContext) ToStringTree(ruleNames []string, recog antl
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *FormalParameterListContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitFormalParameterList(s)
+func (s *FormalParameterListContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterFormalParameterList(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *FormalParameterListContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitFormalParameterList(s)
 	}
 }
 
@@ -3630,13 +3690,15 @@ func (s *FormalParameterContext) ToStringTree(ruleNames []string, recog antlr.Re
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *FormalParameterContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitFormalParameter(s)
+func (s *FormalParameterContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterFormalParameter(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *FormalParameterContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitFormalParameter(s)
 	}
 }
 
@@ -3777,13 +3839,15 @@ func (s *LastFormalParameterContext) ToStringTree(ruleNames []string, recog antl
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *LastFormalParameterContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitLastFormalParameter(s)
+func (s *LastFormalParameterContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterLastFormalParameter(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *LastFormalParameterContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitLastFormalParameter(s)
 	}
 }
 
@@ -3893,13 +3957,15 @@ func (s *QualifiedNameContext) ToStringTree(ruleNames []string, recog antlr.Reco
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *QualifiedNameContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitQualifiedName(s)
+func (s *QualifiedNameContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterQualifiedName(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *QualifiedNameContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitQualifiedName(s)
 	}
 }
 
@@ -4001,13 +4067,15 @@ func (s *VariableModifierContext) ToStringTree(ruleNames []string, recog antlr.R
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *VariableModifierContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitVariableModifier(s)
+func (s *VariableModifierContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterVariableModifier(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *VariableModifierContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitVariableModifier(s)
 	}
 }
 
@@ -4119,13 +4187,15 @@ func (s *VariableDeclaratorsContext) ToStringTree(ruleNames []string, recog antl
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *VariableDeclaratorsContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitVariableDeclarators(s)
+func (s *VariableDeclaratorsContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterVariableDeclarators(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *VariableDeclaratorsContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitVariableDeclarators(s)
 	}
 }
 
@@ -4251,13 +4321,15 @@ func (s *VariableDeclaratorContext) ToStringTree(ruleNames []string, recog antlr
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *VariableDeclaratorContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitVariableDeclarator(s)
+func (s *VariableDeclaratorContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterVariableDeclarator(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *VariableDeclaratorContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitVariableDeclarator(s)
 	}
 }
 
@@ -4372,13 +4444,15 @@ func (s *VariableDeclaratorIdContext) ToStringTree(ruleNames []string, recog ant
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *VariableDeclaratorIdContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitVariableDeclaratorId(s)
+func (s *VariableDeclaratorIdContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterVariableDeclaratorId(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *VariableDeclaratorIdContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitVariableDeclaratorId(s)
 	}
 }
 
@@ -4496,13 +4570,15 @@ func (s *VariableInitializerContext) ToStringTree(ruleNames []string, recog antl
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *VariableInitializerContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitVariableInitializer(s)
+func (s *VariableInitializerContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterVariableInitializer(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *VariableInitializerContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitVariableInitializer(s)
 	}
 }
 
@@ -4628,13 +4704,15 @@ func (s *ArrayInitializerContext) ToStringTree(ruleNames []string, recog antlr.R
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *ArrayInitializerContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitArrayInitializer(s)
+func (s *ArrayInitializerContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterArrayInitializer(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *ArrayInitializerContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitArrayInitializer(s)
 	}
 }
 
@@ -4788,13 +4866,15 @@ func (s *FloatContext) FLOAT_LITERAL() antlr.TerminalNode {
 	return s.GetToken(GScriptParserFLOAT_LITERAL, 0)
 }
 
-func (s *FloatContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitFloat(s)
+func (s *FloatContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterFloat(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *FloatContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitFloat(s)
 	}
 }
 
@@ -4820,13 +4900,15 @@ func (s *NullContext) NULL_LITERAL() antlr.TerminalNode {
 	return s.GetToken(GScriptParserNULL_LITERAL, 0)
 }
 
-func (s *NullContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitNull(s)
+func (s *NullContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterNull(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *NullContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitNull(s)
 	}
 }
 
@@ -4852,13 +4934,15 @@ func (s *BoolContext) BOOL_LITERAL() antlr.TerminalNode {
 	return s.GetToken(GScriptParserBOOL_LITERAL, 0)
 }
 
-func (s *BoolContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitBool(s)
+func (s *BoolContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterBool(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *BoolContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitBool(s)
 	}
 }
 
@@ -4884,13 +4968,15 @@ func (s *StringContext) STRING_LITERAL() antlr.TerminalNode {
 	return s.GetToken(GScriptParserSTRING_LITERAL, 0)
 }
 
-func (s *StringContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitString(s)
+func (s *StringContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterString(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *StringContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitString(s)
 	}
 }
 
@@ -4916,13 +5002,15 @@ func (s *IntContext) DECIMAL_LITERAL() antlr.TerminalNode {
 	return s.GetToken(GScriptParserDECIMAL_LITERAL, 0)
 }
 
-func (s *IntContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitInt(s)
+func (s *IntContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterInt(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *IntContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitInt(s)
 	}
 }
 
@@ -5047,13 +5135,15 @@ func (s *IntegerLiteralContext) ToStringTree(ruleNames []string, recog antlr.Rec
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *IntegerLiteralContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitIntegerLiteral(s)
+func (s *IntegerLiteralContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterIntegerLiteral(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *IntegerLiteralContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitIntegerLiteral(s)
 	}
 }
 
@@ -5136,13 +5226,15 @@ func (s *FloatLiteralContext) ToStringTree(ruleNames []string, recog antlr.Recog
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *FloatLiteralContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitFloatLiteral(s)
+func (s *FloatLiteralContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterFloatLiteral(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *FloatLiteralContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitFloatLiteral(s)
 	}
 }
 
@@ -5267,13 +5359,15 @@ func (s *TypeTypeContext) ToStringTree(ruleNames []string, recog antlr.Recognize
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *TypeTypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitTypeType(s)
+func (s *TypeTypeContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterTypeType(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *TypeTypeContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitTypeType(s)
 	}
 }
 
@@ -5408,13 +5502,15 @@ func (s *PrimitiveTypeContext) ToStringTree(ruleNames []string, recog antlr.Reco
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *PrimitiveTypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitPrimitiveType(s)
+func (s *PrimitiveTypeContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterPrimitiveType(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *PrimitiveTypeContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitPrimitiveType(s)
 	}
 }
 
@@ -5533,13 +5629,15 @@ func (s *FunctionTypeContext) ToStringTree(ruleNames []string, recog antlr.Recog
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *FunctionTypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitFunctionType(s)
+func (s *FunctionTypeContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterFunctionType(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *FunctionTypeContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitFunctionType(s)
 	}
 }
 
@@ -5665,13 +5763,15 @@ func (s *TypeListContext) ToStringTree(ruleNames []string, recog antlr.Recognize
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *TypeListContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitTypeList(s)
+func (s *TypeListContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterTypeList(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *TypeListContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitTypeList(s)
 	}
 }
 
@@ -5783,13 +5883,15 @@ func (s *TypeTypeOrVoidContext) ToStringTree(ruleNames []string, recog antlr.Rec
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *TypeTypeOrVoidContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitTypeTypeOrVoid(s)
+func (s *TypeTypeOrVoidContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterTypeTypeOrVoid(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *TypeTypeOrVoidContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitTypeTypeOrVoid(s)
 	}
 }
 
@@ -5892,13 +5994,15 @@ func (s *ClassOrInterfaceTypeContext) ToStringTree(ruleNames []string, recog ant
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *ClassOrInterfaceTypeContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitClassOrInterfaceType(s)
+func (s *ClassOrInterfaceTypeContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterClassOrInterfaceType(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *ClassOrInterfaceTypeContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitClassOrInterfaceType(s)
 	}
 }
 
@@ -6019,13 +6123,15 @@ func (s *ExpressionListContext) ToStringTree(ruleNames []string, recog antlr.Rec
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *ExpressionListContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitExpressionList(s)
+func (s *ExpressionListContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterExpressionList(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *ExpressionListContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitExpressionList(s)
 	}
 }
 
@@ -6141,13 +6247,15 @@ func (s *ParExpressionContext) ToStringTree(ruleNames []string, recog antlr.Reco
 	return antlr.TreesStringTree(s, ruleNames, recog)
 }
 
-func (s *ParExpressionContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
-	switch t := visitor.(type) {
-	case GScriptVisitor:
-		return t.VisitParExpression(s)
+func (s *ParExpressionContext) EnterRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.EnterParExpression(s)
+	}
+}
 
-	default:
-		return t.VisitChildren(s)
+func (s *ParExpressionContext) ExitRule(listener antlr.ParseTreeListener) {
+	if listenerT, ok := listener.(GScriptListener); ok {
+		listenerT.ExitParExpression(s)
 	}
 }
 
