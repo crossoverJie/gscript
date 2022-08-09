@@ -33,6 +33,7 @@ func ArithmeticOperators(script string) interface{} {
 栈帧入栈
 */
 func (v *Visitor) pushStack(frame *stack.Frame) {
+	// todo crossoverJie parentFrame 设置
 	if !v.stack.IsEmpty() {
 
 	}
@@ -42,6 +43,20 @@ func (v *Visitor) pushStack(frame *stack.Frame) {
 
 func (v *Visitor) popStack() {
 	v.stack.Pop()
+}
+
+func (v *Visitor) getLeftValue(variable *sym.Variable) *LeftValue {
+	frame := v.stack.Peek().(*stack.Frame)
+	var object stack.Object
+	for frame != nil {
+		if frame.GetScope().ContainsSymbol(variable) {
+			object = frame.GetObject()
+		}
+		frame = frame.GetParent()
+	}
+
+	// todo crossoverJie 闭包查询
+	return NewLeftValue(variable, object)
 }
 
 func (v *Visitor) Visit(tree antlr.ParseTree) interface{} {
@@ -128,15 +143,23 @@ func (v *Visitor) VisitVariableDeclarators(ctx *parser.VariableDeclaratorsContex
 }
 
 func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext) interface{} {
-	v.VisitVariableDeclaratorId(ctx.VariableDeclaratorId().(*parser.VariableDeclaratorIdContext))
+	var ret interface{}
+	leftValue := v.VisitVariableDeclaratorId(ctx.VariableDeclaratorId().(*parser.VariableDeclaratorIdContext)).(*LeftValue)
 	if ctx.VariableInitializer() != nil {
-		v.VisitVariableInitializer(ctx.VariableInitializer().(*parser.VariableInitializerContext))
+		ret = v.VisitVariableInitializer(ctx.VariableInitializer().(*parser.VariableInitializerContext))
+		switch ret.(type) {
+		case *LeftValue:
+			ret = ret.(*LeftValue).GetValue()
+		}
+		leftValue.SetValue(ret)
 	}
-	return v.VisitChildren(ctx)
+	return ret
 }
 
 func (v *Visitor) VisitVariableDeclaratorId(ctx *parser.VariableDeclaratorIdContext) interface{} {
-	return ""
+	symbol := v.at.GetSymbolOfNode()[ctx]
+	value := v.getLeftValue(symbol.(*sym.Variable))
+	return value
 }
 func (v *Visitor) VisitVariableInitializer(ctx *parser.VariableInitializerContext) interface{} {
 	// todo array init
@@ -314,14 +337,15 @@ func (v *Visitor) VisitLiterPrimary(ctx *parser.LiterPrimaryContext) interface{}
 }
 
 func (v *Visitor) VisitIdentifierPrimary(ctx *parser.IdentifierPrimayContext) interface{} {
+	var ret interface{}
 	if ctx.IDENTIFIER() != nil {
 		symbol := v.at.GetSymbolOfNode()[ctx]
 		switch symbol.(type) {
 		case *sym.Variable:
-
+			ret = v.getLeftValue(symbol.(*sym.Variable))
 		}
 	}
-	return nil
+	return ret
 }
 
 func (v *Visitor) VisitInt(ctx *parser.IntContext) interface{} {

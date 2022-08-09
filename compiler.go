@@ -23,6 +23,8 @@ func (c *Compiler) Compiler(script string) interface{} {
 	walker := antlr.NewParseTreeWalker()
 	walker.Walk(resolver.NewTypeScopeResolver(at), tree)
 
+	walker.Walk(resolver.NewTypeResolver(at), tree)
+
 	visitor := NewVisitor(at)
 	return visitor.Visit(tree)
 }

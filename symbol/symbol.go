@@ -79,7 +79,7 @@ type blockScope struct {
 func NewBlockScope(ctx antlr.ParserRuleContext, name string, sco Scope) Scope {
 	blockScope := &blockScope{
 		scope: &scope{
-			symbols: make([]Symbol, 10),
+			symbols: make([]Symbol, 0),
 			symbol:  &symbol{},
 		},
 	}

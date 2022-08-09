@@ -50,6 +50,17 @@ func NewBlockScopeFrame(scope symbol.Scope) *Frame {
 	return &Frame{scope: scope, object: NewEmptyObject()}
 }
 
+func (s *Frame) GetScope() symbol.Scope {
+	return s.scope
+}
+func (s *Frame) GetObject() Object {
+	return s.object
+}
+
+func (s *Frame) GetParent() *Frame {
+	return s.parent
+}
+
 func (s *Frame) String() string {
 	return fmt.Sprintf("%s", s.object)
 }
@@ -64,7 +75,7 @@ type object struct {
 }
 
 func NewEmptyObject() Object {
-	return &object{}
+	return &object{fields: make(map[*symbol.Variable]interface{})}
 }
 
 func NewVariableObject() Object {
