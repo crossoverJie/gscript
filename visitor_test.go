@@ -30,7 +30,7 @@ func TestGScriptVisitor_Visit(t *testing.T) {
 	parser := parser.NewGScriptParser(stream)
 	tree := parser.Parse()
 
-	visitor := GScriptVisitor{}
+	visitor := Visitor{}
 
 	var result = visitor.Visit(tree)
 	fmt.Println(expression, "=", result)
@@ -45,7 +45,7 @@ func TestGScriptVisitor_Visit2(t *testing.T) {
 	parser.BuildParseTrees = true
 	tree := parser.Parse()
 
-	visitor := GScriptVisitor{}
+	visitor := Visitor{}
 
 	var result = visitor.Visit(tree)
 	fmt.Println(expression, "=", result)
@@ -66,7 +66,7 @@ func TestGScriptVisitor_VisitIfElse(t *testing.T) {
 	parser.BuildParseTrees = true
 	tree := parser.Parse()
 
-	visitor := GScriptVisitor{}
+	visitor := Visitor{}
 
 	var result = visitor.Visit(tree)
 	fmt.Println(expression, " result:", result)
@@ -80,7 +80,7 @@ func TestGScriptVisitor_VisitIfElse2(t *testing.T) {
 	parser := parser.NewGScriptParser(stream)
 	parser.BuildParseTrees = true
 	tree := parser.Parse()
-	visitor := GScriptVisitor{}
+	visitor := Visitor{}
 	var result = visitor.Visit(tree)
 	fmt.Println(expression, " result:", result)
 	assert.Equal(t, result, false)
@@ -93,7 +93,7 @@ func TestGScriptVisitor_VisitIfElse3(t *testing.T) {
 	parser := parser.NewGScriptParser(stream)
 	parser.BuildParseTrees = true
 	tree := parser.Parse()
-	visitor := GScriptVisitor{}
+	visitor := Visitor{}
 	var result = visitor.Visit(tree)
 	fmt.Println(expression, " result:", result)
 	assert.Equal(t, result, false)
@@ -106,7 +106,7 @@ func TestGScriptVisitor_VisitIfElse4(t *testing.T) {
 	parser := parser.NewGScriptParser(stream)
 	parser.BuildParseTrees = true
 	tree := parser.Parse()
-	visitor := GScriptVisitor{}
+	visitor := Visitor{}
 	var result = visitor.Visit(tree)
 	fmt.Println(expression, " result:", result)
 	assert.Equal(t, result, true)
@@ -116,14 +116,7 @@ func TestGScriptVisitor_VisitIfElse5(t *testing.T) {
 if(3==(1+2)){
 	return 1+2*3
 }`
-	input := antlr.NewInputStream(expression)
-	lexer := parser.NewGScriptLexer(input)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-	parser := parser.NewGScriptParser(stream)
-	parser.BuildParseTrees = true
-	tree := parser.Prog()
-	visitor := GScriptVisitor{}
-	var result = visitor.Visit(tree)
+	var result = NewCompiler().Compiler(expression)
 	fmt.Println(expression, " result:", result)
 	assert.Equal(t, result, 7)
 }
@@ -134,14 +127,7 @@ if(3<(1+2)){
 } else {
 	return 2
 }`
-	input := antlr.NewInputStream(expression)
-	lexer := parser.NewGScriptLexer(input)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-	parser := parser.NewGScriptParser(stream)
-	parser.BuildParseTrees = true
-	tree := parser.Prog()
-	visitor := GScriptVisitor{}
-	var result = visitor.Visit(tree)
+	var result = NewCompiler().Compiler(expression)
 	fmt.Println(expression, " result:", result)
 	assert.Equal(t, result, int(2))
 }
@@ -152,14 +138,7 @@ if(3<(1+2)){
 } else {
 	return "123"
 }`
-	input := antlr.NewInputStream(expression)
-	lexer := parser.NewGScriptLexer(input)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-	parser := parser.NewGScriptParser(stream)
-	parser.BuildParseTrees = true
-	tree := parser.Prog()
-	visitor := GScriptVisitor{}
-	var result = visitor.Visit(tree)
+	var result = NewCompiler().Compiler(expression)
 	fmt.Println(expression, " result:", result)
 	assert.Equal(t, result, "123")
 }
@@ -170,14 +149,7 @@ if(3!=(1+2)){
 } else {
 	return false
 }`
-	input := antlr.NewInputStream(expression)
-	lexer := parser.NewGScriptLexer(input)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-	parser := parser.NewGScriptParser(stream)
-	parser.BuildParseTrees = true
-	tree := parser.Prog()
-	visitor := GScriptVisitor{}
-	var result = visitor.Visit(tree)
+	var result = NewCompiler().Compiler(expression)
 	fmt.Println(expression, " result:", result)
 	assert.Equal(t, result, false)
 }
@@ -189,24 +161,24 @@ if(4==(2+2)){
 } else {
 	return false
 }`
-	ret := ArithmeticOperators(expression)
-	fmt.Println(ret)
-	assert.Equal(t, ret, int(4))
+	var result = NewCompiler().Compiler(expression)
+	fmt.Println(result)
+	assert.Equal(t, result, int(4))
 }
 func TestArithmeticOperators2(t *testing.T) {
 	expression := `(10+20)*20`
-	ret := ArithmeticOperators(expression)
-	fmt.Println(ret)
-	assert.Equal(t, ret, 600)
+	var result = NewCompiler().Compiler(expression)
+	fmt.Println(result)
+	assert.Equal(t, result, 600)
 }
 func TestArithmeticOperators3(t *testing.T) {
 	expression := `(1+1.1)-2`
-	ret := ArithmeticOperators(expression)
-	fmt.Println(ret.(float64))
+	var result = NewCompiler().Compiler(expression)
+	fmt.Println(result.(float64))
 
 	expression = `(10+10)*10+10.1`
-	ret = ArithmeticOperators(expression)
-	fmt.Println(ret)
+	result = NewCompiler().Compiler(expression)
+	fmt.Println(result)
 }
 func TestArithmeticOperators4(t *testing.T) {
 	expression := `
@@ -216,9 +188,9 @@ if ( (10 +10 ) == 20 ) {
 	return 20 
 }
 `
-	ret := ArithmeticOperators(expression)
-	fmt.Println(ret)
-	assert.Equal(t, ret, true)
+	var result = NewCompiler().Compiler(expression)
+	fmt.Println(result)
+	assert.Equal(t, result, true)
 
 }
 func TestArithmeticOperators5(t *testing.T) {
@@ -229,9 +201,9 @@ if ( (10 +10 ) == 20 ) {
 	return 20 
 }
 `
-	ret := ArithmeticOperators(expression)
-	fmt.Println(ret)
-	assert.Equal(t, ret, 11)
+	var result = NewCompiler().Compiler(expression)
+	fmt.Println(result)
+	assert.Equal(t, result, 11)
 }
 func TestArithmeticOperators6(t *testing.T) {
 	expression := `
@@ -241,9 +213,9 @@ if ( (10 +10 ) == 20 ) {
 	return 20 
 }
 `
-	ret := ArithmeticOperators(expression)
-	fmt.Println(ret)
-	assert.Equal(t, ret, false)
+	var result = NewCompiler().Compiler(expression)
+	fmt.Println(result)
+	assert.Equal(t, result, false)
 	expression = `
 if ( (10 +10 ) == 20 ) {
 	return !(1+1!=2) 
@@ -251,9 +223,9 @@ if ( (10 +10 ) == 20 ) {
 	return 20 
 }
 `
-	ret = ArithmeticOperators(expression)
-	fmt.Println(ret)
-	assert.Equal(t, ret, true)
+	result = NewCompiler().Compiler(expression)
+	fmt.Println(result)
+	assert.Equal(t, result, true)
 }
 func TestArithmeticOperators7(t *testing.T) {
 	defer func() {
@@ -268,13 +240,13 @@ if ( (10 +10 ) == 20 ) {
 	return 20 
 }
 `
-	ret := ArithmeticOperators(expression)
-	fmt.Println(ret)
-	assert.Equal(t, ret, false)
+	var result = NewCompiler().Compiler(expression)
+	fmt.Println(result)
+	assert.Equal(t, result, false)
 }
 
 func TestDeclare(t *testing.T) {
 	expression := `int a=100`
-	ret := ArithmeticOperators(expression)
-	fmt.Println(ret)
+	var result = NewCompiler().Compiler(expression)
+	fmt.Println(result)
 }

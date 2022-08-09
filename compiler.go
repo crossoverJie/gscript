@@ -13,15 +13,16 @@ func NewCompiler() *Compiler {
 	return &Compiler{}
 }
 
-func (c *Compiler) Compiler(script string) {
+func (c *Compiler) Compiler(script string) interface{} {
 	input := antlr.NewInputStream(script)
 	lexer := parser.NewGScriptLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 	tree := parser.NewGScriptParser(stream).Prog()
+	at := resolver.NewAnnotatedTree(tree)
 
 	walker := antlr.NewParseTreeWalker()
-	walker.Walk(resolver.NewTypeScopeResolver(), tree)
+	walker.Walk(resolver.NewTypeScopeResolver(at), tree)
 
-	visitor := GScriptVisitor{}
-	visitor.Visit(tree)
+	visitor := NewVisitor(at)
+	return visitor.Visit(tree)
 }

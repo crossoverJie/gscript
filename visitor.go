@@ -4,11 +4,20 @@ import (
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/crossoverJie/gscript/parser"
+	"github.com/crossoverJie/gscript/resolver"
+	"github.com/crossoverJie/gscript/stack"
+	sym "github.com/crossoverJie/gscript/symbol"
 	"strconv"
 )
 
-type GScriptVisitor struct {
+type Visitor struct {
 	parser.BaseGScriptVisitor
+	at    *resolver.AnnotatedTree
+	stack stack.Stack
+}
+
+func NewVisitor(at *resolver.AnnotatedTree) *Visitor {
+	return &Visitor{at: at}
 }
 
 func ArithmeticOperators(script string) interface{} {
@@ -16,11 +25,26 @@ func ArithmeticOperators(script string) interface{} {
 	lexer := parser.NewGScriptLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
 	tree := parser.NewGScriptParser(stream).Prog()
-	visitor := GScriptVisitor{}
+	visitor := Visitor{}
 	return visitor.Visit(tree)
 }
 
-func (v *GScriptVisitor) Visit(tree antlr.ParseTree) interface{} {
+/**
+栈帧入栈
+*/
+func (v *Visitor) pushStack(frame *stack.Frame) {
+	if !v.stack.IsEmpty() {
+
+	}
+
+	v.stack.Push(frame)
+}
+
+func (v *Visitor) popStack() {
+	v.stack.Pop()
+}
+
+func (v *Visitor) Visit(tree antlr.ParseTree) interface{} {
 	switch ctx := tree.(type) {
 	case *parser.ProgContext:
 		return v.VisitProg(ctx)
@@ -75,11 +99,15 @@ func (v *GScriptVisitor) Visit(tree antlr.ParseTree) interface{} {
 	}
 }
 
-func (v *GScriptVisitor) VisitProg(ctx *parser.ProgContext) interface{} {
-	return v.VisitBlockStms(ctx.BlockStatements().(*parser.BlockStmsContext))
+func (v *Visitor) VisitProg(ctx *parser.ProgContext) interface{} {
+	scope := v.at.GetNode2Scope()[ctx]
+	v.pushStack(stack.NewBlockScopeFrame(scope))
+	ret := v.VisitBlockStms(ctx.BlockStatements().(*parser.BlockStmsContext))
+	v.popStack()
+	return ret
 }
 
-func (v *GScriptVisitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{} {
+func (v *Visitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{} {
 	var ret interface{}
 	for _, context := range ctx.AllBlockStatement() {
 		ret = v.Visit(context)
@@ -87,11 +115,11 @@ func (v *GScriptVisitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{
 	return ret
 }
 
-func (v *GScriptVisitor) VisitBlockVarDeclar(ctx *parser.BlockVarDeclarContext) interface{} {
+func (v *Visitor) VisitBlockVarDeclar(ctx *parser.BlockVarDeclarContext) interface{} {
 	return v.Visit(ctx.VariableDeclarators())
 }
 
-func (v *GScriptVisitor) VisitVariableDeclarators(ctx *parser.VariableDeclaratorsContext) interface{} {
+func (v *Visitor) VisitVariableDeclarators(ctx *parser.VariableDeclaratorsContext) interface{} {
 	var ret interface{}
 	for _, context := range ctx.AllVariableDeclarator() {
 		ret = v.VisitVariableDeclarator(context.(*parser.VariableDeclaratorContext))
@@ -99,7 +127,7 @@ func (v *GScriptVisitor) VisitVariableDeclarators(ctx *parser.VariableDeclarator
 	return ret
 }
 
-func (v *GScriptVisitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext) interface{} {
+func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext) interface{} {
 	v.VisitVariableDeclaratorId(ctx.VariableDeclaratorId().(*parser.VariableDeclaratorIdContext))
 	if ctx.VariableInitializer() != nil {
 		v.VisitVariableInitializer(ctx.VariableInitializer().(*parser.VariableInitializerContext))
@@ -107,10 +135,10 @@ func (v *GScriptVisitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorC
 	return v.VisitChildren(ctx)
 }
 
-func (v *GScriptVisitor) VisitVariableDeclaratorId(ctx *parser.VariableDeclaratorIdContext) interface{} {
+func (v *Visitor) VisitVariableDeclaratorId(ctx *parser.VariableDeclaratorIdContext) interface{} {
 	return ""
 }
-func (v *GScriptVisitor) VisitVariableInitializer(ctx *parser.VariableInitializerContext) interface{} {
+func (v *Visitor) VisitVariableInitializer(ctx *parser.VariableInitializerContext) interface{} {
 	// todo array init
 	if ctx.Expr() != nil {
 		return v.Visit(ctx.Expr())
@@ -118,30 +146,30 @@ func (v *GScriptVisitor) VisitVariableInitializer(ctx *parser.VariableInitialize
 	return nil
 }
 
-func (v *GScriptVisitor) VisitBlockStm(ctx *parser.BlockStmContext) interface{} {
+func (v *Visitor) VisitBlockStm(ctx *parser.BlockStmContext) interface{} {
 	return v.Visit(ctx.Statement())
 }
 
-func (v *GScriptVisitor) VisitBlock(ctx *parser.BlockContext) interface{} {
+func (v *Visitor) VisitBlock(ctx *parser.BlockContext) interface{} {
 	return v.VisitBlockStms(ctx.BlockStatements().(*parser.BlockStmsContext))
 }
 
-func (v *GScriptVisitor) VisitBlockLabel(ctx *parser.BlockLabelContext) interface{} {
+func (v *Visitor) VisitBlockLabel(ctx *parser.BlockLabelContext) interface{} {
 	return v.VisitBlock(ctx.GetBlockLabel().(*parser.BlockContext))
 }
 
-func (v *GScriptVisitor) VisitParse(ctx *parser.ParseContext) interface{} {
+func (v *Visitor) VisitParse(ctx *parser.ParseContext) interface{} {
 	for _, expr := range ctx.GetExpr_list() {
 		return v.Visit(expr)
 	}
 	return nil
 }
 
-func (v *GScriptVisitor) VisitPrimaryExpr(ctx *parser.PrimaryExprContext) interface{} {
+func (v *Visitor) VisitPrimaryExpr(ctx *parser.PrimaryExprContext) interface{} {
 	return v.Visit(ctx.Primary())
 }
 
-func (v *GScriptVisitor) VisitPostfixExpr(ctx *parser.PostfixExprContext) interface{} {
+func (v *Visitor) VisitPostfixExpr(ctx *parser.PostfixExprContext) interface{} {
 	lhs := ctx.GetLhs()
 	value := v.Visit(lhs)
 	switch ctx.GetPostfix().GetTokenType() {
@@ -161,7 +189,7 @@ func (v *GScriptVisitor) VisitPostfixExpr(ctx *parser.PostfixExprContext) interf
 	panic("invalid postfix")
 }
 
-func (v *GScriptVisitor) VisitNotExpr(ctx *parser.NotExprContext) interface{} {
+func (v *Visitor) VisitNotExpr(ctx *parser.NotExprContext) interface{} {
 	rhs := ctx.GetRhs()
 	value := v.Visit(rhs)
 	switch value.(type) {
@@ -173,7 +201,7 @@ func (v *GScriptVisitor) VisitNotExpr(ctx *parser.NotExprContext) interface{} {
 	panic(fmt.Sprintf("invalid ! symbol in line:%d and column:%d", line, column))
 }
 
-func (v *GScriptVisitor) VisitMultDivExpr(ctx *parser.MultDivExprContext) interface{} {
+func (v *Visitor) VisitMultDivExpr(ctx *parser.MultDivExprContext) interface{} {
 	val1 := v.Visit(ctx.GetLhs())
 	val2 := v.Visit(ctx.GetRhs())
 
@@ -227,7 +255,7 @@ func (v *GScriptVisitor) VisitMultDivExpr(ctx *parser.MultDivExprContext) interf
 	return 0
 }
 
-func (v *GScriptVisitor) VisitPlusSubExpr(ctx *parser.PlusSubExprContext) interface{} {
+func (v *Visitor) VisitPlusSubExpr(ctx *parser.PlusSubExprContext) interface{} {
 	val1 := v.Visit(ctx.GetLhs())
 	val2 := v.Visit(ctx.GetRhs())
 
@@ -281,48 +309,55 @@ func (v *GScriptVisitor) VisitPlusSubExpr(ctx *parser.PlusSubExprContext) interf
 	return 0
 }
 
-func (v *GScriptVisitor) VisitLiterPrimary(ctx *parser.LiterPrimaryContext) interface{} {
+func (v *Visitor) VisitLiterPrimary(ctx *parser.LiterPrimaryContext) interface{} {
 	return v.Visit(ctx.Literal())
 }
 
-func (v *GScriptVisitor) VisitIdentifierPrimary(ctx *parser.IdentifierPrimayContext) interface{} {
-	return ctx.IDENTIFIER().GetText()
+func (v *Visitor) VisitIdentifierPrimary(ctx *parser.IdentifierPrimayContext) interface{} {
+	if ctx.IDENTIFIER() != nil {
+		symbol := v.at.GetSymbolOfNode()[ctx]
+		switch symbol.(type) {
+		case *sym.Variable:
+
+		}
+	}
+	return nil
 }
 
-func (v *GScriptVisitor) VisitInt(ctx *parser.IntContext) interface{} {
+func (v *Visitor) VisitInt(ctx *parser.IntContext) interface{} {
 	val, _ := strconv.Atoi(ctx.GetText())
 	return val
 }
 
-func (v *GScriptVisitor) VisitFloat(ctx *parser.FloatContext) interface{} {
+func (v *Visitor) VisitFloat(ctx *parser.FloatContext) interface{} {
 	val, _ := strconv.ParseFloat(ctx.GetText(), 0)
 	return val
 }
 
-func (v *GScriptVisitor) VisitString(ctx *parser.StringContext) interface{} {
+func (v *Visitor) VisitString(ctx *parser.StringContext) interface{} {
 	return ctx.GetText()[1 : len(ctx.GetText())-1]
 }
 
-func (v *GScriptVisitor) VisitBool(ctx *parser.BoolContext) interface{} {
+func (v *Visitor) VisitBool(ctx *parser.BoolContext) interface{} {
 	val, _ := strconv.ParseBool(ctx.GetText())
 	return val
 }
 
-func (v *GScriptVisitor) VisitNull(ctx *parser.NullContext) interface{} {
+func (v *Visitor) VisitNull(ctx *parser.NullContext) interface{} {
 	return nil
 }
 
-func (v *GScriptVisitor) VisitExprPrimary(ctx *parser.ExprPrimaryContext) interface{} {
+func (v *Visitor) VisitExprPrimary(ctx *parser.ExprPrimaryContext) interface{} {
 	return v.Visit(ctx.Expr())
 }
 
-func (v *GScriptVisitor) VisitModExpr(ctx *parser.ModExprContext) interface{} {
+func (v *Visitor) VisitModExpr(ctx *parser.ModExprContext) interface{} {
 	lhs := v.Visit(ctx.GetLhs())
 	rhs := v.Visit(ctx.GetRhs())
 	return lhs.(int) % rhs.(int)
 }
 
-func (v *GScriptVisitor) VisitGLe(ctx *parser.GLeContext) interface{} {
+func (v *Visitor) VisitGLe(ctx *parser.GLeContext) interface{} {
 	left := v.Visit(ctx.Expr(0)).(int)
 	right := v.Visit(ctx.Expr(1)).(int)
 	switch ctx.GetBop().GetTokenType() {
@@ -339,7 +374,7 @@ func (v *GScriptVisitor) VisitGLe(ctx *parser.GLeContext) interface{} {
 	}
 }
 
-func (v *GScriptVisitor) VisitEqualOrNot(ctx *parser.EqualOrNotContext) interface{} {
+func (v *Visitor) VisitEqualOrNot(ctx *parser.EqualOrNotContext) interface{} {
 	left := v.Visit(ctx.Expr(0)).(int)
 	right := v.Visit(ctx.Expr(1)).(int)
 	switch ctx.GetBop().GetTokenType() {
@@ -352,7 +387,7 @@ func (v *GScriptVisitor) VisitEqualOrNot(ctx *parser.EqualOrNotContext) interfac
 	}
 }
 
-func (v *GScriptVisitor) VisitIfElse(ctx *parser.IfElseContext) interface{} {
+func (v *Visitor) VisitIfElse(ctx *parser.IfElseContext) interface{} {
 	condition := v.VisitParExpression(ctx.ParExpression().(*parser.ParExpressionContext)).(bool)
 	if condition {
 		return v.Visit(ctx.Statement(0))
@@ -362,17 +397,17 @@ func (v *GScriptVisitor) VisitIfElse(ctx *parser.IfElseContext) interface{} {
 	return nil
 }
 
-func (v *GScriptVisitor) VisitReturn(ctx *parser.ReturnContext) interface{} {
+func (v *Visitor) VisitReturn(ctx *parser.ReturnContext) interface{} {
 	if ctx.Expr() != nil {
 		return v.Visit(ctx.Expr())
 	}
 	return nil
 }
 
-func (v *GScriptVisitor) VisitStmExpr(ctx *parser.StmExprContext) interface{} {
+func (v *Visitor) VisitStmExpr(ctx *parser.StmExprContext) interface{} {
 	return v.Visit(ctx.GetStatementExpression())
 }
 
-func (v *GScriptVisitor) VisitParExpression(ctx *parser.ParExpressionContext) interface{} {
+func (v *Visitor) VisitParExpression(ctx *parser.ParExpressionContext) interface{} {
 	return v.Visit(ctx.Expr())
 }
