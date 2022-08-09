@@ -58,8 +58,6 @@ func (v *GScriptVisitor) Visit(tree antlr.ParseTree) interface{} {
 		return v.VisitPlusSubExpr(ctx)
 	case *parser.ExprPrimaryContext:
 		return v.VisitExprPrimary(ctx)
-	//case *parser.UnaryExprContext:
-	//	return v.VisitUnaryExpr(ctx)
 	case *parser.ModExprContext:
 		return v.VisitModExpr(ctx)
 	case *parser.GLeContext:
@@ -317,10 +315,6 @@ func (v *GScriptVisitor) VisitNull(ctx *parser.NullContext) interface{} {
 func (v *GScriptVisitor) VisitExprPrimary(ctx *parser.ExprPrimaryContext) interface{} {
 	return v.Visit(ctx.Expr())
 }
-
-//func (v *GScriptVisitor) VisitUnaryExpr(ctx *parser.UnaryExprContext) interface{} {
-//	return -v.Visit(ctx.Expr()).(int)
-//}
 
 func (v *GScriptVisitor) VisitModExpr(ctx *parser.ModExprContext) interface{} {
 	lhs := v.Visit(ctx.GetLhs())
