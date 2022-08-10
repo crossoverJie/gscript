@@ -35,6 +35,9 @@ func ArithmeticOperators(script string) interface{} {
 func (v *Visitor) pushStack(frame *stack.Frame) {
 	// todo crossoverJie parentFrame 设置
 	if !v.stack.IsEmpty() {
+		if frame.GetParent() == nil {
+			frame.SetParent(v.stack.Peek().(*stack.Frame))
+		}
 
 	}
 
@@ -65,8 +68,8 @@ func (v *Visitor) Visit(tree antlr.ParseTree) interface{} {
 		return v.VisitProg(ctx)
 	case *parser.BlockStmContext:
 		return v.VisitBlockStm(ctx)
-	case *parser.BlockLabelContext:
-		return v.VisitBlockLabel(ctx)
+	case *parser.StmBlockLabelContext:
+		return v.VisitStmBlockLabel(ctx)
 	case *parser.BlockVarDeclarContext:
 		return v.VisitBlockVarDeclar(ctx)
 	case *parser.VariableDeclaratorsContext:
@@ -101,22 +104,25 @@ func (v *Visitor) Visit(tree antlr.ParseTree) interface{} {
 		return v.VisitExprPrimary(ctx)
 	case *parser.ModExprContext:
 		return v.VisitModExpr(ctx)
-	case *parser.GLeContext:
-		return v.VisitGLe(ctx)
+	case *parser.GLeExprContext:
+		return v.VisitGLeExpr(ctx)
 	case *parser.EqualOrNotContext:
 		return v.VisitEqualOrNot(ctx)
-	case *parser.IfElseContext:
-		return v.VisitIfElse(ctx)
-	case *parser.ReturnContext:
-		return v.VisitReturn(ctx)
+	case *parser.StmIfElseContext:
+		return v.VisitStmIfElse(ctx)
+	case *parser.StmReturnContext:
+		return v.VisitStmReturn(ctx)
 	case *parser.StmExprContext:
 		return v.VisitStmExpr(ctx)
+	case *parser.StmForContext:
+		return v.VisitStmFor(ctx)
 	default:
 		panic("Unknown context")
 	}
 }
 
 func (v *Visitor) VisitProg(ctx *parser.ProgContext) interface{} {
+	// 将scope写入栈帧
 	scope := v.at.GetNode2Scope()[ctx]
 	v.pushStack(stack.NewBlockScopeFrame(scope))
 	ret := v.VisitBlockStms(ctx.BlockStatements().(*parser.BlockStmsContext))
@@ -153,6 +159,7 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 		case *LeftValue:
 			ret = ret.(*LeftValue).GetValue()
 		}
+		// 为变量赋值
 		leftValue.SetValue(ret)
 	}
 	return ret
@@ -176,10 +183,21 @@ func (v *Visitor) VisitBlockStm(ctx *parser.BlockStmContext) interface{} {
 }
 
 func (v *Visitor) VisitBlock(ctx *parser.BlockContext) interface{} {
-	return v.VisitBlockStms(ctx.BlockStatements().(*parser.BlockStmsContext))
+	// 将 scope 写入栈帧
+	scope := v.at.GetNode2Scope()[ctx]
+	if scope != nil {
+		v.pushStack(stack.NewBlockScopeFrame(scope))
+	}
+
+	ret := v.VisitBlockStms(ctx.BlockStatements().(*parser.BlockStmsContext))
+
+	if scope != nil {
+		v.popStack()
+	}
+	return ret
 }
 
-func (v *Visitor) VisitBlockLabel(ctx *parser.BlockLabelContext) interface{} {
+func (v *Visitor) VisitStmBlockLabel(ctx *parser.StmBlockLabelContext) interface{} {
 	return v.VisitBlock(ctx.GetBlockLabel().(*parser.BlockContext))
 }
 
@@ -349,7 +367,7 @@ func (v *Visitor) VisitLiterPrimary(ctx *parser.LiterPrimaryContext) interface{}
 
 func (v *Visitor) VisitIdentifierPrimary(ctx *parser.IdentifierPrimaryContext) interface{} {
 	var ret interface{}
-	fmt.Println(ctx.IDENTIFIER().GetText())
+	//fmt.Println(ctx.IDENTIFIER().GetText())
 	//if ctx.IDENTIFIER() != nil {
 	symbol := v.at.GetSymbolOfNode()[ctx]
 	switch symbol.(type) {
@@ -393,9 +411,23 @@ func (v *Visitor) VisitModExpr(ctx *parser.ModExprContext) interface{} {
 	return lhs.(int) % rhs.(int)
 }
 
-func (v *Visitor) VisitGLe(ctx *parser.GLeContext) interface{} {
-	left := v.Visit(ctx.Expr(0)).(int)
-	right := v.Visit(ctx.Expr(1)).(int)
+func (v *Visitor) VisitGLeExpr(ctx *parser.GLeExprContext) interface{} {
+	var left, right int
+	l := v.Visit(ctx.Expr(0))
+	switch l.(type) {
+	case *LeftValue:
+		left = l.(*LeftValue).GetValue().(int)
+	case int:
+		left = l.(int)
+	}
+	r := v.Visit(ctx.Expr(1))
+	switch r.(type) {
+	case *LeftValue:
+		right = r.(*LeftValue).GetValue().(int)
+	case int:
+		right = r.(int)
+	}
+
 	switch ctx.GetBop().GetTokenType() {
 	case parser.GScriptParserGT:
 		return left > right
@@ -423,7 +455,7 @@ func (v *Visitor) VisitEqualOrNot(ctx *parser.EqualOrNotContext) interface{} {
 	}
 }
 
-func (v *Visitor) VisitIfElse(ctx *parser.IfElseContext) interface{} {
+func (v *Visitor) VisitStmIfElse(ctx *parser.StmIfElseContext) interface{} {
 	condition := v.VisitParExpression(ctx.ParExpression().(*parser.ParExpressionContext)).(bool)
 	if condition {
 		return v.Visit(ctx.Statement(0))
@@ -433,7 +465,71 @@ func (v *Visitor) VisitIfElse(ctx *parser.IfElseContext) interface{} {
 	return nil
 }
 
-func (v *Visitor) VisitReturn(ctx *parser.ReturnContext) interface{} {
+func (v *Visitor) VisitStmFor(ctx *parser.StmForContext) interface{} {
+	scope := v.at.GetNode2Scope()[ctx]
+	v.pushStack(stack.NewBlockScopeFrame(scope))
+
+	forControl := ctx.ForControl()
+	v.VisitForControl(forControl.(*parser.ForControlContext))
+
+	v.popStack()
+	return v.VisitChildren(ctx)
+}
+
+func (v *Visitor) VisitForControl(ctx *parser.ForControlContext) interface{} {
+	var ret interface{}
+	forInit := ctx.ForInit()
+	if forInit != nil {
+		ret = v.VisitForInit(forInit.(*parser.ForInitContext))
+	}
+	for {
+		condition := true
+		if ctx.Expr() != nil {
+			value := v.Visit(ctx.Expr())
+			switch value.(type) {
+			case *LeftValue:
+				condition = value.(*LeftValue).GetValue().(bool)
+			case bool:
+				condition = value.(bool)
+			}
+
+			if !condition {
+				break
+			}
+			ret = v.Visit(ctx.GetParent().(*parser.StmForContext).Statement())
+
+			// todo crossoverJie break/return
+
+			// i++
+			if ctx.GetForUpdate() != nil {
+				v.VisitExpressionList(ctx.GetForUpdate().(*parser.ExpressionListContext))
+			}
+		}
+	}
+
+	return ret
+}
+
+func (v *Visitor) VisitForInit(ctx *parser.ForInitContext) interface{} {
+	var ret interface{}
+	if ctx.VariableDeclarators() != nil {
+		ret = v.VisitVariableDeclarators(ctx.VariableDeclarators().(*parser.VariableDeclaratorsContext))
+	} else if ctx.ExpressionList() != nil {
+		ret = v.VisitExpressionList(ctx.ExpressionList().(*parser.ExpressionListContext))
+	}
+
+	return ret
+}
+
+func (v *Visitor) VisitExpressionList(ctx *parser.ExpressionListContext) interface{} {
+	var ret interface{}
+	for _, context := range ctx.AllExpr() {
+		ret = v.Visit(context)
+	}
+	return ret
+}
+
+func (v *Visitor) VisitStmReturn(ctx *parser.StmReturnContext) interface{} {
 	if ctx.Expr() != nil {
 		return v.Visit(ctx.Expr())
 	}

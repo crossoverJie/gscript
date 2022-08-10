@@ -35,9 +35,6 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#PostfixExpr.
 	VisitPostfixExpr(ctx *PostfixExprContext) interface{}
 
-	// Visit a parse tree produced by GScriptParser#GLe.
-	VisitGLe(ctx *GLeContext) interface{}
-
 	// Visit a parse tree produced by GScriptParser#PlusSubExpr.
 	VisitPlusSubExpr(ctx *PlusSubExprContext) interface{}
 
@@ -53,6 +50,12 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#EqualOrNot.
 	VisitEqualOrNot(ctx *EqualOrNotContext) interface{}
 
+	// Visit a parse tree produced by GScriptParser#GLeExpr.
+	VisitGLeExpr(ctx *GLeExprContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#AssignExpr.
+	VisitAssignExpr(ctx *AssignExprContext) interface{}
+
 	// Visit a parse tree produced by GScriptParser#ExprPrimary.
 	VisitExprPrimary(ctx *ExprPrimaryContext) interface{}
 
@@ -62,17 +65,17 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#IdentifierPrimary.
 	VisitIdentifierPrimary(ctx *IdentifierPrimaryContext) interface{}
 
-	// Visit a parse tree produced by GScriptParser#BlockLabel.
-	VisitBlockLabel(ctx *BlockLabelContext) interface{}
+	// Visit a parse tree produced by GScriptParser#StmBlockLabel.
+	VisitStmBlockLabel(ctx *StmBlockLabelContext) interface{}
 
-	// Visit a parse tree produced by GScriptParser#IfElse.
-	VisitIfElse(ctx *IfElseContext) interface{}
+	// Visit a parse tree produced by GScriptParser#StmIfElse.
+	VisitStmIfElse(ctx *StmIfElseContext) interface{}
 
-	// Visit a parse tree produced by GScriptParser#For.
-	VisitFor(ctx *ForContext) interface{}
+	// Visit a parse tree produced by GScriptParser#StmFor.
+	VisitStmFor(ctx *StmForContext) interface{}
 
-	// Visit a parse tree produced by GScriptParser#Return.
-	VisitReturn(ctx *ReturnContext) interface{}
+	// Visit a parse tree produced by GScriptParser#StmReturn.
+	VisitStmReturn(ctx *StmReturnContext) interface{}
 
 	// Visit a parse tree produced by GScriptParser#StmExpr.
 	VisitStmExpr(ctx *StmExprContext) interface{}

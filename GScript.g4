@@ -32,8 +32,12 @@ expr
     | lhs=expr bop=( MULT | DIV ) rhs=expr #MultDivExpr
     | lhs=expr bop=MOD rhs=expr            #ModExpr
     | lhs=expr bop=( PLUS | SUB ) rhs=expr #PlusSubExpr
-    | expr bop=(LE | GE | GT | LT ) expr # GLe
+    | expr bop=(LE | GE | GT | LT ) expr # GLeExpr
     | expr bop=(EQUAL | NOTEQUAL) expr # EqualOrNot
+    // 表明结合性是右结合的，内部原理使用循环代替递归。
+    | <assoc=right> expr
+      bop=('=' | '+=' | '-=' | '*=')
+      expr  #AssignExpr
     ;
 
 primary
@@ -47,10 +51,10 @@ primary
 
 
 statement
-    : blockLabel=block #BlockLabel
-    | IF parExpression statement (ELSE statement)? #IfElse
-    | FOR '(' forControl ')' statement #For
-    | RETURN expr?  #Return
+    : blockLabel=block #StmBlockLabel
+    | IF parExpression statement (ELSE statement)? #StmIfElse
+    | FOR '(' forControl ')' statement #StmFor
+    | RETURN expr?  #StmReturn
     | statementExpression=expr #StmExpr
     ;
 

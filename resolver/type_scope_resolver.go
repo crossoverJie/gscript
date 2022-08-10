@@ -42,3 +42,30 @@ func (t *TypeScopeResolver) EnterProg(ctx *parser.ProgContext) {
 func (t *TypeScopeResolver) ExitProg(ctx *parser.ProgContext) {
 	t.popScope()
 }
+
+// EnterBlock is called when production block is entered.
+func (t *TypeScopeResolver) EnterBlock(ctx *parser.BlockContext) {
+
+	// todo crossoverJie 函数类型则不需要创建额外的 scope
+	scope := symbol.NewBlockScope(ctx, "block", t.currentScope())
+	t.currentScope().AddSymbol(scope)
+	t.pushScope(ctx, scope)
+}
+
+// ExitBlock is called when production block is exited.
+func (t *TypeScopeResolver) ExitBlock(ctx *parser.BlockContext) {
+	// todo crossoverJie 函数类型则不需要创建额外的 scope
+	t.popScope()
+}
+
+// EnterStmFor is called when production StmFor is entered.
+func (t *TypeScopeResolver) EnterStmFor(ctx *parser.StmForContext) {
+	scope := symbol.NewBlockScope(ctx, "for", t.currentScope())
+	t.currentScope().AddSymbol(scope)
+	t.pushScope(ctx, scope)
+}
+
+// ExitStmFor is called when production StmFor is exited.
+func (t *TypeScopeResolver) ExitStmFor(ctx *parser.StmForContext) {
+	t.popScope()
+}

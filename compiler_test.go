@@ -26,3 +26,15 @@ return a
 	fmt.Println(compiler)
 	assert.Equal(t, compiler.(*LeftValue).GetValue().(int), 11)
 }
+func TestCompiler_CompilerFor(t *testing.T) {
+	script := `
+int age = 0 
+for(int i = 0;i<100;i++) {
+	age++
+} 
+return age
+`
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
+	assert.Equal(t, compiler.(*LeftValue).GetValue().(int), 100)
+}

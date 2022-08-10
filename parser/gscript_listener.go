@@ -35,9 +35,6 @@ type GScriptListener interface {
 	// EnterPostfixExpr is called when entering the PostfixExpr production.
 	EnterPostfixExpr(c *PostfixExprContext)
 
-	// EnterGLe is called when entering the GLe production.
-	EnterGLe(c *GLeContext)
-
 	// EnterPlusSubExpr is called when entering the PlusSubExpr production.
 	EnterPlusSubExpr(c *PlusSubExprContext)
 
@@ -53,6 +50,12 @@ type GScriptListener interface {
 	// EnterEqualOrNot is called when entering the EqualOrNot production.
 	EnterEqualOrNot(c *EqualOrNotContext)
 
+	// EnterGLeExpr is called when entering the GLeExpr production.
+	EnterGLeExpr(c *GLeExprContext)
+
+	// EnterAssignExpr is called when entering the AssignExpr production.
+	EnterAssignExpr(c *AssignExprContext)
+
 	// EnterExprPrimary is called when entering the ExprPrimary production.
 	EnterExprPrimary(c *ExprPrimaryContext)
 
@@ -62,17 +65,17 @@ type GScriptListener interface {
 	// EnterIdentifierPrimary is called when entering the IdentifierPrimary production.
 	EnterIdentifierPrimary(c *IdentifierPrimaryContext)
 
-	// EnterBlockLabel is called when entering the BlockLabel production.
-	EnterBlockLabel(c *BlockLabelContext)
+	// EnterStmBlockLabel is called when entering the StmBlockLabel production.
+	EnterStmBlockLabel(c *StmBlockLabelContext)
 
-	// EnterIfElse is called when entering the IfElse production.
-	EnterIfElse(c *IfElseContext)
+	// EnterStmIfElse is called when entering the StmIfElse production.
+	EnterStmIfElse(c *StmIfElseContext)
 
-	// EnterFor is called when entering the For production.
-	EnterFor(c *ForContext)
+	// EnterStmFor is called when entering the StmFor production.
+	EnterStmFor(c *StmForContext)
 
-	// EnterReturn is called when entering the Return production.
-	EnterReturn(c *ReturnContext)
+	// EnterStmReturn is called when entering the StmReturn production.
+	EnterStmReturn(c *StmReturnContext)
 
 	// EnterStmExpr is called when entering the StmExpr production.
 	EnterStmExpr(c *StmExprContext)
@@ -197,9 +200,6 @@ type GScriptListener interface {
 	// ExitPostfixExpr is called when exiting the PostfixExpr production.
 	ExitPostfixExpr(c *PostfixExprContext)
 
-	// ExitGLe is called when exiting the GLe production.
-	ExitGLe(c *GLeContext)
-
 	// ExitPlusSubExpr is called when exiting the PlusSubExpr production.
 	ExitPlusSubExpr(c *PlusSubExprContext)
 
@@ -215,6 +215,12 @@ type GScriptListener interface {
 	// ExitEqualOrNot is called when exiting the EqualOrNot production.
 	ExitEqualOrNot(c *EqualOrNotContext)
 
+	// ExitGLeExpr is called when exiting the GLeExpr production.
+	ExitGLeExpr(c *GLeExprContext)
+
+	// ExitAssignExpr is called when exiting the AssignExpr production.
+	ExitAssignExpr(c *AssignExprContext)
+
 	// ExitExprPrimary is called when exiting the ExprPrimary production.
 	ExitExprPrimary(c *ExprPrimaryContext)
 
@@ -224,17 +230,17 @@ type GScriptListener interface {
 	// ExitIdentifierPrimary is called when exiting the IdentifierPrimary production.
 	ExitIdentifierPrimary(c *IdentifierPrimaryContext)
 
-	// ExitBlockLabel is called when exiting the BlockLabel production.
-	ExitBlockLabel(c *BlockLabelContext)
+	// ExitStmBlockLabel is called when exiting the StmBlockLabel production.
+	ExitStmBlockLabel(c *StmBlockLabelContext)
 
-	// ExitIfElse is called when exiting the IfElse production.
-	ExitIfElse(c *IfElseContext)
+	// ExitStmIfElse is called when exiting the StmIfElse production.
+	ExitStmIfElse(c *StmIfElseContext)
 
-	// ExitFor is called when exiting the For production.
-	ExitFor(c *ForContext)
+	// ExitStmFor is called when exiting the StmFor production.
+	ExitStmFor(c *StmForContext)
 
-	// ExitReturn is called when exiting the Return production.
-	ExitReturn(c *ReturnContext)
+	// ExitStmReturn is called when exiting the StmReturn production.
+	ExitStmReturn(c *StmReturnContext)
 
 	// ExitStmExpr is called when exiting the StmExpr production.
 	ExitStmExpr(c *StmExprContext)

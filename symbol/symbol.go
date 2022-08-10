@@ -1,6 +1,9 @@
 package symbol
 
-import "github.com/antlr/antlr4/runtime/Go/antlr"
+import (
+	"fmt"
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+)
 
 type Symbol interface {
 	SetName(name string)
@@ -93,12 +96,16 @@ func (s *scope) String() string {
 	return "scope:" + s.GetName()
 }
 
+// todo crossoverJie thread-safe?
+var blockIndex int
+
 type blockScope struct {
 	*scope
-	index int
 }
 
 func NewBlockScope(ctx antlr.ParserRuleContext, name string, s Scope) Scope {
+	blockIndex++
+	name = fmt.Sprintf("block-%s%d", name, blockIndex)
 	blockScope := &blockScope{
 		scope: &scope{
 			symbols: make([]Symbol, 0),

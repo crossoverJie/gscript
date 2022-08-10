@@ -75,12 +75,6 @@ func (s *BaseGScriptListener) EnterPostfixExpr(ctx *PostfixExprContext) {}
 // ExitPostfixExpr is called when production PostfixExpr is exited.
 func (s *BaseGScriptListener) ExitPostfixExpr(ctx *PostfixExprContext) {}
 
-// EnterGLe is called when production GLe is entered.
-func (s *BaseGScriptListener) EnterGLe(ctx *GLeContext) {}
-
-// ExitGLe is called when production GLe is exited.
-func (s *BaseGScriptListener) ExitGLe(ctx *GLeContext) {}
-
 // EnterPlusSubExpr is called when production PlusSubExpr is entered.
 func (s *BaseGScriptListener) EnterPlusSubExpr(ctx *PlusSubExprContext) {}
 
@@ -111,6 +105,18 @@ func (s *BaseGScriptListener) EnterEqualOrNot(ctx *EqualOrNotContext) {}
 // ExitEqualOrNot is called when production EqualOrNot is exited.
 func (s *BaseGScriptListener) ExitEqualOrNot(ctx *EqualOrNotContext) {}
 
+// EnterGLeExpr is called when production GLeExpr is entered.
+func (s *BaseGScriptListener) EnterGLeExpr(ctx *GLeExprContext) {}
+
+// ExitGLeExpr is called when production GLeExpr is exited.
+func (s *BaseGScriptListener) ExitGLeExpr(ctx *GLeExprContext) {}
+
+// EnterAssignExpr is called when production AssignExpr is entered.
+func (s *BaseGScriptListener) EnterAssignExpr(ctx *AssignExprContext) {}
+
+// ExitAssignExpr is called when production AssignExpr is exited.
+func (s *BaseGScriptListener) ExitAssignExpr(ctx *AssignExprContext) {}
+
 // EnterExprPrimary is called when production ExprPrimary is entered.
 func (s *BaseGScriptListener) EnterExprPrimary(ctx *ExprPrimaryContext) {}
 
@@ -129,29 +135,29 @@ func (s *BaseGScriptListener) EnterIdentifierPrimary(ctx *IdentifierPrimaryConte
 // ExitIdentifierPrimary is called when production IdentifierPrimary is exited.
 func (s *BaseGScriptListener) ExitIdentifierPrimary(ctx *IdentifierPrimaryContext) {}
 
-// EnterBlockLabel is called when production BlockLabel is entered.
-func (s *BaseGScriptListener) EnterBlockLabel(ctx *BlockLabelContext) {}
+// EnterStmBlockLabel is called when production StmBlockLabel is entered.
+func (s *BaseGScriptListener) EnterStmBlockLabel(ctx *StmBlockLabelContext) {}
 
-// ExitBlockLabel is called when production BlockLabel is exited.
-func (s *BaseGScriptListener) ExitBlockLabel(ctx *BlockLabelContext) {}
+// ExitStmBlockLabel is called when production StmBlockLabel is exited.
+func (s *BaseGScriptListener) ExitStmBlockLabel(ctx *StmBlockLabelContext) {}
 
-// EnterIfElse is called when production IfElse is entered.
-func (s *BaseGScriptListener) EnterIfElse(ctx *IfElseContext) {}
+// EnterStmIfElse is called when production StmIfElse is entered.
+func (s *BaseGScriptListener) EnterStmIfElse(ctx *StmIfElseContext) {}
 
-// ExitIfElse is called when production IfElse is exited.
-func (s *BaseGScriptListener) ExitIfElse(ctx *IfElseContext) {}
+// ExitStmIfElse is called when production StmIfElse is exited.
+func (s *BaseGScriptListener) ExitStmIfElse(ctx *StmIfElseContext) {}
 
-// EnterFor is called when production For is entered.
-func (s *BaseGScriptListener) EnterFor(ctx *ForContext) {}
+// EnterStmFor is called when production StmFor is entered.
+func (s *BaseGScriptListener) EnterStmFor(ctx *StmForContext) {}
 
-// ExitFor is called when production For is exited.
-func (s *BaseGScriptListener) ExitFor(ctx *ForContext) {}
+// ExitStmFor is called when production StmFor is exited.
+func (s *BaseGScriptListener) ExitStmFor(ctx *StmForContext) {}
 
-// EnterReturn is called when production Return is entered.
-func (s *BaseGScriptListener) EnterReturn(ctx *ReturnContext) {}
+// EnterStmReturn is called when production StmReturn is entered.
+func (s *BaseGScriptListener) EnterStmReturn(ctx *StmReturnContext) {}
 
-// ExitReturn is called when production Return is exited.
-func (s *BaseGScriptListener) ExitReturn(ctx *ReturnContext) {}
+// ExitStmReturn is called when production StmReturn is exited.
+func (s *BaseGScriptListener) ExitStmReturn(ctx *StmReturnContext) {}
 
 // EnterStmExpr is called when production StmExpr is entered.
 func (s *BaseGScriptListener) EnterStmExpr(ctx *StmExprContext) {}

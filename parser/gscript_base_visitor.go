@@ -44,10 +44,6 @@ func (v *BaseGScriptVisitor) VisitPostfixExpr(ctx *PostfixExprContext) interface
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitGLe(ctx *GLeContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
 func (v *BaseGScriptVisitor) VisitPlusSubExpr(ctx *PlusSubExprContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -68,6 +64,14 @@ func (v *BaseGScriptVisitor) VisitEqualOrNot(ctx *EqualOrNotContext) interface{}
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseGScriptVisitor) VisitGLeExpr(ctx *GLeExprContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitAssignExpr(ctx *AssignExprContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseGScriptVisitor) VisitExprPrimary(ctx *ExprPrimaryContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -80,19 +84,19 @@ func (v *BaseGScriptVisitor) VisitIdentifierPrimary(ctx *IdentifierPrimaryContex
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitBlockLabel(ctx *BlockLabelContext) interface{} {
+func (v *BaseGScriptVisitor) VisitStmBlockLabel(ctx *StmBlockLabelContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitIfElse(ctx *IfElseContext) interface{} {
+func (v *BaseGScriptVisitor) VisitStmIfElse(ctx *StmIfElseContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitFor(ctx *ForContext) interface{} {
+func (v *BaseGScriptVisitor) VisitStmFor(ctx *StmForContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitReturn(ctx *ReturnContext) interface{} {
+func (v *BaseGScriptVisitor) VisitStmReturn(ctx *StmReturnContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

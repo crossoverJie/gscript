@@ -61,6 +61,9 @@ func (s *Frame) GetObject() Object {
 func (s *Frame) GetParent() *Frame {
 	return s.parent
 }
+func (s *Frame) SetParent(f *Frame) {
+	s.parent = f
+}
 
 func (s *Frame) String() string {
 	return fmt.Sprintf("%s", s.object)
