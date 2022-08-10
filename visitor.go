@@ -83,6 +83,8 @@ func (v *Visitor) Visit(tree antlr.ParseTree) interface{} {
 		return v.VisitPrimaryExpr(ctx)
 	case *parser.LiterPrimaryContext:
 		return v.VisitLiterPrimary(ctx)
+	case *parser.IdentifierPrimaryContext:
+		return v.VisitIdentifierPrimary(ctx)
 	case *parser.IntContext:
 		return v.VisitInt(ctx)
 	case *parser.FloatContext:
@@ -195,20 +197,29 @@ func (v *Visitor) VisitPrimaryExpr(ctx *parser.PrimaryExprContext) interface{} {
 func (v *Visitor) VisitPostfixExpr(ctx *parser.PostfixExprContext) interface{} {
 	lhs := ctx.GetLhs()
 	value := v.Visit(lhs)
-	switch ctx.GetPostfix().GetTokenType() {
-	case parser.GScriptParserINC:
-		switch value.(type) {
-		case int:
-			value = value.(int) + 1
+	switch value.(type) {
+	case *LeftValue:
+		leftValue := value.(*LeftValue)
+		switch ctx.GetPostfix().GetTokenType() {
+		case parser.GScriptParserINC:
+			leftValue.SetValue(leftValue.GetValue().(int) + 1)
+			return value
+		case parser.GScriptParserDEC:
+			leftValue.SetValue(leftValue.GetValue().(int) - 1)
 			return value
 		}
-	case parser.GScriptParserDEC:
-		switch value.(type) {
-		case int:
+	case int:
+		switch ctx.GetPostfix().GetTokenType() {
+		case parser.GScriptParserINC:
+			value = value.(int) + 1
+			return value
+
+		case parser.GScriptParserDEC:
 			value = value.(int) - 1
 			return value
 		}
 	}
+
 	panic("invalid postfix")
 }
 
@@ -336,15 +347,16 @@ func (v *Visitor) VisitLiterPrimary(ctx *parser.LiterPrimaryContext) interface{}
 	return v.Visit(ctx.Literal())
 }
 
-func (v *Visitor) VisitIdentifierPrimary(ctx *parser.IdentifierPrimayContext) interface{} {
+func (v *Visitor) VisitIdentifierPrimary(ctx *parser.IdentifierPrimaryContext) interface{} {
 	var ret interface{}
-	if ctx.IDENTIFIER() != nil {
-		symbol := v.at.GetSymbolOfNode()[ctx]
-		switch symbol.(type) {
-		case *sym.Variable:
-			ret = v.getLeftValue(symbol.(*sym.Variable))
-		}
+	fmt.Println(ctx.IDENTIFIER().GetText())
+	//if ctx.IDENTIFIER() != nil {
+	symbol := v.at.GetSymbolOfNode()[ctx]
+	switch symbol.(type) {
+	case *sym.Variable:
+		ret = v.getLeftValue(symbol.(*sym.Variable))
 	}
+	//}
 	return ret
 }
 

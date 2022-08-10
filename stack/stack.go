@@ -1,6 +1,7 @@
 package stack
 
 import (
+	"bytes"
 	"fmt"
 	"github.com/crossoverJie/gscript/symbol"
 )
@@ -68,6 +69,7 @@ func (s *Frame) String() string {
 type Object interface {
 	GetValue(variable *symbol.Variable) interface{}
 	SetValue(variable *symbol.Variable, value interface{})
+	String() string
 }
 
 type object struct {
@@ -87,4 +89,11 @@ func (o *object) GetValue(variable *symbol.Variable) interface{} {
 }
 func (o *object) SetValue(variable *symbol.Variable, value interface{}) {
 	o.fields[variable] = value
+}
+func (o *object) String() string {
+	var b bytes.Buffer
+	for k, v := range o.fields {
+		b.WriteString(fmt.Sprintf("%s->%s", k.String(), v))
+	}
+	return fmt.Sprintf("%s", b.String())
 }

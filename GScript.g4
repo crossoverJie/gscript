@@ -41,7 +41,7 @@ primary
     //| THIS
     //| SUPER
     | literal #LiterPrimary
-    | IDENTIFIER #IdentifierPrimay
+    | IDENTIFIER #IdentifierPrimary
     // | typeTypeOrVoid '.' CLASS
     ;
 

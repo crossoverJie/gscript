@@ -59,8 +59,8 @@ type GScriptListener interface {
 	// EnterLiterPrimary is called when entering the LiterPrimary production.
 	EnterLiterPrimary(c *LiterPrimaryContext)
 
-	// EnterIdentifierPrimay is called when entering the IdentifierPrimay production.
-	EnterIdentifierPrimay(c *IdentifierPrimayContext)
+	// EnterIdentifierPrimary is called when entering the IdentifierPrimary production.
+	EnterIdentifierPrimary(c *IdentifierPrimaryContext)
 
 	// EnterBlockLabel is called when entering the BlockLabel production.
 	EnterBlockLabel(c *BlockLabelContext)
@@ -221,8 +221,8 @@ type GScriptListener interface {
 	// ExitLiterPrimary is called when exiting the LiterPrimary production.
 	ExitLiterPrimary(c *LiterPrimaryContext)
 
-	// ExitIdentifierPrimay is called when exiting the IdentifierPrimay production.
-	ExitIdentifierPrimay(c *IdentifierPrimayContext)
+	// ExitIdentifierPrimary is called when exiting the IdentifierPrimary production.
+	ExitIdentifierPrimary(c *IdentifierPrimaryContext)
 
 	// ExitBlockLabel is called when exiting the BlockLabel production.
 	ExitBlockLabel(c *BlockLabelContext)

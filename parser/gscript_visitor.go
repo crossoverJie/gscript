@@ -59,8 +59,8 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#LiterPrimary.
 	VisitLiterPrimary(ctx *LiterPrimaryContext) interface{}
 
-	// Visit a parse tree produced by GScriptParser#IdentifierPrimay.
-	VisitIdentifierPrimay(ctx *IdentifierPrimayContext) interface{}
+	// Visit a parse tree produced by GScriptParser#IdentifierPrimary.
+	VisitIdentifierPrimary(ctx *IdentifierPrimaryContext) interface{}
 
 	// Visit a parse tree produced by GScriptParser#BlockLabel.
 	VisitBlockLabel(ctx *BlockLabelContext) interface{}

@@ -35,6 +35,7 @@ func (a *AnnotatedTree) GetNode2Scope() map[antlr.ParserRuleContext]symbol.Scope
 	return a.node2Scope
 }
 
+// FindEncloseScopeOfNode 查找某个 ctx 所在的 scope，逐级递归 ctx 查找
 func (a *AnnotatedTree) FindEncloseScopeOfNode(ctx antlr.ParserRuleContext) symbol.Scope {
 	var ret symbol.Scope
 	parent := ctx.GetParent()
@@ -48,5 +49,14 @@ func (a *AnnotatedTree) FindEncloseScopeOfNode(ctx antlr.ParserRuleContext) symb
 
 	}
 
+	return ret
+}
+
+// FindVariable 根据变量名称在 scope 中逐级查找变量
+func (a *AnnotatedTree) FindVariable(scope symbol.Scope, name string) *symbol.Variable {
+	var ret = scope.GetVariable(name)
+	if ret == nil && scope.GetEncloseScope() != nil {
+		ret = a.FindVariable(scope.GetEncloseScope(), name)
+	}
 	return ret
 }

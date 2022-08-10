@@ -76,7 +76,7 @@ func (v *BaseGScriptVisitor) VisitLiterPrimary(ctx *LiterPrimaryContext) interfa
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitIdentifierPrimay(ctx *IdentifierPrimayContext) interface{} {
+func (v *BaseGScriptVisitor) VisitIdentifierPrimary(ctx *IdentifierPrimaryContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

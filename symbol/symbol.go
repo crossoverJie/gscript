@@ -43,7 +43,9 @@ type Scope interface {
 	Symbol
 	AddSymbol(symbol Symbol)
 	ContainsSymbol(symbol Symbol) bool
+	GetSymbols() []Symbol
 	SetCtx(ctx antlr.ParserRuleContext)
+	GetVariable(name string) *Variable
 	String() string
 }
 
@@ -64,9 +66,29 @@ func (s *scope) ContainsSymbol(symbol Symbol) bool {
 	}
 	return false
 }
+func (s *scope) GetSymbols() []Symbol {
+	return s.symbols
+}
 func (s *scope) SetCtx(ctx antlr.ParserRuleContext) {
 	s.ctx = ctx
 }
+func (s *scope) GetVariable(name string) *Variable {
+	return GetVariable(s, name)
+}
+
+// GetVariable 从 scope 中通过变量名称查询变量
+func GetVariable(scope Scope, name string) *Variable {
+	for _, s := range scope.GetSymbols() {
+		switch s.(type) {
+		case *Variable:
+			if s.GetName() == name {
+				return s.(*Variable)
+			}
+		}
+	}
+	return nil
+}
+
 func (s *scope) String() string {
 	return "scope:" + s.GetName()
 }
@@ -76,15 +98,22 @@ type blockScope struct {
 	index int
 }
 
-func NewBlockScope(ctx antlr.ParserRuleContext, name string, sco Scope) Scope {
+func NewBlockScope(ctx antlr.ParserRuleContext, name string, s Scope) Scope {
 	blockScope := &blockScope{
 		scope: &scope{
 			symbols: make([]Symbol, 0),
-			symbol:  &symbol{},
+			symbol: &symbol{
+				name:         name,
+				encloseScope: s,
+				visibility:   0,
+				ctx:          ctx,
+			},
 		},
 	}
+
+	// todo crossoverJie 这段是否可以去掉？
 	blockScope.SetCtx(ctx)
-	blockScope.SetEncloseScope(sco)
+	blockScope.SetEncloseScope(s)
 	blockScope.SetName(name)
 	return blockScope
 }
@@ -101,4 +130,8 @@ func NewVariable(ctx antlr.ParserRuleContext, name string, enclose *scope) *Vari
 			ctx:          ctx,
 		},
 	}
+}
+
+func (v *Variable) String() string {
+	return v.name
 }

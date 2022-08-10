@@ -2,6 +2,7 @@ package gscript
 
 import (
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
@@ -17,8 +18,11 @@ if ( (10 +10 ) == 20 ) {
 }
 func TestCompiler_Compiler2(t *testing.T) {
 	script := `
-int a = 10
+int a=10
+a++
+return a
 `
 	compiler := NewCompiler().Compiler(script)
 	fmt.Println(compiler)
+	assert.Equal(t, compiler.(*LeftValue).GetValue().(int), 11)
 }

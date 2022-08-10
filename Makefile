@@ -43,4 +43,4 @@ release:
 
 # ANTLR Parser Generator  Version 4.9.2
 antlr:
-	antlr -Dlanguage=Go -o parser  GScript.g4
+	antlr -Dlanguage=Go -o parser -visitor -listener  GScript.g4

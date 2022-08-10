@@ -123,11 +123,11 @@ func (s *BaseGScriptListener) EnterLiterPrimary(ctx *LiterPrimaryContext) {}
 // ExitLiterPrimary is called when production LiterPrimary is exited.
 func (s *BaseGScriptListener) ExitLiterPrimary(ctx *LiterPrimaryContext) {}
 
-// EnterIdentifierPrimay is called when production IdentifierPrimay is entered.
-func (s *BaseGScriptListener) EnterIdentifierPrimay(ctx *IdentifierPrimayContext) {}
+// EnterIdentifierPrimary is called when production IdentifierPrimary is entered.
+func (s *BaseGScriptListener) EnterIdentifierPrimary(ctx *IdentifierPrimaryContext) {}
 
-// ExitIdentifierPrimay is called when production IdentifierPrimay is exited.
-func (s *BaseGScriptListener) ExitIdentifierPrimay(ctx *IdentifierPrimayContext) {}
+// ExitIdentifierPrimary is called when production IdentifierPrimary is exited.
+func (s *BaseGScriptListener) ExitIdentifierPrimary(ctx *IdentifierPrimaryContext) {}
 
 // EnterBlockLabel is called when production BlockLabel is entered.
 func (s *BaseGScriptListener) EnterBlockLabel(ctx *BlockLabelContext) {}

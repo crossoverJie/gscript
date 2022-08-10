@@ -28,3 +28,7 @@ func (l *LeftValue) SetValue(value interface{}) {
 
 	// todo crossoverJie variable 是函数类型
 }
+
+func (l *LeftValue) String() string {
+	return l.object.String()
+}

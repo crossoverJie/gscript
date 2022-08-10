@@ -21,9 +21,14 @@ func (c *Compiler) Compiler(script string) interface{} {
 	at := resolver.NewAnnotatedTree(tree)
 
 	walker := antlr.NewParseTreeWalker()
+	// 识别所有的类型、函数、scope
 	walker.Walk(resolver.NewTypeScopeResolver(at), tree)
 
+	// 变量、类型解析，所有使用到 typeType 的地方
 	walker.Walk(resolver.NewTypeResolver(at), tree)
+
+	// 消解变量、函数的引用
+	walker.Walk(resolver.NewRefResolver(at), tree)
 
 	visitor := NewVisitor(at)
 	return visitor.Visit(tree)
