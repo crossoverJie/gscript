@@ -12,8 +12,8 @@ func NewRefResolver(at *AnnotatedTree) *RefResolver {
 }
 
 func (s *RefResolver) ExitIdentifierPrimary(ctx *parser.IdentifierPrimaryContext) {
-	scope := s.at.FindEncloseScopeOfNode(ctx)
 	idName := ctx.IDENTIFIER().GetText()
+	scope := s.at.FindEncloseScopeOfNode(ctx)
 	variable := s.at.FindVariable(scope, idName)
 	// todo crossoverJie 区分返回的是函数
 	s.at.PutSymbolOfNode(ctx, variable)

@@ -122,7 +122,7 @@ type Variable struct {
 	*symbol
 }
 
-func NewVariable(ctx antlr.ParserRuleContext, name string, enclose *scope) *Variable {
+func NewVariable(ctx antlr.ParserRuleContext, name string, enclose Scope) *Variable {
 	return &Variable{
 		&symbol{
 			name:         name,

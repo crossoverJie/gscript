@@ -19,8 +19,8 @@ func (t *TypeResolver) ExitVariableDeclarators(ctx *parser.VariableDeclaratorsCo
 
 func (t *TypeResolver) EnterVariableDeclaratorId(ctx *parser.VariableDeclaratorIdContext) {
 	id := ctx.IDENTIFIER().GetText()
-	variable := symbol.NewVariable(ctx, id, nil)
 	scope := t.at.FindEncloseScopeOfNode(ctx)
+	variable := symbol.NewVariable(ctx, id, scope)
 
 	// todo crossoverJie enterLocalVariable
 	scope.AddSymbol(variable)
