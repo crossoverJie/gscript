@@ -4,6 +4,7 @@ import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/resolver"
+	"log"
 )
 
 type Compiler struct {
@@ -14,6 +15,11 @@ func NewCompiler() *Compiler {
 }
 
 func (c *Compiler) Compiler(script string) interface{} {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Println(r)
+		}
+	}()
 	input := antlr.NewInputStream(script)
 	lexer := parser.NewGScriptLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)

@@ -48,6 +48,7 @@ func (v *Visitor) popStack() {
 	v.stack.Pop()
 }
 
+// 在整个栈帧中获取左值
 func (v *Visitor) getLeftValue(variable *sym.Variable) *LeftValue {
 	frame := v.stack.Peek().(*stack.Frame)
 	var object stack.Object
