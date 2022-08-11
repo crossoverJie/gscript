@@ -96,7 +96,7 @@ func (o *object) SetValue(variable *symbol.Variable, value interface{}) {
 func (o *object) String() string {
 	var b bytes.Buffer
 	for k, v := range o.fields {
-		b.WriteString(fmt.Sprintf("%s->%s", k.String(), v))
+		b.WriteString(fmt.Sprintf("%s->%s \t", k.String(), v))
 	}
 	return fmt.Sprintf("%s", b.String())
 }

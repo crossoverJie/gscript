@@ -41,7 +41,9 @@ return age
 func TestCompiler_CompilerFor3(t *testing.T) {
 	script := `
 int age = 0 
+int sum=1
 for(int i = 0;i<100;i++) {
+	sum=sum+1
 	for(int i = 0;i<100;i++) {
 		age++
 	}
