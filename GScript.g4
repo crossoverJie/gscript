@@ -35,9 +35,9 @@ expr
     | expr bop=(LE | GE | GT | LT ) expr # GLeExpr
     | expr bop=(EQUAL | NOTEQUAL) expr # EqualOrNot
     // 表明结合性是右结合的，内部原理使用循环代替递归。
-    | <assoc=right> expr
+    | <assoc=right> lhs=expr
       bop=('=' | '+=' | '-=' | '*=')
-      expr  #AssignExpr
+      rhs=expr  #AssignExpr
     ;
 
 primary
@@ -218,6 +218,11 @@ DIV  : '/';
 PLUS : '+';
 SUB  : '-';
 MOD  : '%';
+
+ADD_ASSIGN:         '+=';
+SUB_ASSIGN:         '-=';
+MUL_ASSIGN:         '*=';
+DIV_ASSIGN:         '/=';
 EQUAL:              '==';
 LE:                 '<=';
 GE:                 '>=';

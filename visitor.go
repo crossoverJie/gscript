@@ -117,6 +117,8 @@ func (v *Visitor) Visit(tree antlr.ParseTree) interface{} {
 		return v.VisitStmExpr(ctx)
 	case *parser.StmForContext:
 		return v.VisitStmFor(ctx)
+	case *parser.AssignExprContext:
+		return v.VisitAssignExpr(ctx)
 	default:
 		panic("Unknown context")
 	}
@@ -323,6 +325,14 @@ func (v *Visitor) VisitPlusSubExpr(ctx *parser.PlusSubExprContext) interface{} {
 		v1i = val1.(int)
 	case float64:
 		v1f = val1.(float64)
+	case *LeftValue:
+		value := val1.(*LeftValue).GetValue()
+		switch value.(type) {
+		case int:
+			v1i = value.(int)
+		case float64:
+			v1f = value.(float64)
+		}
 	}
 
 	switch val2.(type) {
@@ -454,6 +464,23 @@ func (v *Visitor) VisitEqualOrNot(ctx *parser.EqualOrNotContext) interface{} {
 	default:
 		panic("invalid symbol")
 	}
+}
+
+func (v *Visitor) VisitAssignExpr(ctx *parser.AssignExprContext) interface{} {
+	lhs := ctx.GetLhs()
+	rhs := ctx.GetRhs()
+	l := v.Visit(lhs).(*LeftValue)
+	r := v.Visit(rhs)
+	switch v.Visit(rhs).(type) {
+	case *LeftValue:
+		r = v.Visit(rhs).(*LeftValue).GetValue()
+	}
+	switch ctx.GetBop().GetTokenType() {
+	case parser.GScriptParserASSIGN:
+		l.SetValue(r)
+	}
+	return r
+
 }
 
 func (v *Visitor) VisitStmIfElse(ctx *parser.StmIfElseContext) interface{} {

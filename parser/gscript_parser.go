@@ -16,7 +16,7 @@ var _ = reflect.Copy
 var _ = strconv.Itoa
 
 var parserATN = []uint16{
-	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 50, 357,
+	3, 24715, 42794, 33075, 47597, 16764, 15335, 30598, 22884, 3, 51, 357,
 	4, 2, 9, 2, 4, 3, 9, 3, 4, 4, 9, 4, 4, 5, 9, 5, 4, 6, 9, 6, 4, 7, 9, 7,
 	4, 8, 9, 8, 4, 9, 9, 9, 4, 10, 9, 10, 4, 11, 9, 11, 4, 12, 9, 12, 4, 13,
 	9, 13, 4, 14, 9, 14, 4, 15, 9, 15, 4, 16, 9, 16, 4, 17, 9, 17, 4, 18, 9,
@@ -57,8 +57,8 @@ var parserATN = []uint16{
 	14, 35, 351, 11, 35, 3, 36, 3, 36, 3, 36, 3, 36, 3, 36, 2, 3, 12, 37, 2,
 	4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40,
 	42, 44, 46, 48, 50, 52, 54, 56, 58, 60, 62, 64, 66, 68, 70, 2, 10, 3, 2,
-	25, 26, 3, 2, 29, 30, 3, 2, 31, 32, 4, 2, 23, 24, 35, 36, 4, 2, 34, 34,
-	37, 37, 4, 2, 3, 5, 22, 22, 3, 2, 27, 28, 3, 2, 12, 15, 2, 375, 2, 72,
+	22, 23, 3, 2, 26, 27, 3, 2, 28, 29, 4, 2, 20, 21, 36, 37, 4, 2, 35, 35,
+	38, 38, 4, 2, 19, 19, 31, 33, 3, 2, 24, 25, 3, 2, 9, 12, 2, 375, 2, 72,
 	3, 2, 2, 2, 4, 74, 3, 2, 2, 2, 6, 81, 3, 2, 2, 2, 8, 87, 3, 2, 2, 2, 10,
 	90, 3, 2, 2, 2, 12, 100, 3, 2, 2, 2, 14, 133, 3, 2, 2, 2, 16, 154, 3, 2,
 	2, 2, 18, 157, 3, 2, 2, 2, 20, 169, 3, 2, 2, 2, 22, 172, 3, 2, 2, 2, 24,
@@ -69,8 +69,8 @@ var parserATN = []uint16{
 	2, 52, 298, 3, 2, 2, 2, 54, 300, 3, 2, 2, 2, 56, 305, 3, 2, 2, 2, 58, 314,
 	3, 2, 2, 2, 60, 316, 3, 2, 2, 2, 62, 324, 3, 2, 2, 2, 64, 334, 3, 2, 2,
 	2, 66, 336, 3, 2, 2, 2, 68, 344, 3, 2, 2, 2, 70, 352, 3, 2, 2, 2, 72, 73,
-	5, 6, 4, 2, 73, 3, 3, 2, 2, 2, 74, 75, 7, 18, 2, 2, 75, 76, 5, 6, 4, 2,
-	76, 77, 7, 19, 2, 2, 77, 5, 3, 2, 2, 2, 78, 80, 5, 8, 5, 2, 79, 78, 3,
+	5, 6, 4, 2, 73, 3, 3, 2, 2, 2, 74, 75, 7, 15, 2, 2, 75, 76, 5, 6, 4, 2,
+	76, 77, 7, 16, 2, 2, 77, 5, 3, 2, 2, 2, 78, 80, 5, 8, 5, 2, 79, 78, 3,
 	2, 2, 2, 80, 83, 3, 2, 2, 2, 81, 79, 3, 2, 2, 2, 81, 82, 3, 2, 2, 2, 82,
 	7, 3, 2, 2, 2, 83, 81, 3, 2, 2, 2, 84, 88, 5, 40, 21, 2, 85, 88, 5, 16,
 	9, 2, 86, 88, 5, 22, 12, 2, 87, 84, 3, 2, 2, 2, 87, 85, 3, 2, 2, 2, 87,
@@ -80,7 +80,7 @@ var parserATN = []uint16{
 	97, 101, 5, 14, 8, 2, 98, 99, 9, 2, 2, 2, 99, 101, 5, 12, 7, 9, 100, 96,
 	3, 2, 2, 2, 100, 98, 3, 2, 2, 2, 101, 124, 3, 2, 2, 2, 102, 103, 12, 8,
 	2, 2, 103, 104, 9, 3, 2, 2, 104, 123, 5, 12, 7, 9, 105, 106, 12, 7, 2,
-	2, 106, 107, 7, 33, 2, 2, 107, 123, 5, 12, 7, 8, 108, 109, 12, 6, 2, 2,
+	2, 106, 107, 7, 30, 2, 2, 107, 123, 5, 12, 7, 8, 108, 109, 12, 6, 2, 2,
 	109, 110, 9, 4, 2, 2, 110, 123, 5, 12, 7, 7, 111, 112, 12, 5, 2, 2, 112,
 	113, 9, 5, 2, 2, 113, 123, 5, 12, 7, 6, 114, 115, 12, 4, 2, 2, 115, 116,
 	9, 6, 2, 2, 116, 123, 5, 12, 7, 5, 117, 118, 12, 3, 2, 2, 118, 119, 9,
@@ -88,40 +88,40 @@ var parserATN = []uint16{
 	2, 2, 122, 102, 3, 2, 2, 2, 122, 105, 3, 2, 2, 2, 122, 108, 3, 2, 2, 2,
 	122, 111, 3, 2, 2, 2, 122, 114, 3, 2, 2, 2, 122, 117, 3, 2, 2, 2, 122,
 	120, 3, 2, 2, 2, 123, 126, 3, 2, 2, 2, 124, 122, 3, 2, 2, 2, 124, 125,
-	3, 2, 2, 2, 125, 13, 3, 2, 2, 2, 126, 124, 3, 2, 2, 2, 127, 128, 7, 16,
-	2, 2, 128, 129, 5, 12, 7, 2, 129, 130, 7, 17, 2, 2, 130, 134, 3, 2, 2,
-	2, 131, 134, 5, 50, 26, 2, 132, 134, 7, 49, 2, 2, 133, 127, 3, 2, 2, 2,
+	3, 2, 2, 2, 125, 13, 3, 2, 2, 2, 126, 124, 3, 2, 2, 2, 127, 128, 7, 13,
+	2, 2, 128, 129, 5, 12, 7, 2, 129, 130, 7, 14, 2, 2, 130, 134, 3, 2, 2,
+	2, 131, 134, 5, 50, 26, 2, 132, 134, 7, 50, 2, 2, 133, 127, 3, 2, 2, 2,
 	133, 131, 3, 2, 2, 2, 133, 132, 3, 2, 2, 2, 134, 15, 3, 2, 2, 2, 135, 155,
-	5, 4, 3, 2, 136, 137, 7, 41, 2, 2, 137, 138, 5, 70, 36, 2, 138, 141, 5,
-	16, 9, 2, 139, 140, 7, 42, 2, 2, 140, 142, 5, 16, 9, 2, 141, 139, 3, 2,
-	2, 2, 141, 142, 3, 2, 2, 2, 142, 155, 3, 2, 2, 2, 143, 144, 7, 40, 2, 2,
-	144, 145, 7, 16, 2, 2, 145, 146, 5, 18, 10, 2, 146, 147, 7, 17, 2, 2, 147,
-	148, 5, 16, 9, 2, 148, 155, 3, 2, 2, 2, 149, 151, 7, 43, 2, 2, 150, 152,
+	5, 4, 3, 2, 136, 137, 7, 42, 2, 2, 137, 138, 5, 70, 36, 2, 138, 141, 5,
+	16, 9, 2, 139, 140, 7, 43, 2, 2, 140, 142, 5, 16, 9, 2, 141, 139, 3, 2,
+	2, 2, 141, 142, 3, 2, 2, 2, 142, 155, 3, 2, 2, 2, 143, 144, 7, 41, 2, 2,
+	144, 145, 7, 13, 2, 2, 145, 146, 5, 18, 10, 2, 146, 147, 7, 14, 2, 2, 147,
+	148, 5, 16, 9, 2, 148, 155, 3, 2, 2, 2, 149, 151, 7, 44, 2, 2, 150, 152,
 	5, 12, 7, 2, 151, 150, 3, 2, 2, 2, 151, 152, 3, 2, 2, 2, 152, 155, 3, 2,
 	2, 2, 153, 155, 5, 12, 7, 2, 154, 135, 3, 2, 2, 2, 154, 136, 3, 2, 2, 2,
 	154, 143, 3, 2, 2, 2, 154, 149, 3, 2, 2, 2, 154, 153, 3, 2, 2, 2, 155,
 	17, 3, 2, 2, 2, 156, 158, 5, 20, 11, 2, 157, 156, 3, 2, 2, 2, 157, 158,
-	3, 2, 2, 2, 158, 159, 3, 2, 2, 2, 159, 161, 7, 6, 2, 2, 160, 162, 5, 12,
+	3, 2, 2, 2, 158, 159, 3, 2, 2, 2, 159, 161, 7, 3, 2, 2, 160, 162, 5, 12,
 	7, 2, 161, 160, 3, 2, 2, 2, 161, 162, 3, 2, 2, 2, 162, 163, 3, 2, 2, 2,
-	163, 165, 7, 6, 2, 2, 164, 166, 5, 68, 35, 2, 165, 164, 3, 2, 2, 2, 165,
+	163, 165, 7, 3, 2, 2, 164, 166, 5, 68, 35, 2, 165, 164, 3, 2, 2, 2, 165,
 	166, 3, 2, 2, 2, 166, 19, 3, 2, 2, 2, 167, 170, 5, 40, 21, 2, 168, 170,
 	5, 68, 35, 2, 169, 167, 3, 2, 2, 2, 169, 168, 3, 2, 2, 2, 170, 21, 3, 2,
 	2, 2, 171, 173, 5, 64, 33, 2, 172, 171, 3, 2, 2, 2, 172, 173, 3, 2, 2,
-	2, 173, 174, 3, 2, 2, 2, 174, 175, 7, 49, 2, 2, 175, 180, 5, 28, 15, 2,
-	176, 177, 7, 20, 2, 2, 177, 179, 7, 21, 2, 2, 178, 176, 3, 2, 2, 2, 179,
+	2, 173, 174, 3, 2, 2, 2, 174, 175, 7, 50, 2, 2, 175, 180, 5, 28, 15, 2,
+	176, 177, 7, 17, 2, 2, 177, 179, 7, 18, 2, 2, 178, 176, 3, 2, 2, 2, 179,
 	182, 3, 2, 2, 2, 180, 178, 3, 2, 2, 2, 180, 181, 3, 2, 2, 2, 181, 185,
-	3, 2, 2, 2, 182, 180, 3, 2, 2, 2, 183, 184, 7, 11, 2, 2, 184, 186, 5, 26,
+	3, 2, 2, 2, 182, 180, 3, 2, 2, 2, 183, 184, 7, 8, 2, 2, 184, 186, 5, 26,
 	14, 2, 185, 183, 3, 2, 2, 2, 185, 186, 3, 2, 2, 2, 186, 187, 3, 2, 2, 2,
 	187, 188, 5, 24, 13, 2, 188, 23, 3, 2, 2, 2, 189, 190, 5, 4, 3, 2, 190,
-	25, 3, 2, 2, 2, 191, 196, 5, 36, 19, 2, 192, 193, 7, 7, 2, 2, 193, 195,
+	25, 3, 2, 2, 2, 191, 196, 5, 36, 19, 2, 192, 193, 7, 4, 2, 2, 193, 195,
 	5, 36, 19, 2, 194, 192, 3, 2, 2, 2, 195, 198, 3, 2, 2, 2, 196, 194, 3,
 	2, 2, 2, 196, 197, 3, 2, 2, 2, 197, 27, 3, 2, 2, 2, 198, 196, 3, 2, 2,
-	2, 199, 201, 7, 16, 2, 2, 200, 202, 5, 30, 16, 2, 201, 200, 3, 2, 2, 2,
-	201, 202, 3, 2, 2, 2, 202, 203, 3, 2, 2, 2, 203, 204, 7, 17, 2, 2, 204,
-	29, 3, 2, 2, 2, 205, 210, 5, 32, 17, 2, 206, 207, 7, 7, 2, 2, 207, 209,
+	2, 199, 201, 7, 13, 2, 2, 200, 202, 5, 30, 16, 2, 201, 200, 3, 2, 2, 2,
+	201, 202, 3, 2, 2, 2, 202, 203, 3, 2, 2, 2, 203, 204, 7, 14, 2, 2, 204,
+	29, 3, 2, 2, 2, 205, 210, 5, 32, 17, 2, 206, 207, 7, 4, 2, 2, 207, 209,
 	5, 32, 17, 2, 208, 206, 3, 2, 2, 2, 209, 212, 3, 2, 2, 2, 210, 208, 3,
 	2, 2, 2, 210, 211, 3, 2, 2, 2, 211, 215, 3, 2, 2, 2, 212, 210, 3, 2, 2,
-	2, 213, 214, 7, 7, 2, 2, 214, 216, 5, 34, 18, 2, 215, 213, 3, 2, 2, 2,
+	2, 213, 214, 7, 4, 2, 2, 214, 216, 5, 34, 18, 2, 215, 213, 3, 2, 2, 2,
 	215, 216, 3, 2, 2, 2, 216, 219, 3, 2, 2, 2, 217, 219, 5, 34, 18, 2, 218,
 	205, 3, 2, 2, 2, 218, 217, 3, 2, 2, 2, 219, 31, 3, 2, 2, 2, 220, 222, 5,
 	38, 20, 2, 221, 220, 3, 2, 2, 2, 222, 225, 3, 2, 2, 2, 223, 221, 3, 2,
@@ -129,68 +129,69 @@ var parserATN = []uint16{
 	226, 227, 5, 56, 29, 2, 227, 228, 5, 44, 23, 2, 228, 33, 3, 2, 2, 2, 229,
 	231, 5, 38, 20, 2, 230, 229, 3, 2, 2, 2, 231, 234, 3, 2, 2, 2, 232, 230,
 	3, 2, 2, 2, 232, 233, 3, 2, 2, 2, 233, 235, 3, 2, 2, 2, 234, 232, 3, 2,
-	2, 2, 235, 236, 5, 56, 29, 2, 236, 237, 7, 8, 2, 2, 237, 238, 5, 44, 23,
-	2, 238, 35, 3, 2, 2, 2, 239, 244, 7, 49, 2, 2, 240, 241, 7, 9, 2, 2, 241,
-	243, 7, 49, 2, 2, 242, 240, 3, 2, 2, 2, 243, 246, 3, 2, 2, 2, 244, 242,
+	2, 2, 235, 236, 5, 56, 29, 2, 236, 237, 7, 5, 2, 2, 237, 238, 5, 44, 23,
+	2, 238, 35, 3, 2, 2, 2, 239, 244, 7, 50, 2, 2, 240, 241, 7, 6, 2, 2, 241,
+	243, 7, 50, 2, 2, 242, 240, 3, 2, 2, 2, 243, 246, 3, 2, 2, 2, 244, 242,
 	3, 2, 2, 2, 244, 245, 3, 2, 2, 2, 245, 37, 3, 2, 2, 2, 246, 244, 3, 2,
-	2, 2, 247, 248, 7, 10, 2, 2, 248, 39, 3, 2, 2, 2, 249, 250, 5, 56, 29,
-	2, 250, 255, 5, 42, 22, 2, 251, 252, 7, 7, 2, 2, 252, 254, 5, 42, 22, 2,
-	253, 251, 3, 2, 2, 2, 254, 257, 3, 2, 2, 2, 255, 253, 3, 2, 2, 2, 255,
-	256, 3, 2, 2, 2, 256, 41, 3, 2, 2, 2, 257, 255, 3, 2, 2, 2, 258, 261, 5,
-	44, 23, 2, 259, 260, 7, 22, 2, 2, 260, 262, 5, 46, 24, 2, 261, 259, 3,
-	2, 2, 2, 261, 262, 3, 2, 2, 2, 262, 43, 3, 2, 2, 2, 263, 268, 7, 49, 2,
-	2, 264, 265, 7, 20, 2, 2, 265, 267, 7, 21, 2, 2, 266, 264, 3, 2, 2, 2,
-	267, 270, 3, 2, 2, 2, 268, 266, 3, 2, 2, 2, 268, 269, 3, 2, 2, 2, 269,
-	45, 3, 2, 2, 2, 270, 268, 3, 2, 2, 2, 271, 274, 5, 48, 25, 2, 272, 274,
-	5, 12, 7, 2, 273, 271, 3, 2, 2, 2, 273, 272, 3, 2, 2, 2, 274, 47, 3, 2,
-	2, 2, 275, 287, 7, 18, 2, 2, 276, 281, 5, 46, 24, 2, 277, 278, 7, 7, 2,
-	2, 278, 280, 5, 46, 24, 2, 279, 277, 3, 2, 2, 2, 280, 283, 3, 2, 2, 2,
-	281, 279, 3, 2, 2, 2, 281, 282, 3, 2, 2, 2, 282, 285, 3, 2, 2, 2, 283,
-	281, 3, 2, 2, 2, 284, 286, 7, 7, 2, 2, 285, 284, 3, 2, 2, 2, 285, 286,
-	3, 2, 2, 2, 286, 288, 3, 2, 2, 2, 287, 276, 3, 2, 2, 2, 287, 288, 3, 2,
-	2, 2, 288, 289, 3, 2, 2, 2, 289, 290, 7, 19, 2, 2, 290, 49, 3, 2, 2, 2,
-	291, 297, 7, 47, 2, 2, 292, 297, 7, 48, 2, 2, 293, 297, 7, 45, 2, 2, 294,
-	297, 7, 44, 2, 2, 295, 297, 7, 46, 2, 2, 296, 291, 3, 2, 2, 2, 296, 292,
-	3, 2, 2, 2, 296, 293, 3, 2, 2, 2, 296, 294, 3, 2, 2, 2, 296, 295, 3, 2,
-	2, 2, 297, 51, 3, 2, 2, 2, 298, 299, 7, 47, 2, 2, 299, 53, 3, 2, 2, 2,
-	300, 301, 7, 48, 2, 2, 301, 55, 3, 2, 2, 2, 302, 306, 5, 66, 34, 2, 303,
-	306, 5, 60, 31, 2, 304, 306, 5, 58, 30, 2, 305, 302, 3, 2, 2, 2, 305, 303,
-	3, 2, 2, 2, 305, 304, 3, 2, 2, 2, 306, 311, 3, 2, 2, 2, 307, 308, 7, 20,
-	2, 2, 308, 310, 7, 21, 2, 2, 309, 307, 3, 2, 2, 2, 310, 313, 3, 2, 2, 2,
-	311, 309, 3, 2, 2, 2, 311, 312, 3, 2, 2, 2, 312, 57, 3, 2, 2, 2, 313, 311,
-	3, 2, 2, 2, 314, 315, 9, 9, 2, 2, 315, 59, 3, 2, 2, 2, 316, 317, 7, 38,
-	2, 2, 317, 318, 5, 64, 33, 2, 318, 320, 7, 16, 2, 2, 319, 321, 5, 62, 32,
-	2, 320, 319, 3, 2, 2, 2, 320, 321, 3, 2, 2, 2, 321, 322, 3, 2, 2, 2, 322,
-	323, 7, 17, 2, 2, 323, 61, 3, 2, 2, 2, 324, 329, 5, 56, 29, 2, 325, 326,
-	7, 7, 2, 2, 326, 328, 5, 56, 29, 2, 327, 325, 3, 2, 2, 2, 328, 331, 3,
-	2, 2, 2, 329, 327, 3, 2, 2, 2, 329, 330, 3, 2, 2, 2, 330, 63, 3, 2, 2,
-	2, 331, 329, 3, 2, 2, 2, 332, 335, 5, 56, 29, 2, 333, 335, 7, 39, 2, 2,
-	334, 332, 3, 2, 2, 2, 334, 333, 3, 2, 2, 2, 335, 65, 3, 2, 2, 2, 336, 341,
-	7, 49, 2, 2, 337, 338, 7, 9, 2, 2, 338, 340, 7, 49, 2, 2, 339, 337, 3,
-	2, 2, 2, 340, 343, 3, 2, 2, 2, 341, 339, 3, 2, 2, 2, 341, 342, 3, 2, 2,
-	2, 342, 67, 3, 2, 2, 2, 343, 341, 3, 2, 2, 2, 344, 349, 5, 12, 7, 2, 345,
-	346, 7, 7, 2, 2, 346, 348, 5, 12, 7, 2, 347, 345, 3, 2, 2, 2, 348, 351,
+	2, 2, 247, 248, 7, 7, 2, 2, 248, 39, 3, 2, 2, 2, 249, 250, 5, 56, 29, 2,
+	250, 255, 5, 42, 22, 2, 251, 252, 7, 4, 2, 2, 252, 254, 5, 42, 22, 2, 253,
+	251, 3, 2, 2, 2, 254, 257, 3, 2, 2, 2, 255, 253, 3, 2, 2, 2, 255, 256,
+	3, 2, 2, 2, 256, 41, 3, 2, 2, 2, 257, 255, 3, 2, 2, 2, 258, 261, 5, 44,
+	23, 2, 259, 260, 7, 19, 2, 2, 260, 262, 5, 46, 24, 2, 261, 259, 3, 2, 2,
+	2, 261, 262, 3, 2, 2, 2, 262, 43, 3, 2, 2, 2, 263, 268, 7, 50, 2, 2, 264,
+	265, 7, 17, 2, 2, 265, 267, 7, 18, 2, 2, 266, 264, 3, 2, 2, 2, 267, 270,
+	3, 2, 2, 2, 268, 266, 3, 2, 2, 2, 268, 269, 3, 2, 2, 2, 269, 45, 3, 2,
+	2, 2, 270, 268, 3, 2, 2, 2, 271, 274, 5, 48, 25, 2, 272, 274, 5, 12, 7,
+	2, 273, 271, 3, 2, 2, 2, 273, 272, 3, 2, 2, 2, 274, 47, 3, 2, 2, 2, 275,
+	287, 7, 15, 2, 2, 276, 281, 5, 46, 24, 2, 277, 278, 7, 4, 2, 2, 278, 280,
+	5, 46, 24, 2, 279, 277, 3, 2, 2, 2, 280, 283, 3, 2, 2, 2, 281, 279, 3,
+	2, 2, 2, 281, 282, 3, 2, 2, 2, 282, 285, 3, 2, 2, 2, 283, 281, 3, 2, 2,
+	2, 284, 286, 7, 4, 2, 2, 285, 284, 3, 2, 2, 2, 285, 286, 3, 2, 2, 2, 286,
+	288, 3, 2, 2, 2, 287, 276, 3, 2, 2, 2, 287, 288, 3, 2, 2, 2, 288, 289,
+	3, 2, 2, 2, 289, 290, 7, 16, 2, 2, 290, 49, 3, 2, 2, 2, 291, 297, 7, 48,
+	2, 2, 292, 297, 7, 49, 2, 2, 293, 297, 7, 46, 2, 2, 294, 297, 7, 45, 2,
+	2, 295, 297, 7, 47, 2, 2, 296, 291, 3, 2, 2, 2, 296, 292, 3, 2, 2, 2, 296,
+	293, 3, 2, 2, 2, 296, 294, 3, 2, 2, 2, 296, 295, 3, 2, 2, 2, 297, 51, 3,
+	2, 2, 2, 298, 299, 7, 48, 2, 2, 299, 53, 3, 2, 2, 2, 300, 301, 7, 49, 2,
+	2, 301, 55, 3, 2, 2, 2, 302, 306, 5, 66, 34, 2, 303, 306, 5, 60, 31, 2,
+	304, 306, 5, 58, 30, 2, 305, 302, 3, 2, 2, 2, 305, 303, 3, 2, 2, 2, 305,
+	304, 3, 2, 2, 2, 306, 311, 3, 2, 2, 2, 307, 308, 7, 17, 2, 2, 308, 310,
+	7, 18, 2, 2, 309, 307, 3, 2, 2, 2, 310, 313, 3, 2, 2, 2, 311, 309, 3, 2,
+	2, 2, 311, 312, 3, 2, 2, 2, 312, 57, 3, 2, 2, 2, 313, 311, 3, 2, 2, 2,
+	314, 315, 9, 9, 2, 2, 315, 59, 3, 2, 2, 2, 316, 317, 7, 39, 2, 2, 317,
+	318, 5, 64, 33, 2, 318, 320, 7, 13, 2, 2, 319, 321, 5, 62, 32, 2, 320,
+	319, 3, 2, 2, 2, 320, 321, 3, 2, 2, 2, 321, 322, 3, 2, 2, 2, 322, 323,
+	7, 14, 2, 2, 323, 61, 3, 2, 2, 2, 324, 329, 5, 56, 29, 2, 325, 326, 7,
+	4, 2, 2, 326, 328, 5, 56, 29, 2, 327, 325, 3, 2, 2, 2, 328, 331, 3, 2,
+	2, 2, 329, 327, 3, 2, 2, 2, 329, 330, 3, 2, 2, 2, 330, 63, 3, 2, 2, 2,
+	331, 329, 3, 2, 2, 2, 332, 335, 5, 56, 29, 2, 333, 335, 7, 40, 2, 2, 334,
+	332, 3, 2, 2, 2, 334, 333, 3, 2, 2, 2, 335, 65, 3, 2, 2, 2, 336, 341, 7,
+	50, 2, 2, 337, 338, 7, 6, 2, 2, 338, 340, 7, 50, 2, 2, 339, 337, 3, 2,
+	2, 2, 340, 343, 3, 2, 2, 2, 341, 339, 3, 2, 2, 2, 341, 342, 3, 2, 2, 2,
+	342, 67, 3, 2, 2, 2, 343, 341, 3, 2, 2, 2, 344, 349, 5, 12, 7, 2, 345,
+	346, 7, 4, 2, 2, 346, 348, 5, 12, 7, 2, 347, 345, 3, 2, 2, 2, 348, 351,
 	3, 2, 2, 2, 349, 347, 3, 2, 2, 2, 349, 350, 3, 2, 2, 2, 350, 69, 3, 2,
-	2, 2, 351, 349, 3, 2, 2, 2, 352, 353, 7, 16, 2, 2, 353, 354, 5, 12, 7,
-	2, 354, 355, 7, 17, 2, 2, 355, 71, 3, 2, 2, 2, 42, 81, 87, 92, 100, 122,
+	2, 2, 351, 349, 3, 2, 2, 2, 352, 353, 7, 13, 2, 2, 353, 354, 5, 12, 7,
+	2, 354, 355, 7, 14, 2, 2, 355, 71, 3, 2, 2, 2, 42, 81, 87, 92, 100, 122,
 	124, 133, 141, 151, 154, 157, 161, 165, 169, 172, 180, 185, 196, 201, 210,
 	215, 218, 223, 232, 244, 255, 261, 268, 273, 281, 285, 287, 296, 305, 311,
 	320, 329, 334, 341, 349,
 }
 var literalNames = []string{
-	"", "'+='", "'-='", "'*='", "';'", "','", "'...'", "'.'", "'final'", "'throws'",
-	"'int'", "'string'", "'float'", "'bool'", "'('", "')'", "'{'", "'}'", "'['",
-	"']'", "'='", "'>'", "'<'", "'!'", "'~'", "'++'", "'--'", "'*'", "'/'",
-	"'+'", "'-'", "'%'", "'=='", "'<='", "'>='", "'!='", "'func'", "'void'",
-	"'for'", "'if'", "'else'", "'return'", "", "", "'null'",
+	"", "';'", "','", "'...'", "'.'", "'final'", "'throws'", "'int'", "'string'",
+	"'float'", "'bool'", "'('", "')'", "'{'", "'}'", "'['", "']'", "'='", "'>'",
+	"'<'", "'!'", "'~'", "'++'", "'--'", "'*'", "'/'", "'+'", "'-'", "'%'",
+	"'+='", "'-='", "'*='", "'/='", "'=='", "'<='", "'>='", "'!='", "'func'",
+	"'void'", "'for'", "'if'", "'else'", "'return'", "", "", "'null'",
 }
 var symbolicNames = []string{
-	"", "", "", "", "", "", "", "", "FINAL", "THROWS", "INT", "STRING", "FLOAT",
-	"BOOLEAN", "LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK",
-	"ASSIGN", "GT", "LT", "BANG", "TILDE", "INC", "DEC", "MULT", "DIV", "PLUS",
-	"SUB", "MOD", "EQUAL", "LE", "GE", "NOTEQUAL", "FUNCTION", "VOID", "FOR",
-	"IF", "ELSE", "RETURN", "BOOL_LITERAL", "STRING_LITERAL", "NULL_LITERAL",
-	"DECIMAL_LITERAL", "FLOAT_LITERAL", "IDENTIFIER", "SPACES",
+	"", "", "", "", "", "FINAL", "THROWS", "INT", "STRING", "FLOAT", "BOOLEAN",
+	"LPAREN", "RPAREN", "LBRACE", "RBRACE", "LBRACK", "RBRACK", "ASSIGN", "GT",
+	"LT", "BANG", "TILDE", "INC", "DEC", "MULT", "DIV", "PLUS", "SUB", "MOD",
+	"ADD_ASSIGN", "SUB_ASSIGN", "MUL_ASSIGN", "DIV_ASSIGN", "EQUAL", "LE",
+	"GE", "NOTEQUAL", "FUNCTION", "VOID", "FOR", "IF", "ELSE", "RETURN", "BOOL_LITERAL",
+	"STRING_LITERAL", "NULL_LITERAL", "DECIMAL_LITERAL", "FLOAT_LITERAL", "IDENTIFIER",
+	"SPACES",
 }
 
 var ruleNames = []string{
@@ -240,50 +241,51 @@ const (
 	GScriptParserT__1            = 2
 	GScriptParserT__2            = 3
 	GScriptParserT__3            = 4
-	GScriptParserT__4            = 5
-	GScriptParserT__5            = 6
-	GScriptParserT__6            = 7
-	GScriptParserFINAL           = 8
-	GScriptParserTHROWS          = 9
-	GScriptParserINT             = 10
-	GScriptParserSTRING          = 11
-	GScriptParserFLOAT           = 12
-	GScriptParserBOOLEAN         = 13
-	GScriptParserLPAREN          = 14
-	GScriptParserRPAREN          = 15
-	GScriptParserLBRACE          = 16
-	GScriptParserRBRACE          = 17
-	GScriptParserLBRACK          = 18
-	GScriptParserRBRACK          = 19
-	GScriptParserASSIGN          = 20
-	GScriptParserGT              = 21
-	GScriptParserLT              = 22
-	GScriptParserBANG            = 23
-	GScriptParserTILDE           = 24
-	GScriptParserINC             = 25
-	GScriptParserDEC             = 26
-	GScriptParserMULT            = 27
-	GScriptParserDIV             = 28
-	GScriptParserPLUS            = 29
-	GScriptParserSUB             = 30
-	GScriptParserMOD             = 31
-	GScriptParserEQUAL           = 32
-	GScriptParserLE              = 33
-	GScriptParserGE              = 34
-	GScriptParserNOTEQUAL        = 35
-	GScriptParserFUNCTION        = 36
-	GScriptParserVOID            = 37
-	GScriptParserFOR             = 38
-	GScriptParserIF              = 39
-	GScriptParserELSE            = 40
-	GScriptParserRETURN          = 41
-	GScriptParserBOOL_LITERAL    = 42
-	GScriptParserSTRING_LITERAL  = 43
-	GScriptParserNULL_LITERAL    = 44
-	GScriptParserDECIMAL_LITERAL = 45
-	GScriptParserFLOAT_LITERAL   = 46
-	GScriptParserIDENTIFIER      = 47
-	GScriptParserSPACES          = 48
+	GScriptParserFINAL           = 5
+	GScriptParserTHROWS          = 6
+	GScriptParserINT             = 7
+	GScriptParserSTRING          = 8
+	GScriptParserFLOAT           = 9
+	GScriptParserBOOLEAN         = 10
+	GScriptParserLPAREN          = 11
+	GScriptParserRPAREN          = 12
+	GScriptParserLBRACE          = 13
+	GScriptParserRBRACE          = 14
+	GScriptParserLBRACK          = 15
+	GScriptParserRBRACK          = 16
+	GScriptParserASSIGN          = 17
+	GScriptParserGT              = 18
+	GScriptParserLT              = 19
+	GScriptParserBANG            = 20
+	GScriptParserTILDE           = 21
+	GScriptParserINC             = 22
+	GScriptParserDEC             = 23
+	GScriptParserMULT            = 24
+	GScriptParserDIV             = 25
+	GScriptParserPLUS            = 26
+	GScriptParserSUB             = 27
+	GScriptParserMOD             = 28
+	GScriptParserADD_ASSIGN      = 29
+	GScriptParserSUB_ASSIGN      = 30
+	GScriptParserMUL_ASSIGN      = 31
+	GScriptParserDIV_ASSIGN      = 32
+	GScriptParserEQUAL           = 33
+	GScriptParserLE              = 34
+	GScriptParserGE              = 35
+	GScriptParserNOTEQUAL        = 36
+	GScriptParserFUNCTION        = 37
+	GScriptParserVOID            = 38
+	GScriptParserFOR             = 39
+	GScriptParserIF              = 40
+	GScriptParserELSE            = 41
+	GScriptParserRETURN          = 42
+	GScriptParserBOOL_LITERAL    = 43
+	GScriptParserSTRING_LITERAL  = 44
+	GScriptParserNULL_LITERAL    = 45
+	GScriptParserDECIMAL_LITERAL = 46
+	GScriptParserFLOAT_LITERAL   = 47
+	GScriptParserIDENTIFIER      = 48
+	GScriptParserSPACES          = 49
 )
 
 // GScriptParser rules.
@@ -695,7 +697,7 @@ func (p *GScriptParser) BlockStatements() (localctx IBlockStatementsContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<GScriptParserINT)|(1<<GScriptParserSTRING)|(1<<GScriptParserFLOAT)|(1<<GScriptParserBOOLEAN)|(1<<GScriptParserLPAREN)|(1<<GScriptParserLBRACE)|(1<<GScriptParserBANG)|(1<<GScriptParserTILDE))) != 0) || (((_la-36)&-(0x1f+1)) == 0 && ((1<<uint((_la-36)))&((1<<(GScriptParserFUNCTION-36))|(1<<(GScriptParserVOID-36))|(1<<(GScriptParserFOR-36))|(1<<(GScriptParserIF-36))|(1<<(GScriptParserRETURN-36))|(1<<(GScriptParserBOOL_LITERAL-36))|(1<<(GScriptParserSTRING_LITERAL-36))|(1<<(GScriptParserNULL_LITERAL-36))|(1<<(GScriptParserDECIMAL_LITERAL-36))|(1<<(GScriptParserFLOAT_LITERAL-36))|(1<<(GScriptParserIDENTIFIER-36)))) != 0) {
+	for (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<GScriptParserINT)|(1<<GScriptParserSTRING)|(1<<GScriptParserFLOAT)|(1<<GScriptParserBOOLEAN)|(1<<GScriptParserLPAREN)|(1<<GScriptParserLBRACE)|(1<<GScriptParserBANG)|(1<<GScriptParserTILDE))) != 0) || (((_la-37)&-(0x1f+1)) == 0 && ((1<<uint((_la-37)))&((1<<(GScriptParserFUNCTION-37))|(1<<(GScriptParserVOID-37))|(1<<(GScriptParserFOR-37))|(1<<(GScriptParserIF-37))|(1<<(GScriptParserRETURN-37))|(1<<(GScriptParserBOOL_LITERAL-37))|(1<<(GScriptParserSTRING_LITERAL-37))|(1<<(GScriptParserNULL_LITERAL-37))|(1<<(GScriptParserDECIMAL_LITERAL-37))|(1<<(GScriptParserFLOAT_LITERAL-37))|(1<<(GScriptParserIDENTIFIER-37)))) != 0) {
 		{
 			p.SetState(76)
 			p.BlockStatement()
@@ -1104,7 +1106,7 @@ func (p *GScriptParser) Parse() (localctx IParseContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for ok := true; ok; ok = (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<GScriptParserLPAREN)|(1<<GScriptParserBANG)|(1<<GScriptParserTILDE))) != 0) || (((_la-42)&-(0x1f+1)) == 0 && ((1<<uint((_la-42)))&((1<<(GScriptParserBOOL_LITERAL-42))|(1<<(GScriptParserSTRING_LITERAL-42))|(1<<(GScriptParserNULL_LITERAL-42))|(1<<(GScriptParserDECIMAL_LITERAL-42))|(1<<(GScriptParserFLOAT_LITERAL-42))|(1<<(GScriptParserIDENTIFIER-42)))) != 0) {
+	for ok := true; ok; ok = (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<GScriptParserLPAREN)|(1<<GScriptParserBANG)|(1<<GScriptParserTILDE))) != 0) || (((_la-43)&-(0x1f+1)) == 0 && ((1<<uint((_la-43)))&((1<<(GScriptParserBOOL_LITERAL-43))|(1<<(GScriptParserSTRING_LITERAL-43))|(1<<(GScriptParserNULL_LITERAL-43))|(1<<(GScriptParserDECIMAL_LITERAL-43))|(1<<(GScriptParserFLOAT_LITERAL-43))|(1<<(GScriptParserIDENTIFIER-43)))) != 0) {
 		{
 			p.SetState(87)
 
@@ -1778,7 +1780,9 @@ func (s *GLeExprContext) Accept(visitor antlr.ParseTreeVisitor) interface{} {
 
 type AssignExprContext struct {
 	*ExprContext
+	lhs IExprContext
 	bop antlr.Token
+	rhs IExprContext
 }
 
 func NewAssignExprContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *AssignExprContext {
@@ -1794,6 +1798,14 @@ func NewAssignExprContext(parser antlr.Parser, ctx antlr.ParserRuleContext) *Ass
 func (s *AssignExprContext) GetBop() antlr.Token { return s.bop }
 
 func (s *AssignExprContext) SetBop(v antlr.Token) { s.bop = v }
+
+func (s *AssignExprContext) GetLhs() IExprContext { return s.lhs }
+
+func (s *AssignExprContext) GetRhs() IExprContext { return s.rhs }
+
+func (s *AssignExprContext) SetLhs(v IExprContext) { s.lhs = v }
+
+func (s *AssignExprContext) SetRhs(v IExprContext) { s.rhs = v }
 
 func (s *AssignExprContext) GetRuleContext() antlr.RuleContext {
 	return s
@@ -1824,6 +1836,18 @@ func (s *AssignExprContext) Expr(i int) IExprContext {
 
 func (s *AssignExprContext) ASSIGN() antlr.TerminalNode {
 	return s.GetToken(GScriptParserASSIGN, 0)
+}
+
+func (s *AssignExprContext) ADD_ASSIGN() antlr.TerminalNode {
+	return s.GetToken(GScriptParserADD_ASSIGN, 0)
+}
+
+func (s *AssignExprContext) SUB_ASSIGN() antlr.TerminalNode {
+	return s.GetToken(GScriptParserSUB_ASSIGN, 0)
+}
+
+func (s *AssignExprContext) MUL_ASSIGN() antlr.TerminalNode {
+	return s.GetToken(GScriptParserMUL_ASSIGN, 0)
 }
 
 func (s *AssignExprContext) EnterRule(listener antlr.ParseTreeListener) {
@@ -2056,7 +2080,7 @@ func (p *GScriptParser) expr(_p int) (localctx IExprContext) {
 
 					_la = p.GetTokenStream().LA(1)
 
-					if !(((_la-21)&-(0x1f+1)) == 0 && ((1<<uint((_la-21)))&((1<<(GScriptParserGT-21))|(1<<(GScriptParserLT-21))|(1<<(GScriptParserLE-21))|(1<<(GScriptParserGE-21)))) != 0) {
+					if !(((_la-18)&-(0x1f+1)) == 0 && ((1<<uint((_la-18)))&((1<<(GScriptParserGT-18))|(1<<(GScriptParserLT-18))|(1<<(GScriptParserLE-18))|(1<<(GScriptParserGE-18)))) != 0) {
 						var _ri = p.GetErrorHandler().RecoverInline(p)
 
 						localctx.(*GLeExprContext).bop = _ri
@@ -2103,6 +2127,8 @@ func (p *GScriptParser) expr(_p int) (localctx IExprContext) {
 
 			case 6:
 				localctx = NewAssignExprContext(p, NewExprContext(p, _parentctx, _parentState))
+				localctx.(*AssignExprContext).lhs = _prevctx
+
 				p.PushNewRecursionContext(localctx, _startState, GScriptParserRULE_expr)
 				p.SetState(115)
 
@@ -2118,7 +2144,7 @@ func (p *GScriptParser) expr(_p int) (localctx IExprContext) {
 
 					_la = p.GetTokenStream().LA(1)
 
-					if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<GScriptParserT__0)|(1<<GScriptParserT__1)|(1<<GScriptParserT__2)|(1<<GScriptParserASSIGN))) != 0) {
+					if !(((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<GScriptParserASSIGN)|(1<<GScriptParserADD_ASSIGN)|(1<<GScriptParserSUB_ASSIGN)|(1<<GScriptParserMUL_ASSIGN))) != 0) {
 						var _ri = p.GetErrorHandler().RecoverInline(p)
 
 						localctx.(*AssignExprContext).bop = _ri
@@ -2129,7 +2155,10 @@ func (p *GScriptParser) expr(_p int) (localctx IExprContext) {
 				}
 				{
 					p.SetState(117)
-					p.expr(1)
+
+					var _x = p.expr(1)
+
+					localctx.(*AssignExprContext).rhs = _x
 				}
 
 			case 7:
@@ -3064,7 +3093,7 @@ func (p *GScriptParser) ForControl() (localctx IForControlContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<GScriptParserINT)|(1<<GScriptParserSTRING)|(1<<GScriptParserFLOAT)|(1<<GScriptParserBOOLEAN)|(1<<GScriptParserLPAREN)|(1<<GScriptParserBANG)|(1<<GScriptParserTILDE))) != 0) || (((_la-36)&-(0x1f+1)) == 0 && ((1<<uint((_la-36)))&((1<<(GScriptParserFUNCTION-36))|(1<<(GScriptParserBOOL_LITERAL-36))|(1<<(GScriptParserSTRING_LITERAL-36))|(1<<(GScriptParserNULL_LITERAL-36))|(1<<(GScriptParserDECIMAL_LITERAL-36))|(1<<(GScriptParserFLOAT_LITERAL-36))|(1<<(GScriptParserIDENTIFIER-36)))) != 0) {
+	if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<GScriptParserINT)|(1<<GScriptParserSTRING)|(1<<GScriptParserFLOAT)|(1<<GScriptParserBOOLEAN)|(1<<GScriptParserLPAREN)|(1<<GScriptParserBANG)|(1<<GScriptParserTILDE))) != 0) || (((_la-37)&-(0x1f+1)) == 0 && ((1<<uint((_la-37)))&((1<<(GScriptParserFUNCTION-37))|(1<<(GScriptParserBOOL_LITERAL-37))|(1<<(GScriptParserSTRING_LITERAL-37))|(1<<(GScriptParserNULL_LITERAL-37))|(1<<(GScriptParserDECIMAL_LITERAL-37))|(1<<(GScriptParserFLOAT_LITERAL-37))|(1<<(GScriptParserIDENTIFIER-37)))) != 0) {
 		{
 			p.SetState(154)
 			p.ForInit()
@@ -3073,13 +3102,13 @@ func (p *GScriptParser) ForControl() (localctx IForControlContext) {
 	}
 	{
 		p.SetState(157)
-		p.Match(GScriptParserT__3)
+		p.Match(GScriptParserT__0)
 	}
 	p.SetState(159)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<GScriptParserLPAREN)|(1<<GScriptParserBANG)|(1<<GScriptParserTILDE))) != 0) || (((_la-42)&-(0x1f+1)) == 0 && ((1<<uint((_la-42)))&((1<<(GScriptParserBOOL_LITERAL-42))|(1<<(GScriptParserSTRING_LITERAL-42))|(1<<(GScriptParserNULL_LITERAL-42))|(1<<(GScriptParserDECIMAL_LITERAL-42))|(1<<(GScriptParserFLOAT_LITERAL-42))|(1<<(GScriptParserIDENTIFIER-42)))) != 0) {
+	if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<GScriptParserLPAREN)|(1<<GScriptParserBANG)|(1<<GScriptParserTILDE))) != 0) || (((_la-43)&-(0x1f+1)) == 0 && ((1<<uint((_la-43)))&((1<<(GScriptParserBOOL_LITERAL-43))|(1<<(GScriptParserSTRING_LITERAL-43))|(1<<(GScriptParserNULL_LITERAL-43))|(1<<(GScriptParserDECIMAL_LITERAL-43))|(1<<(GScriptParserFLOAT_LITERAL-43))|(1<<(GScriptParserIDENTIFIER-43)))) != 0) {
 		{
 			p.SetState(158)
 			p.expr(0)
@@ -3088,13 +3117,13 @@ func (p *GScriptParser) ForControl() (localctx IForControlContext) {
 	}
 	{
 		p.SetState(161)
-		p.Match(GScriptParserT__3)
+		p.Match(GScriptParserT__0)
 	}
 	p.SetState(163)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<GScriptParserLPAREN)|(1<<GScriptParserBANG)|(1<<GScriptParserTILDE))) != 0) || (((_la-42)&-(0x1f+1)) == 0 && ((1<<uint((_la-42)))&((1<<(GScriptParserBOOL_LITERAL-42))|(1<<(GScriptParserSTRING_LITERAL-42))|(1<<(GScriptParserNULL_LITERAL-42))|(1<<(GScriptParserDECIMAL_LITERAL-42))|(1<<(GScriptParserFLOAT_LITERAL-42))|(1<<(GScriptParserIDENTIFIER-42)))) != 0) {
+	if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<GScriptParserLPAREN)|(1<<GScriptParserBANG)|(1<<GScriptParserTILDE))) != 0) || (((_la-43)&-(0x1f+1)) == 0 && ((1<<uint((_la-43)))&((1<<(GScriptParserBOOL_LITERAL-43))|(1<<(GScriptParserSTRING_LITERAL-43))|(1<<(GScriptParserNULL_LITERAL-43))|(1<<(GScriptParserDECIMAL_LITERAL-43))|(1<<(GScriptParserFLOAT_LITERAL-43))|(1<<(GScriptParserIDENTIFIER-43)))) != 0) {
 		{
 			p.SetState(162)
 
@@ -3679,10 +3708,10 @@ func (p *GScriptParser) QualifiedNameList() (localctx IQualifiedNameListContext)
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == GScriptParserT__4 {
+	for _la == GScriptParserT__1 {
 		{
 			p.SetState(190)
-			p.Match(GScriptParserT__4)
+			p.Match(GScriptParserT__1)
 		}
 		{
 			p.SetState(191)
@@ -3969,7 +3998,7 @@ func (p *GScriptParser) FormalParameterList() (localctx IFormalParameterListCont
 			if _alt == 1 {
 				{
 					p.SetState(204)
-					p.Match(GScriptParserT__4)
+					p.Match(GScriptParserT__1)
 				}
 				{
 					p.SetState(205)
@@ -3985,10 +4014,10 @@ func (p *GScriptParser) FormalParameterList() (localctx IFormalParameterListCont
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
-		if _la == GScriptParserT__4 {
+		if _la == GScriptParserT__1 {
 			{
 				p.SetState(211)
-				p.Match(GScriptParserT__4)
+				p.Match(GScriptParserT__1)
 			}
 			{
 				p.SetState(212)
@@ -4321,7 +4350,7 @@ func (p *GScriptParser) LastFormalParameter() (localctx ILastFormalParameterCont
 	}
 	{
 		p.SetState(234)
-		p.Match(GScriptParserT__5)
+		p.Match(GScriptParserT__2)
 	}
 	{
 		p.SetState(235)
@@ -4437,10 +4466,10 @@ func (p *GScriptParser) QualifiedName() (localctx IQualifiedNameContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == GScriptParserT__6 {
+	for _la == GScriptParserT__3 {
 		{
 			p.SetState(238)
-			p.Match(GScriptParserT__6)
+			p.Match(GScriptParserT__3)
 		}
 		{
 			p.SetState(239)
@@ -4691,10 +4720,10 @@ func (p *GScriptParser) VariableDeclarators() (localctx IVariableDeclaratorsCont
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == GScriptParserT__4 {
+	for _la == GScriptParserT__1 {
 		{
 			p.SetState(249)
-			p.Match(GScriptParserT__4)
+			p.Match(GScriptParserT__1)
 		}
 		{
 			p.SetState(250)
@@ -5246,7 +5275,7 @@ func (p *GScriptParser) ArrayInitializer() (localctx IArrayInitializerContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<GScriptParserLPAREN)|(1<<GScriptParserLBRACE)|(1<<GScriptParserBANG)|(1<<GScriptParserTILDE))) != 0) || (((_la-42)&-(0x1f+1)) == 0 && ((1<<uint((_la-42)))&((1<<(GScriptParserBOOL_LITERAL-42))|(1<<(GScriptParserSTRING_LITERAL-42))|(1<<(GScriptParserNULL_LITERAL-42))|(1<<(GScriptParserDECIMAL_LITERAL-42))|(1<<(GScriptParserFLOAT_LITERAL-42))|(1<<(GScriptParserIDENTIFIER-42)))) != 0) {
+	if (((_la)&-(0x1f+1)) == 0 && ((1<<uint(_la))&((1<<GScriptParserLPAREN)|(1<<GScriptParserLBRACE)|(1<<GScriptParserBANG)|(1<<GScriptParserTILDE))) != 0) || (((_la-43)&-(0x1f+1)) == 0 && ((1<<uint((_la-43)))&((1<<(GScriptParserBOOL_LITERAL-43))|(1<<(GScriptParserSTRING_LITERAL-43))|(1<<(GScriptParserNULL_LITERAL-43))|(1<<(GScriptParserDECIMAL_LITERAL-43))|(1<<(GScriptParserFLOAT_LITERAL-43))|(1<<(GScriptParserIDENTIFIER-43)))) != 0) {
 		{
 			p.SetState(274)
 			p.VariableInitializer()
@@ -5259,7 +5288,7 @@ func (p *GScriptParser) ArrayInitializer() (localctx IArrayInitializerContext) {
 			if _alt == 1 {
 				{
 					p.SetState(275)
-					p.Match(GScriptParserT__4)
+					p.Match(GScriptParserT__1)
 				}
 				{
 					p.SetState(276)
@@ -5275,10 +5304,10 @@ func (p *GScriptParser) ArrayInitializer() (localctx IArrayInitializerContext) {
 		p.GetErrorHandler().Sync(p)
 		_la = p.GetTokenStream().LA(1)
 
-		if _la == GScriptParserT__4 {
+		if _la == GScriptParserT__1 {
 			{
 				p.SetState(282)
-				p.Match(GScriptParserT__4)
+				p.Match(GScriptParserT__1)
 			}
 
 		}
@@ -6413,10 +6442,10 @@ func (p *GScriptParser) TypeList() (localctx ITypeListContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == GScriptParserT__4 {
+	for _la == GScriptParserT__1 {
 		{
 			p.SetState(323)
-			p.Match(GScriptParserT__4)
+			p.Match(GScriptParserT__1)
 		}
 		{
 			p.SetState(324)
@@ -6664,10 +6693,10 @@ func (p *GScriptParser) ClassOrInterfaceType() (localctx IClassOrInterfaceTypeCo
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == GScriptParserT__6 {
+	for _la == GScriptParserT__3 {
 		{
 			p.SetState(335)
-			p.Match(GScriptParserT__6)
+			p.Match(GScriptParserT__3)
 		}
 		{
 			p.SetState(336)
@@ -6803,10 +6832,10 @@ func (p *GScriptParser) ExpressionList() (localctx IExpressionListContext) {
 	p.GetErrorHandler().Sync(p)
 	_la = p.GetTokenStream().LA(1)
 
-	for _la == GScriptParserT__4 {
+	for _la == GScriptParserT__1 {
 		{
 			p.SetState(343)
-			p.Match(GScriptParserT__4)
+			p.Match(GScriptParserT__1)
 		}
 		{
 			p.SetState(344)

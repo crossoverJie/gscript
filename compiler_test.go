@@ -38,6 +38,32 @@ return age
 	fmt.Println(compiler)
 	assert.Equal(t, compiler.(*LeftValue).GetValue().(int), 100)
 }
+func TestCompiler_CompilerFor3(t *testing.T) {
+	script := `
+int age = 0 
+for(int i = 0;i<100;i++) {
+	for(int i = 0;i<100;i++) {
+		age++
+	}
+} 
+return age
+`
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
+	assert.Equal(t, compiler.(*LeftValue).GetValue().(int), 100*100)
+}
+func TestCompiler_CompilerFor2(t *testing.T) {
+	script := `
+int age = 1 
+for(int i = 0;i<100;i++) {
+	age=age+1
+} 
+return age
+`
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
+	assert.Equal(t, compiler.(*LeftValue).GetValue().(int), 101)
+}
 func TestCompiler_CompilerIf(t *testing.T) {
 	script := `
 int age=10
