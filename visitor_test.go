@@ -228,11 +228,6 @@ if ( (10 +10 ) == 20 ) {
 	assert.Equal(t, result, true)
 }
 func TestArithmeticOperators7(t *testing.T) {
-	defer func() {
-		if r := recover(); r != nil {
-			t.Log(r)
-		}
-	}()
 	expression := `
 if ( (10 +10 ) == 20 ) {
 	return !10 
@@ -242,7 +237,6 @@ if ( (10 +10 ) == 20 ) {
 `
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(result)
-	assert.Equal(t, result, false)
 }
 
 func TestDeclare(t *testing.T) {

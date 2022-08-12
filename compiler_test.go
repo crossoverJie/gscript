@@ -93,3 +93,14 @@ return abc
 	compiler := NewCompiler().Compiler(script)
 	fmt.Println(compiler)
 }
+func TestCompiler_FunctionCall(t *testing.T) {
+	script := `
+int b= 10
+int myfunc(int a) {
+	return a+b+3
+}
+myfunc(2)
+`
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
+}

@@ -39,7 +39,10 @@ func (s *symbol) SetEncloseScope(scope Scope) {
 
 type Type interface {
 	GetName() string
-	GetEncloseScope() *Scope
+	GetEncloseScope() Scope
+
+	// IsType 判断类型是否相同，或者是不是 is-a ，是否为子类
+	IsType(t Type) bool
 }
 
 type Scope interface {
@@ -49,12 +52,13 @@ type Scope interface {
 	GetSymbols() []Symbol
 	SetCtx(ctx antlr.ParserRuleContext)
 	GetVariable(name string) *Variable
+	GetFunction(name string, paramTypes []Type) *Func
 	String() string
 }
 
 type scope struct {
-	symbols []Symbol
 	*symbol
+	symbols []Symbol
 }
 
 func (s *scope) AddSymbol(symbol Symbol) {
@@ -75,8 +79,15 @@ func (s *scope) GetSymbols() []Symbol {
 func (s *scope) SetCtx(ctx antlr.ParserRuleContext) {
 	s.ctx = ctx
 }
+func (s *scope) GetCtx() antlr.ParserRuleContext {
+	return s.ctx
+}
 func (s *scope) GetVariable(name string) *Variable {
 	return GetVariable(s, name)
+}
+
+func (s *scope) GetFunction(name string, paramTypes []Type) *Func {
+	return GetFunction(s, name, paramTypes)
 }
 
 // GetVariable 从 scope 中通过变量名称查询变量
@@ -92,6 +103,20 @@ func GetVariable(scope Scope, name string) *Variable {
 	return nil
 }
 
+func GetFunction(scope Scope, name string, paramTypes []Type) *Func {
+	for _, s := range scope.GetSymbols() {
+		switch s.(type) {
+		case *Func:
+			f := s.(*Func)
+			if f.MatchParameterTypes(paramTypes) && name == f.GetName() {
+				return f
+			}
+		}
+	}
+
+	return nil
+}
+
 func (s *scope) String() string {
 	return "scope:" + s.GetName()
 }
@@ -99,14 +124,14 @@ func (s *scope) String() string {
 // todo crossoverJie thread-safe?
 var blockIndex int
 
-type blockScope struct {
+type BlockScope struct {
 	*scope
 }
 
 func NewBlockScope(ctx antlr.ParserRuleContext, name string, s Scope) Scope {
 	blockIndex++
 	name = fmt.Sprintf("block-%s%d", name, blockIndex)
-	blockScope := &blockScope{
+	blockScope := &BlockScope{
 		scope: &scope{
 			symbols: make([]Symbol, 0),
 			symbol: &symbol{
@@ -127,11 +152,12 @@ func NewBlockScope(ctx antlr.ParserRuleContext, name string, s Scope) Scope {
 
 type Variable struct {
 	*symbol
+	t Type
 }
 
 func NewVariable(ctx antlr.ParserRuleContext, name string, enclose Scope) *Variable {
 	return &Variable{
-		&symbol{
+		symbol: &symbol{
 			name:         name,
 			encloseScope: enclose,
 			ctx:          ctx,
@@ -139,6 +165,107 @@ func NewVariable(ctx antlr.ParserRuleContext, name string, enclose Scope) *Varia
 	}
 }
 
+func (v *Variable) GetType() Type {
+	return v.t
+}
+func (v *Variable) SetType(t Type) {
+	v.t = t
+}
 func (v *Variable) String() string {
 	return v.name
+}
+
+// function
+
+type FuncType interface {
+	Type
+	GetReturnType() Type
+
+	GetParameterType() []Type
+
+	// MatchParameterTypes 检查参数类型是否和函数匹配
+	MatchParameterTypes(types []Type) bool
+}
+
+type Func struct {
+	*scope
+	parameters    []*Variable
+	parameterType []Type
+
+	// todo crossoverJie 返回多个值
+	returnType Type
+
+	// todo crossoverJie 闭包变量，用于存放外部变量
+}
+
+func NewFunc(ctx antlr.ParserRuleContext, name string, encloseScope Scope) *Func {
+	return &Func{
+		scope: &scope{
+			symbol: &symbol{
+				name:         name,
+				encloseScope: encloseScope,
+				ctx:          ctx,
+			},
+		},
+	}
+}
+
+func (f *Func) GetEncloseScope() Scope {
+	return f.encloseScope
+}
+
+func (f *Func) IsType(t Type) bool {
+	return f == t
+}
+
+func (f *Func) GetReturnType() Type {
+	return f.returnType
+}
+
+func (f *Func) SetReturnType(t Type) {
+	f.returnType = t
+}
+
+// GetParameterType 获取和初始化
+func (f *Func) GetParameterType() []Type {
+	if f.parameterType == nil {
+		f.parameterType = make([]Type, 0)
+	}
+	for _, parameter := range f.parameters {
+		f.parameterType = append(f.parameterType, parameter.GetType())
+	}
+
+	return f.parameterType
+}
+
+func (f *Func) AppendParameter(v *Variable) {
+	f.parameters = append(f.parameters, v)
+}
+
+// MatchParameterTypes 通过参数类型匹配函数是否一致
+func (f *Func) MatchParameterTypes(types []Type) bool {
+	if len(f.parameters) != len(types) {
+		return false
+	}
+	match := true
+	for i, t := range types {
+		variable := f.parameters[i]
+		if !variable.t.IsType(t) {
+			match = false
+			break
+		}
+	}
+	return match
+
+}
+
+func (f *Func) SetName(name string) {
+	f.name = name
+}
+func (f *Func) GetName() string {
+	return f.name
+}
+
+func (f *Func) SetEncloseScope(scope Scope) {
+	f.encloseScope = scope
 }

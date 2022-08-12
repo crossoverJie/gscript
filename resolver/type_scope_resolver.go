@@ -7,6 +7,7 @@ import (
 	"github.com/crossoverJie/gscript/symbol"
 )
 
+// TypeScopeResolver 第一次扫描，记录所有的类型：类、函数、scope 到 node2Scope 中。
 type TypeScopeResolver struct {
 	parser.BaseGScriptListener
 	stack stack.Stack
@@ -67,5 +68,25 @@ func (t *TypeScopeResolver) EnterStmFor(ctx *parser.StmForContext) {
 
 // ExitStmFor is called when production StmFor is exited.
 func (t *TypeScopeResolver) ExitStmFor(ctx *parser.StmForContext) {
+	t.popScope()
+}
+
+// EnterFunctionDeclaration 加入一个 func 的 scope
+func (t *TypeScopeResolver) EnterFunctionDeclaration(ctx *parser.FunctionDeclarationContext) {
+	scope := symbol.NewBlockScope(ctx, "func", t.currentScope())
+	t.currentScope().AddSymbol(scope)
+
+	name := ctx.IDENTIFIER().GetText()
+	newFunc := symbol.NewFunc(ctx, name, t.currentScope())
+	scope.AddSymbol(newFunc)
+
+	// add type
+	t.at.AppendType(newFunc)
+
+	t.pushScope(ctx, scope)
+}
+
+// ExitFunctionDeclaration is called when production functionDeclaration is exited.
+func (t *TypeScopeResolver) ExitFunctionDeclaration(ctx *parser.FunctionDeclarationContext) {
 	t.popScope()
 }

@@ -21,6 +21,138 @@ func (s *BaseGScriptListener) EnterEveryRule(ctx antlr.ParserRuleContext) {}
 // ExitEveryRule is called when any rule is exited.
 func (s *BaseGScriptListener) ExitEveryRule(ctx antlr.ParserRuleContext) {}
 
+// EnterFunctionDeclaration is called when production functionDeclaration is entered.
+func (s *BaseGScriptListener) EnterFunctionDeclaration(ctx *FunctionDeclarationContext) {}
+
+// ExitFunctionDeclaration is called when production functionDeclaration is exited.
+func (s *BaseGScriptListener) ExitFunctionDeclaration(ctx *FunctionDeclarationContext) {}
+
+// EnterFunctionBody is called when production functionBody is entered.
+func (s *BaseGScriptListener) EnterFunctionBody(ctx *FunctionBodyContext) {}
+
+// ExitFunctionBody is called when production functionBody is exited.
+func (s *BaseGScriptListener) ExitFunctionBody(ctx *FunctionBodyContext) {}
+
+// EnterTypeTypeOrVoid is called when production typeTypeOrVoid is entered.
+func (s *BaseGScriptListener) EnterTypeTypeOrVoid(ctx *TypeTypeOrVoidContext) {}
+
+// ExitTypeTypeOrVoid is called when production typeTypeOrVoid is exited.
+func (s *BaseGScriptListener) ExitTypeTypeOrVoid(ctx *TypeTypeOrVoidContext) {}
+
+// EnterQualifiedNameList is called when production qualifiedNameList is entered.
+func (s *BaseGScriptListener) EnterQualifiedNameList(ctx *QualifiedNameListContext) {}
+
+// ExitQualifiedNameList is called when production qualifiedNameList is exited.
+func (s *BaseGScriptListener) ExitQualifiedNameList(ctx *QualifiedNameListContext) {}
+
+// EnterFormalParameters is called when production formalParameters is entered.
+func (s *BaseGScriptListener) EnterFormalParameters(ctx *FormalParametersContext) {}
+
+// ExitFormalParameters is called when production formalParameters is exited.
+func (s *BaseGScriptListener) ExitFormalParameters(ctx *FormalParametersContext) {}
+
+// EnterFormalParameterList is called when production formalParameterList is entered.
+func (s *BaseGScriptListener) EnterFormalParameterList(ctx *FormalParameterListContext) {}
+
+// ExitFormalParameterList is called when production formalParameterList is exited.
+func (s *BaseGScriptListener) ExitFormalParameterList(ctx *FormalParameterListContext) {}
+
+// EnterFormalParameter is called when production formalParameter is entered.
+func (s *BaseGScriptListener) EnterFormalParameter(ctx *FormalParameterContext) {}
+
+// ExitFormalParameter is called when production formalParameter is exited.
+func (s *BaseGScriptListener) ExitFormalParameter(ctx *FormalParameterContext) {}
+
+// EnterLastFormalParameter is called when production lastFormalParameter is entered.
+func (s *BaseGScriptListener) EnterLastFormalParameter(ctx *LastFormalParameterContext) {}
+
+// ExitLastFormalParameter is called when production lastFormalParameter is exited.
+func (s *BaseGScriptListener) ExitLastFormalParameter(ctx *LastFormalParameterContext) {}
+
+// EnterVariableModifier is called when production variableModifier is entered.
+func (s *BaseGScriptListener) EnterVariableModifier(ctx *VariableModifierContext) {}
+
+// ExitVariableModifier is called when production variableModifier is exited.
+func (s *BaseGScriptListener) ExitVariableModifier(ctx *VariableModifierContext) {}
+
+// EnterQualifiedName is called when production qualifiedName is entered.
+func (s *BaseGScriptListener) EnterQualifiedName(ctx *QualifiedNameContext) {}
+
+// ExitQualifiedName is called when production qualifiedName is exited.
+func (s *BaseGScriptListener) ExitQualifiedName(ctx *QualifiedNameContext) {}
+
+// EnterFieldDeclaration is called when production fieldDeclaration is entered.
+func (s *BaseGScriptListener) EnterFieldDeclaration(ctx *FieldDeclarationContext) {}
+
+// ExitFieldDeclaration is called when production fieldDeclaration is exited.
+func (s *BaseGScriptListener) ExitFieldDeclaration(ctx *FieldDeclarationContext) {}
+
+// EnterVariableDeclarators is called when production variableDeclarators is entered.
+func (s *BaseGScriptListener) EnterVariableDeclarators(ctx *VariableDeclaratorsContext) {}
+
+// ExitVariableDeclarators is called when production variableDeclarators is exited.
+func (s *BaseGScriptListener) ExitVariableDeclarators(ctx *VariableDeclaratorsContext) {}
+
+// EnterVariableDeclarator is called when production variableDeclarator is entered.
+func (s *BaseGScriptListener) EnterVariableDeclarator(ctx *VariableDeclaratorContext) {}
+
+// ExitVariableDeclarator is called when production variableDeclarator is exited.
+func (s *BaseGScriptListener) ExitVariableDeclarator(ctx *VariableDeclaratorContext) {}
+
+// EnterVariableDeclaratorId is called when production variableDeclaratorId is entered.
+func (s *BaseGScriptListener) EnterVariableDeclaratorId(ctx *VariableDeclaratorIdContext) {}
+
+// ExitVariableDeclaratorId is called when production variableDeclaratorId is exited.
+func (s *BaseGScriptListener) ExitVariableDeclaratorId(ctx *VariableDeclaratorIdContext) {}
+
+// EnterVariableInitializer is called when production variableInitializer is entered.
+func (s *BaseGScriptListener) EnterVariableInitializer(ctx *VariableInitializerContext) {}
+
+// ExitVariableInitializer is called when production variableInitializer is exited.
+func (s *BaseGScriptListener) ExitVariableInitializer(ctx *VariableInitializerContext) {}
+
+// EnterArrayInitializer is called when production arrayInitializer is entered.
+func (s *BaseGScriptListener) EnterArrayInitializer(ctx *ArrayInitializerContext) {}
+
+// ExitArrayInitializer is called when production arrayInitializer is exited.
+func (s *BaseGScriptListener) ExitArrayInitializer(ctx *ArrayInitializerContext) {}
+
+// EnterClassOrInterfaceType is called when production classOrInterfaceType is entered.
+func (s *BaseGScriptListener) EnterClassOrInterfaceType(ctx *ClassOrInterfaceTypeContext) {}
+
+// ExitClassOrInterfaceType is called when production classOrInterfaceType is exited.
+func (s *BaseGScriptListener) ExitClassOrInterfaceType(ctx *ClassOrInterfaceTypeContext) {}
+
+// EnterInt is called when production Int is entered.
+func (s *BaseGScriptListener) EnterInt(ctx *IntContext) {}
+
+// ExitInt is called when production Int is exited.
+func (s *BaseGScriptListener) ExitInt(ctx *IntContext) {}
+
+// EnterFloat is called when production Float is entered.
+func (s *BaseGScriptListener) EnterFloat(ctx *FloatContext) {}
+
+// ExitFloat is called when production Float is exited.
+func (s *BaseGScriptListener) ExitFloat(ctx *FloatContext) {}
+
+// EnterString is called when production String is entered.
+func (s *BaseGScriptListener) EnterString(ctx *StringContext) {}
+
+// ExitString is called when production String is exited.
+func (s *BaseGScriptListener) ExitString(ctx *StringContext) {}
+
+// EnterBool is called when production Bool is entered.
+func (s *BaseGScriptListener) EnterBool(ctx *BoolContext) {}
+
+// ExitBool is called when production Bool is exited.
+func (s *BaseGScriptListener) ExitBool(ctx *BoolContext) {}
+
+// EnterNull is called when production Null is entered.
+func (s *BaseGScriptListener) EnterNull(ctx *NullContext) {}
+
+// ExitNull is called when production Null is exited.
+func (s *BaseGScriptListener) ExitNull(ctx *NullContext) {}
+
 // EnterProg is called when production prog is entered.
 func (s *BaseGScriptListener) EnterProg(ctx *ProgContext) {}
 
@@ -57,11 +189,59 @@ func (s *BaseGScriptListener) EnterBlockFunc(ctx *BlockFuncContext) {}
 // ExitBlockFunc is called when production BlockFunc is exited.
 func (s *BaseGScriptListener) ExitBlockFunc(ctx *BlockFuncContext) {}
 
-// EnterParse is called when production parse is entered.
-func (s *BaseGScriptListener) EnterParse(ctx *ParseContext) {}
+// EnterStmBlockLabel is called when production StmBlockLabel is entered.
+func (s *BaseGScriptListener) EnterStmBlockLabel(ctx *StmBlockLabelContext) {}
 
-// ExitParse is called when production parse is exited.
-func (s *BaseGScriptListener) ExitParse(ctx *ParseContext) {}
+// ExitStmBlockLabel is called when production StmBlockLabel is exited.
+func (s *BaseGScriptListener) ExitStmBlockLabel(ctx *StmBlockLabelContext) {}
+
+// EnterStmIfElse is called when production StmIfElse is entered.
+func (s *BaseGScriptListener) EnterStmIfElse(ctx *StmIfElseContext) {}
+
+// ExitStmIfElse is called when production StmIfElse is exited.
+func (s *BaseGScriptListener) ExitStmIfElse(ctx *StmIfElseContext) {}
+
+// EnterStmFor is called when production StmFor is entered.
+func (s *BaseGScriptListener) EnterStmFor(ctx *StmForContext) {}
+
+// ExitStmFor is called when production StmFor is exited.
+func (s *BaseGScriptListener) ExitStmFor(ctx *StmForContext) {}
+
+// EnterStmReturn is called when production StmReturn is entered.
+func (s *BaseGScriptListener) EnterStmReturn(ctx *StmReturnContext) {}
+
+// ExitStmReturn is called when production StmReturn is exited.
+func (s *BaseGScriptListener) ExitStmReturn(ctx *StmReturnContext) {}
+
+// EnterStmExpr is called when production StmExpr is entered.
+func (s *BaseGScriptListener) EnterStmExpr(ctx *StmExprContext) {}
+
+// ExitStmExpr is called when production StmExpr is exited.
+func (s *BaseGScriptListener) ExitStmExpr(ctx *StmExprContext) {}
+
+// EnterForControl is called when production forControl is entered.
+func (s *BaseGScriptListener) EnterForControl(ctx *ForControlContext) {}
+
+// ExitForControl is called when production forControl is exited.
+func (s *BaseGScriptListener) ExitForControl(ctx *ForControlContext) {}
+
+// EnterForInit is called when production forInit is entered.
+func (s *BaseGScriptListener) EnterForInit(ctx *ForInitContext) {}
+
+// ExitForInit is called when production forInit is exited.
+func (s *BaseGScriptListener) ExitForInit(ctx *ForInitContext) {}
+
+// EnterParExpression is called when production parExpression is entered.
+func (s *BaseGScriptListener) EnterParExpression(ctx *ParExpressionContext) {}
+
+// ExitParExpression is called when production parExpression is exited.
+func (s *BaseGScriptListener) ExitParExpression(ctx *ParExpressionContext) {}
+
+// EnterExpressionList is called when production expressionList is entered.
+func (s *BaseGScriptListener) EnterExpressionList(ctx *ExpressionListContext) {}
+
+// ExitExpressionList is called when production expressionList is exited.
+func (s *BaseGScriptListener) ExitExpressionList(ctx *ExpressionListContext) {}
 
 // EnterFunctionCall is called when production functionCall is entered.
 func (s *BaseGScriptListener) EnterFunctionCall(ctx *FunctionCallContext) {}
@@ -153,161 +333,29 @@ func (s *BaseGScriptListener) EnterIdentifierPrimary(ctx *IdentifierPrimaryConte
 // ExitIdentifierPrimary is called when production IdentifierPrimary is exited.
 func (s *BaseGScriptListener) ExitIdentifierPrimary(ctx *IdentifierPrimaryContext) {}
 
-// EnterStmBlockLabel is called when production StmBlockLabel is entered.
-func (s *BaseGScriptListener) EnterStmBlockLabel(ctx *StmBlockLabelContext) {}
+// EnterTypeList is called when production typeList is entered.
+func (s *BaseGScriptListener) EnterTypeList(ctx *TypeListContext) {}
 
-// ExitStmBlockLabel is called when production StmBlockLabel is exited.
-func (s *BaseGScriptListener) ExitStmBlockLabel(ctx *StmBlockLabelContext) {}
+// ExitTypeList is called when production typeList is exited.
+func (s *BaseGScriptListener) ExitTypeList(ctx *TypeListContext) {}
 
-// EnterStmIfElse is called when production StmIfElse is entered.
-func (s *BaseGScriptListener) EnterStmIfElse(ctx *StmIfElseContext) {}
+// EnterTypeType is called when production typeType is entered.
+func (s *BaseGScriptListener) EnterTypeType(ctx *TypeTypeContext) {}
 
-// ExitStmIfElse is called when production StmIfElse is exited.
-func (s *BaseGScriptListener) ExitStmIfElse(ctx *StmIfElseContext) {}
+// ExitTypeType is called when production typeType is exited.
+func (s *BaseGScriptListener) ExitTypeType(ctx *TypeTypeContext) {}
 
-// EnterStmFor is called when production StmFor is entered.
-func (s *BaseGScriptListener) EnterStmFor(ctx *StmForContext) {}
+// EnterFunctionType is called when production functionType is entered.
+func (s *BaseGScriptListener) EnterFunctionType(ctx *FunctionTypeContext) {}
 
-// ExitStmFor is called when production StmFor is exited.
-func (s *BaseGScriptListener) ExitStmFor(ctx *StmForContext) {}
+// ExitFunctionType is called when production functionType is exited.
+func (s *BaseGScriptListener) ExitFunctionType(ctx *FunctionTypeContext) {}
 
-// EnterStmReturn is called when production StmReturn is entered.
-func (s *BaseGScriptListener) EnterStmReturn(ctx *StmReturnContext) {}
+// EnterPrimitiveType is called when production primitiveType is entered.
+func (s *BaseGScriptListener) EnterPrimitiveType(ctx *PrimitiveTypeContext) {}
 
-// ExitStmReturn is called when production StmReturn is exited.
-func (s *BaseGScriptListener) ExitStmReturn(ctx *StmReturnContext) {}
-
-// EnterStmExpr is called when production StmExpr is entered.
-func (s *BaseGScriptListener) EnterStmExpr(ctx *StmExprContext) {}
-
-// ExitStmExpr is called when production StmExpr is exited.
-func (s *BaseGScriptListener) ExitStmExpr(ctx *StmExprContext) {}
-
-// EnterForControl is called when production forControl is entered.
-func (s *BaseGScriptListener) EnterForControl(ctx *ForControlContext) {}
-
-// ExitForControl is called when production forControl is exited.
-func (s *BaseGScriptListener) ExitForControl(ctx *ForControlContext) {}
-
-// EnterForInit is called when production forInit is entered.
-func (s *BaseGScriptListener) EnterForInit(ctx *ForInitContext) {}
-
-// ExitForInit is called when production forInit is exited.
-func (s *BaseGScriptListener) ExitForInit(ctx *ForInitContext) {}
-
-// EnterFunctionDeclaration is called when production functionDeclaration is entered.
-func (s *BaseGScriptListener) EnterFunctionDeclaration(ctx *FunctionDeclarationContext) {}
-
-// ExitFunctionDeclaration is called when production functionDeclaration is exited.
-func (s *BaseGScriptListener) ExitFunctionDeclaration(ctx *FunctionDeclarationContext) {}
-
-// EnterFunctionBody is called when production functionBody is entered.
-func (s *BaseGScriptListener) EnterFunctionBody(ctx *FunctionBodyContext) {}
-
-// ExitFunctionBody is called when production functionBody is exited.
-func (s *BaseGScriptListener) ExitFunctionBody(ctx *FunctionBodyContext) {}
-
-// EnterQualifiedNameList is called when production qualifiedNameList is entered.
-func (s *BaseGScriptListener) EnterQualifiedNameList(ctx *QualifiedNameListContext) {}
-
-// ExitQualifiedNameList is called when production qualifiedNameList is exited.
-func (s *BaseGScriptListener) ExitQualifiedNameList(ctx *QualifiedNameListContext) {}
-
-// EnterFormalParameters is called when production formalParameters is entered.
-func (s *BaseGScriptListener) EnterFormalParameters(ctx *FormalParametersContext) {}
-
-// ExitFormalParameters is called when production formalParameters is exited.
-func (s *BaseGScriptListener) ExitFormalParameters(ctx *FormalParametersContext) {}
-
-// EnterFormalParameterList is called when production formalParameterList is entered.
-func (s *BaseGScriptListener) EnterFormalParameterList(ctx *FormalParameterListContext) {}
-
-// ExitFormalParameterList is called when production formalParameterList is exited.
-func (s *BaseGScriptListener) ExitFormalParameterList(ctx *FormalParameterListContext) {}
-
-// EnterFormalParameter is called when production formalParameter is entered.
-func (s *BaseGScriptListener) EnterFormalParameter(ctx *FormalParameterContext) {}
-
-// ExitFormalParameter is called when production formalParameter is exited.
-func (s *BaseGScriptListener) ExitFormalParameter(ctx *FormalParameterContext) {}
-
-// EnterLastFormalParameter is called when production lastFormalParameter is entered.
-func (s *BaseGScriptListener) EnterLastFormalParameter(ctx *LastFormalParameterContext) {}
-
-// ExitLastFormalParameter is called when production lastFormalParameter is exited.
-func (s *BaseGScriptListener) ExitLastFormalParameter(ctx *LastFormalParameterContext) {}
-
-// EnterQualifiedName is called when production qualifiedName is entered.
-func (s *BaseGScriptListener) EnterQualifiedName(ctx *QualifiedNameContext) {}
-
-// ExitQualifiedName is called when production qualifiedName is exited.
-func (s *BaseGScriptListener) ExitQualifiedName(ctx *QualifiedNameContext) {}
-
-// EnterVariableModifier is called when production variableModifier is entered.
-func (s *BaseGScriptListener) EnterVariableModifier(ctx *VariableModifierContext) {}
-
-// ExitVariableModifier is called when production variableModifier is exited.
-func (s *BaseGScriptListener) ExitVariableModifier(ctx *VariableModifierContext) {}
-
-// EnterVariableDeclarators is called when production variableDeclarators is entered.
-func (s *BaseGScriptListener) EnterVariableDeclarators(ctx *VariableDeclaratorsContext) {}
-
-// ExitVariableDeclarators is called when production variableDeclarators is exited.
-func (s *BaseGScriptListener) ExitVariableDeclarators(ctx *VariableDeclaratorsContext) {}
-
-// EnterVariableDeclarator is called when production variableDeclarator is entered.
-func (s *BaseGScriptListener) EnterVariableDeclarator(ctx *VariableDeclaratorContext) {}
-
-// ExitVariableDeclarator is called when production variableDeclarator is exited.
-func (s *BaseGScriptListener) ExitVariableDeclarator(ctx *VariableDeclaratorContext) {}
-
-// EnterVariableDeclaratorId is called when production variableDeclaratorId is entered.
-func (s *BaseGScriptListener) EnterVariableDeclaratorId(ctx *VariableDeclaratorIdContext) {}
-
-// ExitVariableDeclaratorId is called when production variableDeclaratorId is exited.
-func (s *BaseGScriptListener) ExitVariableDeclaratorId(ctx *VariableDeclaratorIdContext) {}
-
-// EnterVariableInitializer is called when production variableInitializer is entered.
-func (s *BaseGScriptListener) EnterVariableInitializer(ctx *VariableInitializerContext) {}
-
-// ExitVariableInitializer is called when production variableInitializer is exited.
-func (s *BaseGScriptListener) ExitVariableInitializer(ctx *VariableInitializerContext) {}
-
-// EnterArrayInitializer is called when production arrayInitializer is entered.
-func (s *BaseGScriptListener) EnterArrayInitializer(ctx *ArrayInitializerContext) {}
-
-// ExitArrayInitializer is called when production arrayInitializer is exited.
-func (s *BaseGScriptListener) ExitArrayInitializer(ctx *ArrayInitializerContext) {}
-
-// EnterInt is called when production Int is entered.
-func (s *BaseGScriptListener) EnterInt(ctx *IntContext) {}
-
-// ExitInt is called when production Int is exited.
-func (s *BaseGScriptListener) ExitInt(ctx *IntContext) {}
-
-// EnterFloat is called when production Float is entered.
-func (s *BaseGScriptListener) EnterFloat(ctx *FloatContext) {}
-
-// ExitFloat is called when production Float is exited.
-func (s *BaseGScriptListener) ExitFloat(ctx *FloatContext) {}
-
-// EnterString is called when production String is entered.
-func (s *BaseGScriptListener) EnterString(ctx *StringContext) {}
-
-// ExitString is called when production String is exited.
-func (s *BaseGScriptListener) ExitString(ctx *StringContext) {}
-
-// EnterBool is called when production Bool is entered.
-func (s *BaseGScriptListener) EnterBool(ctx *BoolContext) {}
-
-// ExitBool is called when production Bool is exited.
-func (s *BaseGScriptListener) ExitBool(ctx *BoolContext) {}
-
-// EnterNull is called when production Null is entered.
-func (s *BaseGScriptListener) EnterNull(ctx *NullContext) {}
-
-// ExitNull is called when production Null is exited.
-func (s *BaseGScriptListener) ExitNull(ctx *NullContext) {}
+// ExitPrimitiveType is called when production primitiveType is exited.
+func (s *BaseGScriptListener) ExitPrimitiveType(ctx *PrimitiveTypeContext) {}
 
 // EnterIntegerLiteral is called when production integerLiteral is entered.
 func (s *BaseGScriptListener) EnterIntegerLiteral(ctx *IntegerLiteralContext) {}
@@ -321,50 +369,8 @@ func (s *BaseGScriptListener) EnterFloatLiteral(ctx *FloatLiteralContext) {}
 // ExitFloatLiteral is called when production floatLiteral is exited.
 func (s *BaseGScriptListener) ExitFloatLiteral(ctx *FloatLiteralContext) {}
 
-// EnterTypeType is called when production typeType is entered.
-func (s *BaseGScriptListener) EnterTypeType(ctx *TypeTypeContext) {}
+// EnterParse is called when production parse is entered.
+func (s *BaseGScriptListener) EnterParse(ctx *ParseContext) {}
 
-// ExitTypeType is called when production typeType is exited.
-func (s *BaseGScriptListener) ExitTypeType(ctx *TypeTypeContext) {}
-
-// EnterPrimitiveType is called when production primitiveType is entered.
-func (s *BaseGScriptListener) EnterPrimitiveType(ctx *PrimitiveTypeContext) {}
-
-// ExitPrimitiveType is called when production primitiveType is exited.
-func (s *BaseGScriptListener) ExitPrimitiveType(ctx *PrimitiveTypeContext) {}
-
-// EnterFunctionType is called when production functionType is entered.
-func (s *BaseGScriptListener) EnterFunctionType(ctx *FunctionTypeContext) {}
-
-// ExitFunctionType is called when production functionType is exited.
-func (s *BaseGScriptListener) ExitFunctionType(ctx *FunctionTypeContext) {}
-
-// EnterTypeList is called when production typeList is entered.
-func (s *BaseGScriptListener) EnterTypeList(ctx *TypeListContext) {}
-
-// ExitTypeList is called when production typeList is exited.
-func (s *BaseGScriptListener) ExitTypeList(ctx *TypeListContext) {}
-
-// EnterTypeTypeOrVoid is called when production typeTypeOrVoid is entered.
-func (s *BaseGScriptListener) EnterTypeTypeOrVoid(ctx *TypeTypeOrVoidContext) {}
-
-// ExitTypeTypeOrVoid is called when production typeTypeOrVoid is exited.
-func (s *BaseGScriptListener) ExitTypeTypeOrVoid(ctx *TypeTypeOrVoidContext) {}
-
-// EnterClassOrInterfaceType is called when production classOrInterfaceType is entered.
-func (s *BaseGScriptListener) EnterClassOrInterfaceType(ctx *ClassOrInterfaceTypeContext) {}
-
-// ExitClassOrInterfaceType is called when production classOrInterfaceType is exited.
-func (s *BaseGScriptListener) ExitClassOrInterfaceType(ctx *ClassOrInterfaceTypeContext) {}
-
-// EnterExpressionList is called when production expressionList is entered.
-func (s *BaseGScriptListener) EnterExpressionList(ctx *ExpressionListContext) {}
-
-// ExitExpressionList is called when production expressionList is exited.
-func (s *BaseGScriptListener) ExitExpressionList(ctx *ExpressionListContext) {}
-
-// EnterParExpression is called when production parExpression is entered.
-func (s *BaseGScriptListener) EnterParExpression(ctx *ParExpressionContext) {}
-
-// ExitParExpression is called when production parExpression is exited.
-func (s *BaseGScriptListener) ExitParExpression(ctx *ParExpressionContext) {}
+// ExitParse is called when production parse is exited.
+func (s *BaseGScriptListener) ExitParse(ctx *ParseContext) {}

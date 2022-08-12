@@ -119,6 +119,8 @@ func (v *Visitor) Visit(tree antlr.ParseTree) interface{} {
 		return v.VisitStmFor(ctx)
 	case *parser.AssignExprContext:
 		return v.VisitAssignExpr(ctx)
+	case *parser.FuncCallExprContext:
+		return v.VisitFuncCallExpr(ctx)
 	default:
 		panic("Unknown context")
 	}
@@ -244,6 +246,106 @@ func (v *Visitor) VisitPostfixExpr(ctx *parser.PostfixExprContext) interface{} {
 	panic("invalid postfix")
 }
 
+func (v *Visitor) VisitFuncCallExpr(ctx *parser.FuncCallExprContext) interface{} {
+	return v.VisitFunctionCall(ctx.FunctionCall().(*parser.FunctionCallContext))
+}
+
+// VisitFunctionCall 函数调用
+func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{} {
+	var ret interface{}
+	//name := ctx.IDENTIFIER().GetText()
+	// todo crossoverJie 内置函数校验
+
+	//symbol := v.at.GetSymbolOfNode()[ctx]
+	// todo crossoverJie 默认构造函数
+
+	functionObject := v.getFunctionObject(ctx)
+
+	// todo crossoverJie 如果对象的构造函数
+
+	// 构建函数调用的参数值
+	paramValues := v.buildParamValues(ctx)
+
+	// 执行函数调用
+	v.executeFunctionCall(functionObject, paramValues)
+	return ret
+}
+
+// 获取函数的 object 对象，需要用来压栈
+func (v *Visitor) getFunctionObject(ctx *parser.FunctionCallContext) *stack.FuncObject {
+	var (
+		funcObject *stack.FuncObject
+		function   *sym.Func
+	)
+	symbol := v.at.GetSymbolOfNode()[ctx]
+	switch symbol.(type) {
+	case *sym.Func:
+		function = symbol.(*sym.Func)
+		// todo crossoverJie symbol 是函数变量类型
+	default:
+		// todo crossoverJie 函数提示
+		name := ctx.IDENTIFIER().GetText()
+		line := ctx.GetStart().GetLine()
+		column := ctx.GetStart().GetColumn()
+		panic(fmt.Sprintf("unable find func %s in line:%d and column:%d", name, line, column))
+
+	}
+
+	funcObject = stack.NewFuncObject(function)
+	return funcObject
+}
+
+// 构建函数调用的参数值 myfunc(2+2+a) 2+2+a 的值
+func (v *Visitor) buildParamValues(ctx *parser.FunctionCallContext) []interface{} {
+	ret := make([]interface{}, 0)
+	for _, context := range ctx.ExpressionList().(*parser.ExpressionListContext).AllExpr() {
+		value := v.Visit(context)
+		switch value.(type) {
+		case *LeftValue:
+			ret = append(ret, value.(*LeftValue).GetValue())
+		}
+	}
+	return ret
+}
+
+// 执行函数调用
+// 1. 先给参数赋值
+// 2. 调用函数，内部就是递归调用 block
+func (v *Visitor) executeFunctionCall(functionObject *stack.FuncObject, paramValues []interface{}) interface{} {
+	var ret interface{}
+
+	// 添加函数栈帧
+	frame := stack.NewObjectStackFrame(functionObject)
+	v.pushStack(frame)
+
+	// 拿到函数声明时所对应的 ctx, type_scope_resolver.go EnterFunctionDeclaration, g4:functionDeclaration
+	declarationContext := functionObject.GetFunction().GetCtx().(*parser.FunctionDeclarationContext)
+	formalParametersContext := declarationContext.FormalParameters().(*parser.FormalParametersContext)
+	for i, context := range formalParametersContext.FormalParameterList().(*parser.FormalParameterListContext).AllFormalParameter() {
+		parameterContext := context.(*parser.FormalParameterContext)
+		value := v.VisitVariableDeclaratorId(parameterContext.VariableDeclaratorId().(*parser.VariableDeclaratorIdContext))
+		switch value.(type) {
+		case *LeftValue:
+			leftValue := value.(*LeftValue)
+			leftValue.SetValue(paramValues[i])
+		}
+	}
+
+	// 执行方法体
+	v.VisitFunctionDeclaration(declarationContext)
+
+	v.popStack()
+	return ret
+}
+
+func (v *Visitor) VisitFunctionDeclaration(ctx *parser.FunctionDeclarationContext) interface{} {
+	return v.VisitFunctionBody(ctx.FunctionBody().(*parser.FunctionBodyContext))
+}
+
+func (v *Visitor) VisitFunctionBody(ctx *parser.FunctionBodyContext) interface{} {
+	return v.VisitBlock(ctx.Block().(*parser.BlockContext))
+}
+
 func (v *Visitor) VisitNotExpr(ctx *parser.NotExprContext) interface{} {
 	rhs := ctx.GetRhs()
 	value := v.Visit(rhs)
@@ -342,6 +444,7 @@ func (v *Visitor) VisitPlusSubExpr(ctx *parser.PlusSubExprContext) interface{} {
 		v2f = val2.(float64)
 	}
 
+	// todo crossoverJie v1i 值为0的情况
 	if ctx.GetBop().GetTokenType() == parser.GScriptLexerPLUS {
 		if v1i != 0 && v2i != 0 {
 			return v1i + v2i

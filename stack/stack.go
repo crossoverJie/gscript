@@ -100,3 +100,18 @@ func (o *object) String() string {
 	}
 	return fmt.Sprintf("%s", b.String())
 }
+
+type FuncObject struct {
+	*object
+	function *symbol.Func
+}
+
+func NewFuncObject(function *symbol.Func) *FuncObject {
+	return &FuncObject{
+		function: function,
+	}
+}
+
+func (f *FuncObject) GetFunction() *symbol.Func {
+	return f.function
+}

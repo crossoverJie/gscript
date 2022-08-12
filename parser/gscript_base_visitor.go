@@ -8,6 +8,94 @@ type BaseGScriptVisitor struct {
 	*antlr.BaseParseTreeVisitor
 }
 
+func (v *BaseGScriptVisitor) VisitFunctionDeclaration(ctx *FunctionDeclarationContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitFunctionBody(ctx *FunctionBodyContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitTypeTypeOrVoid(ctx *TypeTypeOrVoidContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitQualifiedNameList(ctx *QualifiedNameListContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitFormalParameters(ctx *FormalParametersContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitFormalParameterList(ctx *FormalParameterListContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitFormalParameter(ctx *FormalParameterContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitLastFormalParameter(ctx *LastFormalParameterContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitVariableModifier(ctx *VariableModifierContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitQualifiedName(ctx *QualifiedNameContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitFieldDeclaration(ctx *FieldDeclarationContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitVariableDeclarators(ctx *VariableDeclaratorsContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitVariableDeclarator(ctx *VariableDeclaratorContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitVariableDeclaratorId(ctx *VariableDeclaratorIdContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitVariableInitializer(ctx *VariableInitializerContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitArrayInitializer(ctx *ArrayInitializerContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitClassOrInterfaceType(ctx *ClassOrInterfaceTypeContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitInt(ctx *IntContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitFloat(ctx *FloatContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitString(ctx *StringContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitBool(ctx *BoolContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitNull(ctx *NullContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseGScriptVisitor) VisitProg(ctx *ProgContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -32,7 +120,39 @@ func (v *BaseGScriptVisitor) VisitBlockFunc(ctx *BlockFuncContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitParse(ctx *ParseContext) interface{} {
+func (v *BaseGScriptVisitor) VisitStmBlockLabel(ctx *StmBlockLabelContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitStmIfElse(ctx *StmIfElseContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitStmFor(ctx *StmForContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitStmReturn(ctx *StmReturnContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitStmExpr(ctx *StmExprContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitForControl(ctx *ForControlContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitForInit(ctx *ForInitContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitParExpression(ctx *ParExpressionContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitExpressionList(ctx *ExpressionListContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -96,107 +216,19 @@ func (v *BaseGScriptVisitor) VisitIdentifierPrimary(ctx *IdentifierPrimaryContex
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitStmBlockLabel(ctx *StmBlockLabelContext) interface{} {
+func (v *BaseGScriptVisitor) VisitTypeList(ctx *TypeListContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitStmIfElse(ctx *StmIfElseContext) interface{} {
+func (v *BaseGScriptVisitor) VisitTypeType(ctx *TypeTypeContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitStmFor(ctx *StmForContext) interface{} {
+func (v *BaseGScriptVisitor) VisitFunctionType(ctx *FunctionTypeContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitStmReturn(ctx *StmReturnContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitStmExpr(ctx *StmExprContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitForControl(ctx *ForControlContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitForInit(ctx *ForInitContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitFunctionDeclaration(ctx *FunctionDeclarationContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitFunctionBody(ctx *FunctionBodyContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitQualifiedNameList(ctx *QualifiedNameListContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitFormalParameters(ctx *FormalParametersContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitFormalParameterList(ctx *FormalParameterListContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitFormalParameter(ctx *FormalParameterContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitLastFormalParameter(ctx *LastFormalParameterContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitQualifiedName(ctx *QualifiedNameContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitVariableModifier(ctx *VariableModifierContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitVariableDeclarators(ctx *VariableDeclaratorsContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitVariableDeclarator(ctx *VariableDeclaratorContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitVariableDeclaratorId(ctx *VariableDeclaratorIdContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitVariableInitializer(ctx *VariableInitializerContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitArrayInitializer(ctx *ArrayInitializerContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitInt(ctx *IntContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitFloat(ctx *FloatContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitString(ctx *StringContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitBool(ctx *BoolContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitNull(ctx *NullContext) interface{} {
+func (v *BaseGScriptVisitor) VisitPrimitiveType(ctx *PrimitiveTypeContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -208,34 +240,6 @@ func (v *BaseGScriptVisitor) VisitFloatLiteral(ctx *FloatLiteralContext) interfa
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitTypeType(ctx *TypeTypeContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitPrimitiveType(ctx *PrimitiveTypeContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitFunctionType(ctx *FunctionTypeContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitTypeList(ctx *TypeListContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitTypeTypeOrVoid(ctx *TypeTypeOrVoidContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitClassOrInterfaceType(ctx *ClassOrInterfaceTypeContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitExpressionList(ctx *ExpressionListContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitParExpression(ctx *ParExpressionContext) interface{} {
+func (v *BaseGScriptVisitor) VisitParse(ctx *ParseContext) interface{} {
 	return v.VisitChildren(ctx)
 }

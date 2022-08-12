@@ -1,71 +1,5 @@
 grammar GScript;
 
-prog
-    : blockStatements
-    ;
-
-block
-    : '{' blockStatements '}'
-    ;
-
-blockStatements
-    : blockStatement* #BlockStms
-    ;
-
-blockStatement
-    : variableDeclarators #BlockVarDeclar
-    | statement # BlockStm
-   // | localTypeDeclaration
-    | functionDeclaration #BlockFunc
-    //| classDeclaration
-    ;
-
-
-parse
- : expr_list+=expr+ EOF
- ;
-
-expr
-    : primary #PrimaryExpr
-    | lhs=expr postfix=('++' | '--') #PostfixExpr
-    | prefix=('~'|'!') rhs=expr #NotExpr
-    | lhs=expr bop=( MULT | DIV ) rhs=expr #MultDivExpr
-    | lhs=expr bop=MOD rhs=expr            #ModExpr
-    | lhs=expr bop=( PLUS | SUB ) rhs=expr #PlusSubExpr
-    | expr bop=(LE | GE | GT | LT ) expr # GLeExpr
-    | expr bop=(EQUAL | NOTEQUAL) expr # EqualOrNot
-    // 表明结合性是右结合的，内部原理使用循环代替递归。
-    | <assoc=right> lhs=expr
-      bop=('=' | '+=' | '-=' | '*=')
-      rhs=expr  #AssignExpr
-    ;
-
-primary
-    : '(' expr ')' #ExprPrimary
-    //| THIS
-    //| SUPER
-    | literal #LiterPrimary
-    | IDENTIFIER #IdentifierPrimary
-    // | typeTypeOrVoid '.' CLASS
-    ;
-
-
-statement
-    : blockLabel=block #StmBlockLabel
-    | IF parExpression statement (ELSE statement)? #StmIfElse
-    | FOR '(' forControl ')' statement #StmFor
-    | RETURN expr?  #StmReturn
-    | statementExpression=expr #StmExpr
-    ;
-
-forControl
-    : forInit? ';' expr? ';' forUpdate=expressionList?
-    ;
-
-forInit
-    : variableDeclarators
-    | expressionList
-    ;
 
 functionDeclaration
     : typeTypeOrVoid? IDENTIFIER formalParameters ('[' ']')*
@@ -75,6 +9,11 @@ functionDeclaration
 
 functionBody
     : block
+    ;
+
+typeTypeOrVoid
+    : typeType
+    | VOID
     ;
 
 qualifiedNameList
@@ -98,14 +37,20 @@ lastFormalParameter
     : variableModifier* typeType '...' variableDeclaratorId
     ;
 
-qualifiedName
-    : IDENTIFIER ('.' IDENTIFIER)*
-    ;
-
 variableModifier
 // todo final require?
     : FINAL
     //| annotation
+    ;
+
+qualifiedName
+    : IDENTIFIER ('.' IDENTIFIER)*
+    ;
+
+
+fieldDeclaration
+    //: typeType variableDeclarators ';'
+    : variableDeclarators ';'
     ;
 
 variableDeclarators
@@ -129,6 +74,13 @@ arrayInitializer
     : '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
     ;
 
+
+classOrInterfaceType
+    : IDENTIFIER ('.' IDENTIFIER)*
+    //: IDENTIFIER
+    ;
+
+
 literal
 //    : integerLiteral #Int
     : DECIMAL_LITERAL #Int
@@ -139,6 +91,120 @@ literal
     | BOOL_LITERAL # Bool
     | NULL_LITERAL # Null
     ;
+
+prog
+    : blockStatements
+    ;
+
+block
+    : '{' blockStatements '}'
+    ;
+
+blockStatements
+    : blockStatement* #BlockStms
+    ;
+
+blockStatement
+    : variableDeclarators #BlockVarDeclar
+    | statement # BlockStm
+   // | localTypeDeclaration
+    | functionDeclaration #BlockFunc
+    //| classDeclaration
+    ;
+
+statement
+    : blockLabel=block #StmBlockLabel
+    | IF parExpression statement (ELSE statement)? #StmIfElse
+    | FOR '(' forControl ')' statement #StmFor
+    | RETURN expr?  #StmReturn
+    | statementExpression=expr #StmExpr
+    ;
+
+forControl
+    : forInit? ';' expr? ';' forUpdate=expressionList?
+    ;
+
+forInit
+    : variableDeclarators
+    | expressionList
+    ;
+
+parExpression
+    : '(' expr ')'
+    ;
+
+
+expressionList
+    : expr (',' expr)*
+    ;
+
+
+
+functionCall
+    : IDENTIFIER '(' expressionList? ')'
+    | THIS '(' expressionList? ')'
+    | SUPER '(' expressionList? ')'
+    ;
+
+
+expr
+    : primary #PrimaryExpr
+    | expr bop='.'
+      ( IDENTIFIER
+      | functionCall
+      | expr
+      ) #DotExpr
+    | functionCall #FuncCallExpr
+    | lhs=expr postfix=('++' | '--') #PostfixExpr
+    | prefix=('~'|'!') rhs=expr #NotExpr
+    | lhs=expr bop=( MULT | DIV ) rhs=expr #MultDivExpr
+    | lhs=expr bop=MOD rhs=expr            #ModExpr
+    | lhs=expr bop=( PLUS | SUB ) rhs=expr #PlusSubExpr
+    | expr bop=(LE | GE | GT | LT ) expr # GLeExpr
+    | expr bop=(EQUAL | NOTEQUAL) expr # EqualOrNot
+    // 表明结合性是右结合的，内部原理使用循环代替递归。
+    | <assoc=right> lhs=expr
+      bop=('=' | '+=' | '-=' | '*=')
+      rhs=expr  #AssignExpr
+    ;
+
+primary
+    : '(' expr ')' #ExprPrimary
+    //| THIS
+    //| SUPER
+    | literal #LiterPrimary
+    | IDENTIFIER #IdentifierPrimary
+    // | typeTypeOrVoid '.' CLASS
+    ;
+
+
+
+
+
+
+typeList
+    : typeType (',' typeType)*
+    ;
+
+
+
+typeType
+    : (classOrInterfaceType| functionType | primitiveType) ('[' ']')*
+    ;
+
+
+functionType
+    : FUNCTION typeTypeOrVoid '(' typeList? ')'
+    ;
+
+primitiveType
+    : INT
+    | STRING
+    | FLOAT
+    | BOOLEAN
+    ;
+
+
 
 integerLiteral
     : DECIMAL_LITERAL
@@ -151,42 +217,14 @@ floatLiteral
 //    | HEX_FLOAT_LITERAL
     ;
 
-typeType
-    : (classOrInterfaceType| functionType | primitiveType) ('[' ']')*
-    ;
 
-primitiveType
-    : INT
-    | STRING
-    | FLOAT
-    | BOOLEAN
-    ;
 
-functionType
-    : FUNCTION typeTypeOrVoid '(' typeList? ')'
-    ;
 
-typeList
-    : typeType (',' typeType)*
-    ;
 
-typeTypeOrVoid
-    : typeType
-    | VOID
-    ;
 
-classOrInterfaceType
-    : IDENTIFIER ('.' IDENTIFIER)*
-    //: IDENTIFIER
-    ;
-
-expressionList
-    : expr (',' expr)*
-    ;
-
-parExpression
-    : '(' expr ')'
-    ;
+parse
+ : expr_list+=expr+ EOF
+ ;
 
 // Keywords
 FINAL:              'final';
@@ -195,6 +233,10 @@ INT:                'int';
 STRING:             'string';
 FLOAT:              'float';
 BOOLEAN:            'bool';
+SUPER:              'super';
+SWITCH:             'switch';
+SYNCHRONIZED:       'synchronized';
+THIS:               'this';
 
 
 // Separators
