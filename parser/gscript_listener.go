@@ -29,6 +29,9 @@ type GScriptListener interface {
 	// EnterParse is called when entering the parse production.
 	EnterParse(c *ParseContext)
 
+	// EnterFunctionCall is called when entering the functionCall production.
+	EnterFunctionCall(c *FunctionCallContext)
+
 	// EnterMultDivExpr is called when entering the MultDivExpr production.
 	EnterMultDivExpr(c *MultDivExprContext)
 
@@ -47,11 +50,17 @@ type GScriptListener interface {
 	// EnterModExpr is called when entering the ModExpr production.
 	EnterModExpr(c *ModExprContext)
 
+	// EnterDotExpr is called when entering the DotExpr production.
+	EnterDotExpr(c *DotExprContext)
+
 	// EnterEqualOrNot is called when entering the EqualOrNot production.
 	EnterEqualOrNot(c *EqualOrNotContext)
 
 	// EnterGLeExpr is called when entering the GLeExpr production.
 	EnterGLeExpr(c *GLeExprContext)
+
+	// EnterFuncCallExpr is called when entering the FuncCallExpr production.
+	EnterFuncCallExpr(c *FuncCallExprContext)
 
 	// EnterAssignExpr is called when entering the AssignExpr production.
 	EnterAssignExpr(c *AssignExprContext)
@@ -194,6 +203,9 @@ type GScriptListener interface {
 	// ExitParse is called when exiting the parse production.
 	ExitParse(c *ParseContext)
 
+	// ExitFunctionCall is called when exiting the functionCall production.
+	ExitFunctionCall(c *FunctionCallContext)
+
 	// ExitMultDivExpr is called when exiting the MultDivExpr production.
 	ExitMultDivExpr(c *MultDivExprContext)
 
@@ -212,11 +224,17 @@ type GScriptListener interface {
 	// ExitModExpr is called when exiting the ModExpr production.
 	ExitModExpr(c *ModExprContext)
 
+	// ExitDotExpr is called when exiting the DotExpr production.
+	ExitDotExpr(c *DotExprContext)
+
 	// ExitEqualOrNot is called when exiting the EqualOrNot production.
 	ExitEqualOrNot(c *EqualOrNotContext)
 
 	// ExitGLeExpr is called when exiting the GLeExpr production.
 	ExitGLeExpr(c *GLeExprContext)
+
+	// ExitFuncCallExpr is called when exiting the FuncCallExpr production.
+	ExitFuncCallExpr(c *FuncCallExprContext)
 
 	// ExitAssignExpr is called when exiting the AssignExpr production.
 	ExitAssignExpr(c *AssignExprContext)

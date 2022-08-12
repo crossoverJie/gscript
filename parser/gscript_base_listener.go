@@ -63,6 +63,12 @@ func (s *BaseGScriptListener) EnterParse(ctx *ParseContext) {}
 // ExitParse is called when production parse is exited.
 func (s *BaseGScriptListener) ExitParse(ctx *ParseContext) {}
 
+// EnterFunctionCall is called when production functionCall is entered.
+func (s *BaseGScriptListener) EnterFunctionCall(ctx *FunctionCallContext) {}
+
+// ExitFunctionCall is called when production functionCall is exited.
+func (s *BaseGScriptListener) ExitFunctionCall(ctx *FunctionCallContext) {}
+
 // EnterMultDivExpr is called when production MultDivExpr is entered.
 func (s *BaseGScriptListener) EnterMultDivExpr(ctx *MultDivExprContext) {}
 
@@ -99,6 +105,12 @@ func (s *BaseGScriptListener) EnterModExpr(ctx *ModExprContext) {}
 // ExitModExpr is called when production ModExpr is exited.
 func (s *BaseGScriptListener) ExitModExpr(ctx *ModExprContext) {}
 
+// EnterDotExpr is called when production DotExpr is entered.
+func (s *BaseGScriptListener) EnterDotExpr(ctx *DotExprContext) {}
+
+// ExitDotExpr is called when production DotExpr is exited.
+func (s *BaseGScriptListener) ExitDotExpr(ctx *DotExprContext) {}
+
 // EnterEqualOrNot is called when production EqualOrNot is entered.
 func (s *BaseGScriptListener) EnterEqualOrNot(ctx *EqualOrNotContext) {}
 
@@ -110,6 +122,12 @@ func (s *BaseGScriptListener) EnterGLeExpr(ctx *GLeExprContext) {}
 
 // ExitGLeExpr is called when production GLeExpr is exited.
 func (s *BaseGScriptListener) ExitGLeExpr(ctx *GLeExprContext) {}
+
+// EnterFuncCallExpr is called when production FuncCallExpr is entered.
+func (s *BaseGScriptListener) EnterFuncCallExpr(ctx *FuncCallExprContext) {}
+
+// ExitFuncCallExpr is called when production FuncCallExpr is exited.
+func (s *BaseGScriptListener) ExitFuncCallExpr(ctx *FuncCallExprContext) {}
 
 // EnterAssignExpr is called when production AssignExpr is entered.
 func (s *BaseGScriptListener) EnterAssignExpr(ctx *AssignExprContext) {}

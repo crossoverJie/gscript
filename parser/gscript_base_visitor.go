@@ -36,6 +36,10 @@ func (v *BaseGScriptVisitor) VisitParse(ctx *ParseContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseGScriptVisitor) VisitFunctionCall(ctx *FunctionCallContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseGScriptVisitor) VisitMultDivExpr(ctx *MultDivExprContext) interface{} {
 	return v.VisitChildren(ctx)
 }
@@ -60,11 +64,19 @@ func (v *BaseGScriptVisitor) VisitModExpr(ctx *ModExprContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseGScriptVisitor) VisitDotExpr(ctx *DotExprContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseGScriptVisitor) VisitEqualOrNot(ctx *EqualOrNotContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
 func (v *BaseGScriptVisitor) VisitGLeExpr(ctx *GLeExprContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitFuncCallExpr(ctx *FuncCallExprContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

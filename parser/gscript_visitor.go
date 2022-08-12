@@ -29,6 +29,9 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#parse.
 	VisitParse(ctx *ParseContext) interface{}
 
+	// Visit a parse tree produced by GScriptParser#functionCall.
+	VisitFunctionCall(ctx *FunctionCallContext) interface{}
+
 	// Visit a parse tree produced by GScriptParser#MultDivExpr.
 	VisitMultDivExpr(ctx *MultDivExprContext) interface{}
 
@@ -47,11 +50,17 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#ModExpr.
 	VisitModExpr(ctx *ModExprContext) interface{}
 
+	// Visit a parse tree produced by GScriptParser#DotExpr.
+	VisitDotExpr(ctx *DotExprContext) interface{}
+
 	// Visit a parse tree produced by GScriptParser#EqualOrNot.
 	VisitEqualOrNot(ctx *EqualOrNotContext) interface{}
 
 	// Visit a parse tree produced by GScriptParser#GLeExpr.
 	VisitGLeExpr(ctx *GLeExprContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#FuncCallExpr.
+	VisitFuncCallExpr(ctx *FuncCallExprContext) interface{}
 
 	// Visit a parse tree produced by GScriptParser#AssignExpr.
 	VisitAssignExpr(ctx *AssignExprContext) interface{}
