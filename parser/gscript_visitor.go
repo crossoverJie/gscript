@@ -8,6 +8,18 @@ import "github.com/antlr/antlr4/runtime/Go/antlr"
 type GScriptVisitor interface {
 	antlr.ParseTreeVisitor
 
+	// Visit a parse tree produced by GScriptParser#classDeclaration.
+	VisitClassDeclaration(ctx *ClassDeclarationContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#classBody.
+	VisitClassBody(ctx *ClassBodyContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#classBodyDeclaration.
+	VisitClassBodyDeclaration(ctx *ClassBodyDeclarationContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#memberDeclaration.
+	VisitMemberDeclaration(ctx *MemberDeclarationContext) interface{}
+
 	// Visit a parse tree produced by GScriptParser#functionDeclaration.
 	VisitFunctionDeclaration(ctx *FunctionDeclarationContext) interface{}
 

@@ -73,17 +73,17 @@ func (t *TypeScopeResolver) ExitStmFor(ctx *parser.StmForContext) {
 
 // EnterFunctionDeclaration 加入一个 func 的 scope
 func (t *TypeScopeResolver) EnterFunctionDeclaration(ctx *parser.FunctionDeclarationContext) {
-	scope := symbol.NewBlockScope(ctx, "func", t.currentScope())
-	t.currentScope().AddSymbol(scope)
+	//scope := symbol.NewBlockScope(ctx, "func", t.currentScope())
+	//t.currentScope().AddSymbol(scope)
 
 	name := ctx.IDENTIFIER().GetText()
 	newFunc := symbol.NewFunc(ctx, name, t.currentScope())
-	scope.AddSymbol(newFunc)
+	t.currentScope().AddSymbol(newFunc)
 
 	// add type
 	t.at.AppendType(newFunc)
 
-	t.pushScope(ctx, scope)
+	t.pushScope(ctx, newFunc)
 }
 
 // ExitFunctionDeclaration is called when production functionDeclaration is exited.

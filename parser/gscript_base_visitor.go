@@ -8,6 +8,22 @@ type BaseGScriptVisitor struct {
 	*antlr.BaseParseTreeVisitor
 }
 
+func (v *BaseGScriptVisitor) VisitClassDeclaration(ctx *ClassDeclarationContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitClassBody(ctx *ClassBodyContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitClassBodyDeclaration(ctx *ClassBodyDeclarationContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitMemberDeclaration(ctx *MemberDeclarationContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseGScriptVisitor) VisitFunctionDeclaration(ctx *FunctionDeclarationContext) interface{} {
 	return v.VisitChildren(ctx)
 }

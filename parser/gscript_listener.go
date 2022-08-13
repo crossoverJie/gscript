@@ -8,6 +8,18 @@ import "github.com/antlr/antlr4/runtime/Go/antlr"
 type GScriptListener interface {
 	antlr.ParseTreeListener
 
+	// EnterClassDeclaration is called when entering the classDeclaration production.
+	EnterClassDeclaration(c *ClassDeclarationContext)
+
+	// EnterClassBody is called when entering the classBody production.
+	EnterClassBody(c *ClassBodyContext)
+
+	// EnterClassBodyDeclaration is called when entering the classBodyDeclaration production.
+	EnterClassBodyDeclaration(c *ClassBodyDeclarationContext)
+
+	// EnterMemberDeclaration is called when entering the memberDeclaration production.
+	EnterMemberDeclaration(c *MemberDeclarationContext)
+
 	// EnterFunctionDeclaration is called when entering the functionDeclaration production.
 	EnterFunctionDeclaration(c *FunctionDeclarationContext)
 
@@ -184,6 +196,18 @@ type GScriptListener interface {
 
 	// EnterParse is called when entering the parse production.
 	EnterParse(c *ParseContext)
+
+	// ExitClassDeclaration is called when exiting the classDeclaration production.
+	ExitClassDeclaration(c *ClassDeclarationContext)
+
+	// ExitClassBody is called when exiting the classBody production.
+	ExitClassBody(c *ClassBodyContext)
+
+	// ExitClassBodyDeclaration is called when exiting the classBodyDeclaration production.
+	ExitClassBodyDeclaration(c *ClassBodyDeclarationContext)
+
+	// ExitMemberDeclaration is called when exiting the memberDeclaration production.
+	ExitMemberDeclaration(c *MemberDeclarationContext)
 
 	// ExitFunctionDeclaration is called when exiting the functionDeclaration production.
 	ExitFunctionDeclaration(c *FunctionDeclarationContext)

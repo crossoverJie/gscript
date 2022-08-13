@@ -121,6 +121,8 @@ func (v *Visitor) Visit(tree antlr.ParseTree) interface{} {
 		return v.VisitAssignExpr(ctx)
 	case *parser.FuncCallExprContext:
 		return v.VisitFuncCallExpr(ctx)
+	case *parser.BlockFuncContext:
+		return v.VisitBlockFunc(ctx)
 	default:
 		panic("Unknown context")
 	}

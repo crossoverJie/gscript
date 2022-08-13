@@ -21,6 +21,30 @@ func (s *BaseGScriptListener) EnterEveryRule(ctx antlr.ParserRuleContext) {}
 // ExitEveryRule is called when any rule is exited.
 func (s *BaseGScriptListener) ExitEveryRule(ctx antlr.ParserRuleContext) {}
 
+// EnterClassDeclaration is called when production classDeclaration is entered.
+func (s *BaseGScriptListener) EnterClassDeclaration(ctx *ClassDeclarationContext) {}
+
+// ExitClassDeclaration is called when production classDeclaration is exited.
+func (s *BaseGScriptListener) ExitClassDeclaration(ctx *ClassDeclarationContext) {}
+
+// EnterClassBody is called when production classBody is entered.
+func (s *BaseGScriptListener) EnterClassBody(ctx *ClassBodyContext) {}
+
+// ExitClassBody is called when production classBody is exited.
+func (s *BaseGScriptListener) ExitClassBody(ctx *ClassBodyContext) {}
+
+// EnterClassBodyDeclaration is called when production classBodyDeclaration is entered.
+func (s *BaseGScriptListener) EnterClassBodyDeclaration(ctx *ClassBodyDeclarationContext) {}
+
+// ExitClassBodyDeclaration is called when production classBodyDeclaration is exited.
+func (s *BaseGScriptListener) ExitClassBodyDeclaration(ctx *ClassBodyDeclarationContext) {}
+
+// EnterMemberDeclaration is called when production memberDeclaration is entered.
+func (s *BaseGScriptListener) EnterMemberDeclaration(ctx *MemberDeclarationContext) {}
+
+// ExitMemberDeclaration is called when production memberDeclaration is exited.
+func (s *BaseGScriptListener) ExitMemberDeclaration(ctx *MemberDeclarationContext) {}
+
 // EnterFunctionDeclaration is called when production functionDeclaration is entered.
 func (s *BaseGScriptListener) EnterFunctionDeclaration(ctx *FunctionDeclarationContext) {}
 

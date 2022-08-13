@@ -114,7 +114,7 @@ func TestGScriptVisitor_VisitIfElse4(t *testing.T) {
 func TestGScriptVisitor_VisitIfElse5(t *testing.T) {
 	expression := `
 if(3==(1+2)){
-	return 1+2*3
+	return 1+2*3;
 }`
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(expression, " result:", result)
@@ -123,9 +123,9 @@ if(3==(1+2)){
 func TestGScriptVisitor_VisitIfElse6(t *testing.T) {
 	expression := `
 if(3<(1+2)){
-	return 1+2*3
+	return 1+2*3;
 } else {
-	return 2
+	return 2;
 }`
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(expression, " result:", result)
@@ -134,9 +134,9 @@ if(3<(1+2)){
 func TestGScriptVisitor_VisitIfElse7(t *testing.T) {
 	expression := `
 if(3<(1+2)){
-	return 1+2*3
+	return 1+2*3;
 } else {
-	return "123"
+	return "123";
 }`
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(expression, " result:", result)
@@ -145,9 +145,9 @@ if(3<(1+2)){
 func TestGScriptVisitor_VisitIfElse8(t *testing.T) {
 	expression := `
 if(3!=(1+2)){
-	return 1+3
+	return 1+3;
 } else {
-	return false
+	return false;
 }`
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(expression, " result:", result)
@@ -157,35 +157,35 @@ if(3!=(1+2)){
 func TestArithmeticOperators(t *testing.T) {
 	expression := `
 if(4==(2+2)){
-	return 1+3
+	return 1+3;
 } else {
-	return false
+	return false;
 }`
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(result)
 	assert.Equal(t, result, int(4))
 }
 func TestArithmeticOperators2(t *testing.T) {
-	expression := `(10+20)*20`
+	expression := `(10+20)*20;`
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(result)
 	assert.Equal(t, result, 600)
 }
 func TestArithmeticOperators3(t *testing.T) {
-	expression := `(1+1.1)-2`
+	expression := `(1+1.1)-2;`
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(result.(float64))
 
-	expression = `(10+10)*10+10.1`
+	expression = `(10+10)*10+10.1;`
 	result = NewCompiler().Compiler(expression)
 	fmt.Println(result)
 }
 func TestArithmeticOperators4(t *testing.T) {
 	expression := `
 if ( (10 +10 ) == 20 ) {
-	return true 
+	return true ;
 } else {
-	return 20 
+	return 20 ;
 }
 `
 	var result = NewCompiler().Compiler(expression)
@@ -196,9 +196,9 @@ if ( (10 +10 ) == 20 ) {
 func TestArithmeticOperators5(t *testing.T) {
 	expression := `
 if ( (10 +10 ) == 20 ) {
-	return 10++ 
+	return 10++ ;
 } else {
-	return 20 
+	return 20 ;
 }
 `
 	var result = NewCompiler().Compiler(expression)
@@ -208,9 +208,9 @@ if ( (10 +10 ) == 20 ) {
 func TestArithmeticOperators6(t *testing.T) {
 	expression := `
 if ( (10 +10 ) == 20 ) {
-	return !(1+1==2) 
+	return !(1+1==2) ;
 } else {
-	return 20 
+	return 20 ;
 }
 `
 	var result = NewCompiler().Compiler(expression)
@@ -218,9 +218,9 @@ if ( (10 +10 ) == 20 ) {
 	assert.Equal(t, result, false)
 	expression = `
 if ( (10 +10 ) == 20 ) {
-	return !(1+1!=2) 
+	return !(1+1!=2) ;
 } else {
-	return 20 
+	return 20 ;
 }
 `
 	result = NewCompiler().Compiler(expression)
@@ -230,9 +230,9 @@ if ( (10 +10 ) == 20 ) {
 func TestArithmeticOperators7(t *testing.T) {
 	expression := `
 if ( (10 +10 ) == 20 ) {
-	return !10 
+	return !10 ;
 } else {
-	return 20 
+	return 20 ;
 }
 `
 	var result = NewCompiler().Compiler(expression)
@@ -240,7 +240,7 @@ if ( (10 +10 ) == 20 ) {
 }
 
 func TestDeclare(t *testing.T) {
-	expression := `int a=100`
+	expression := `int a=100;`
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(result)
 }

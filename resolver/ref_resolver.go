@@ -49,8 +49,8 @@ func (s *RefResolver) ExitIdentifierPrimary(ctx *parser.IdentifierPrimaryContext
 
 	s.at.PutSymbolOfNode(ctx, variable)
 
-	// 写入类型
-	s.at.PutTypeOfNode(ctx, variable.GetType())
+	// 写入类型1
+	s.at.PutTypeOfNode(ctx.GetParent().(*parser.PrimaryExprContext), variable.GetType())
 }
 
 func (s *RefResolver) ExitLiterPrimary(ctx *parser.LiterPrimaryContext) {
@@ -105,8 +105,12 @@ func (s *RefResolver) ExitFuncCallExpr(ctx *parser.FuncCallExprContext) {
 func (s *RefResolver) getParamTypes(ctx *parser.FunctionCallContext) []symbol.Type {
 	var paraTypes []symbol.Type
 	for _, context := range ctx.ExpressionList().(*parser.ExpressionListContext).AllExpr() {
-		symbolType := s.at.GetTypeOfNode()[context]
+		symbolType := s.at.GetTypeOfNode()[context.(*parser.PrimaryExprContext)]
 		paraTypes = append(paraTypes, symbolType)
 	}
 	return paraTypes
+}
+
+func (s *RefResolver) ExitInt(ctx *parser.IntContext) {
+	s.at.PutTypeOfNode(ctx.GetParent().(*parser.LiterPrimaryContext), symbol.Int)
 }

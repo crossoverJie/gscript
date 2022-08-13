@@ -1,6 +1,38 @@
 grammar GScript;
 
 
+classDeclaration
+    : CLASS IDENTIFIER
+
+      (IMPLEMENTS typeList)?
+      classBody
+    ;
+
+classBody
+    : '{' classBodyDeclaration* '}'
+    ;
+
+// interfaceBody
+//     : '{' interfaceBodyDeclaration* '}'
+//     ;
+
+classBodyDeclaration
+    : ';'
+    //| STATIC? block
+    | memberDeclaration
+    ;
+
+memberDeclaration
+    : functionDeclaration
+//    | genericFunctionDeclaration
+    | fieldDeclaration
+    // | constructorDeclaration
+    // | genericConstructorDeclaration
+//     | interfaceDeclaration
+    // | annotationTypeDeclaration
+     | classDeclaration
+    // | enumDeclaration
+    ;
 functionDeclaration
     : typeTypeOrVoid? IDENTIFIER formalParameters ('[' ']')*
       (THROWS qualifiedNameList)?
@@ -9,6 +41,7 @@ functionDeclaration
 
 functionBody
     : block
+    | ';'
     ;
 
 typeTypeOrVoid
@@ -105,7 +138,7 @@ blockStatements
     ;
 
 blockStatement
-    : variableDeclarators #BlockVarDeclar
+    : variableDeclarators ';' #BlockVarDeclar
     | statement # BlockStm
    // | localTypeDeclaration
     | functionDeclaration #BlockFunc
@@ -116,8 +149,8 @@ statement
     : blockLabel=block #StmBlockLabel
     | IF parExpression statement (ELSE statement)? #StmIfElse
     | FOR '(' forControl ')' statement #StmFor
-    | RETURN expr?  #StmReturn
-    | statementExpression=expr #StmExpr
+    | RETURN expr?  ';'#StmReturn
+    | statementExpression=expr ';'#StmExpr
     ;
 
 forControl
@@ -152,7 +185,6 @@ expr
     | expr bop='.'
       ( IDENTIFIER
       | functionCall
-      | expr
       ) #DotExpr
     | functionCall #FuncCallExpr
     | lhs=expr postfix=('++' | '--') #PostfixExpr
@@ -227,6 +259,9 @@ parse
  ;
 
 // Keywords
+CLASS:              'class';
+EXTENDS:            'extends';
+IMPLEMENTS:         'implements';
 FINAL:              'final';
 THROWS:             'throws';
 INT:                'int';
