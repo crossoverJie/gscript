@@ -44,8 +44,8 @@ type Frame struct {
 	object Object
 }
 
-func NewObjectStackFrame(object Object) *Frame {
-	return &Frame{object: object}
+func NewObjectStackFrame(object *FuncObject) *Frame {
+	return &Frame{object: object, scope: object.GetFunction()}
 }
 func NewBlockScopeFrame(scope symbol.Scope) *Frame {
 	return &Frame{scope: scope, object: NewEmptyObject()}
@@ -108,10 +108,15 @@ type FuncObject struct {
 
 func NewFuncObject(function *symbol.Func) *FuncObject {
 	return &FuncObject{
+		object:   &object{fields: make(map[*symbol.Variable]interface{})},
 		function: function,
 	}
 }
 
 func (f *FuncObject) GetFunction() *symbol.Func {
 	return f.function
+}
+
+func (f *FuncObject) SetValue(variable *symbol.Variable, value interface{}) {
+	f.fields[variable] = value
 }

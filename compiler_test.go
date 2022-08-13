@@ -94,14 +94,27 @@ return abc;
 	fmt.Println(compiler)
 }
 
-//func TestCompiler_FunctionCall(t *testing.T) {
-//	script := `
-//int b= 10;
-//int myfunc(int a) {
-//	return a+b+3;
-//}
-//myfunc(2);
-//`
-//	compiler := NewCompiler().Compiler(script)
-//	fmt.Println(compiler)
-//}
+func TestCompiler_FunctionCall(t *testing.T) {
+	script := `
+int b= 10;
+int myfunc(int a) {
+	return a+b+3;
+}
+myfunc(2);
+`
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
+	assert.Equal(t, compiler, 15)
+}
+func TestCompiler_FunctionCall2(t *testing.T) {
+	script := `
+int b= 10;
+int myfunc(int a,int d) {
+	return a+b+3+d;
+}
+myfunc(2,10);
+`
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
+	assert.Equal(t, compiler, 25)
+}

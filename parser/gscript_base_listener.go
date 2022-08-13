@@ -147,35 +147,11 @@ func (s *BaseGScriptListener) EnterClassOrInterfaceType(ctx *ClassOrInterfaceTyp
 // ExitClassOrInterfaceType is called when production classOrInterfaceType is exited.
 func (s *BaseGScriptListener) ExitClassOrInterfaceType(ctx *ClassOrInterfaceTypeContext) {}
 
-// EnterInt is called when production Int is entered.
-func (s *BaseGScriptListener) EnterInt(ctx *IntContext) {}
+// EnterLiteral is called when production literal is entered.
+func (s *BaseGScriptListener) EnterLiteral(ctx *LiteralContext) {}
 
-// ExitInt is called when production Int is exited.
-func (s *BaseGScriptListener) ExitInt(ctx *IntContext) {}
-
-// EnterFloat is called when production Float is entered.
-func (s *BaseGScriptListener) EnterFloat(ctx *FloatContext) {}
-
-// ExitFloat is called when production Float is exited.
-func (s *BaseGScriptListener) ExitFloat(ctx *FloatContext) {}
-
-// EnterString is called when production String is entered.
-func (s *BaseGScriptListener) EnterString(ctx *StringContext) {}
-
-// ExitString is called when production String is exited.
-func (s *BaseGScriptListener) ExitString(ctx *StringContext) {}
-
-// EnterBool is called when production Bool is entered.
-func (s *BaseGScriptListener) EnterBool(ctx *BoolContext) {}
-
-// ExitBool is called when production Bool is exited.
-func (s *BaseGScriptListener) ExitBool(ctx *BoolContext) {}
-
-// EnterNull is called when production Null is entered.
-func (s *BaseGScriptListener) EnterNull(ctx *NullContext) {}
-
-// ExitNull is called when production Null is exited.
-func (s *BaseGScriptListener) ExitNull(ctx *NullContext) {}
+// ExitLiteral is called when production literal is exited.
+func (s *BaseGScriptListener) ExitLiteral(ctx *LiteralContext) {}
 
 // EnterProg is called when production prog is entered.
 func (s *BaseGScriptListener) EnterProg(ctx *ProgContext) {}
@@ -273,89 +249,17 @@ func (s *BaseGScriptListener) EnterFunctionCall(ctx *FunctionCallContext) {}
 // ExitFunctionCall is called when production functionCall is exited.
 func (s *BaseGScriptListener) ExitFunctionCall(ctx *FunctionCallContext) {}
 
-// EnterMultDivExpr is called when production MultDivExpr is entered.
-func (s *BaseGScriptListener) EnterMultDivExpr(ctx *MultDivExprContext) {}
+// EnterExpr is called when production expr is entered.
+func (s *BaseGScriptListener) EnterExpr(ctx *ExprContext) {}
 
-// ExitMultDivExpr is called when production MultDivExpr is exited.
-func (s *BaseGScriptListener) ExitMultDivExpr(ctx *MultDivExprContext) {}
+// ExitExpr is called when production expr is exited.
+func (s *BaseGScriptListener) ExitExpr(ctx *ExprContext) {}
 
-// EnterPostfixExpr is called when production PostfixExpr is entered.
-func (s *BaseGScriptListener) EnterPostfixExpr(ctx *PostfixExprContext) {}
+// EnterPrimary is called when production primary is entered.
+func (s *BaseGScriptListener) EnterPrimary(ctx *PrimaryContext) {}
 
-// ExitPostfixExpr is called when production PostfixExpr is exited.
-func (s *BaseGScriptListener) ExitPostfixExpr(ctx *PostfixExprContext) {}
-
-// EnterPlusSubExpr is called when production PlusSubExpr is entered.
-func (s *BaseGScriptListener) EnterPlusSubExpr(ctx *PlusSubExprContext) {}
-
-// ExitPlusSubExpr is called when production PlusSubExpr is exited.
-func (s *BaseGScriptListener) ExitPlusSubExpr(ctx *PlusSubExprContext) {}
-
-// EnterPrimaryExpr is called when production PrimaryExpr is entered.
-func (s *BaseGScriptListener) EnterPrimaryExpr(ctx *PrimaryExprContext) {}
-
-// ExitPrimaryExpr is called when production PrimaryExpr is exited.
-func (s *BaseGScriptListener) ExitPrimaryExpr(ctx *PrimaryExprContext) {}
-
-// EnterNotExpr is called when production NotExpr is entered.
-func (s *BaseGScriptListener) EnterNotExpr(ctx *NotExprContext) {}
-
-// ExitNotExpr is called when production NotExpr is exited.
-func (s *BaseGScriptListener) ExitNotExpr(ctx *NotExprContext) {}
-
-// EnterModExpr is called when production ModExpr is entered.
-func (s *BaseGScriptListener) EnterModExpr(ctx *ModExprContext) {}
-
-// ExitModExpr is called when production ModExpr is exited.
-func (s *BaseGScriptListener) ExitModExpr(ctx *ModExprContext) {}
-
-// EnterDotExpr is called when production DotExpr is entered.
-func (s *BaseGScriptListener) EnterDotExpr(ctx *DotExprContext) {}
-
-// ExitDotExpr is called when production DotExpr is exited.
-func (s *BaseGScriptListener) ExitDotExpr(ctx *DotExprContext) {}
-
-// EnterEqualOrNot is called when production EqualOrNot is entered.
-func (s *BaseGScriptListener) EnterEqualOrNot(ctx *EqualOrNotContext) {}
-
-// ExitEqualOrNot is called when production EqualOrNot is exited.
-func (s *BaseGScriptListener) ExitEqualOrNot(ctx *EqualOrNotContext) {}
-
-// EnterGLeExpr is called when production GLeExpr is entered.
-func (s *BaseGScriptListener) EnterGLeExpr(ctx *GLeExprContext) {}
-
-// ExitGLeExpr is called when production GLeExpr is exited.
-func (s *BaseGScriptListener) ExitGLeExpr(ctx *GLeExprContext) {}
-
-// EnterFuncCallExpr is called when production FuncCallExpr is entered.
-func (s *BaseGScriptListener) EnterFuncCallExpr(ctx *FuncCallExprContext) {}
-
-// ExitFuncCallExpr is called when production FuncCallExpr is exited.
-func (s *BaseGScriptListener) ExitFuncCallExpr(ctx *FuncCallExprContext) {}
-
-// EnterAssignExpr is called when production AssignExpr is entered.
-func (s *BaseGScriptListener) EnterAssignExpr(ctx *AssignExprContext) {}
-
-// ExitAssignExpr is called when production AssignExpr is exited.
-func (s *BaseGScriptListener) ExitAssignExpr(ctx *AssignExprContext) {}
-
-// EnterExprPrimary is called when production ExprPrimary is entered.
-func (s *BaseGScriptListener) EnterExprPrimary(ctx *ExprPrimaryContext) {}
-
-// ExitExprPrimary is called when production ExprPrimary is exited.
-func (s *BaseGScriptListener) ExitExprPrimary(ctx *ExprPrimaryContext) {}
-
-// EnterLiterPrimary is called when production LiterPrimary is entered.
-func (s *BaseGScriptListener) EnterLiterPrimary(ctx *LiterPrimaryContext) {}
-
-// ExitLiterPrimary is called when production LiterPrimary is exited.
-func (s *BaseGScriptListener) ExitLiterPrimary(ctx *LiterPrimaryContext) {}
-
-// EnterIdentifierPrimary is called when production IdentifierPrimary is entered.
-func (s *BaseGScriptListener) EnterIdentifierPrimary(ctx *IdentifierPrimaryContext) {}
-
-// ExitIdentifierPrimary is called when production IdentifierPrimary is exited.
-func (s *BaseGScriptListener) ExitIdentifierPrimary(ctx *IdentifierPrimaryContext) {}
+// ExitPrimary is called when production primary is exited.
+func (s *BaseGScriptListener) ExitPrimary(ctx *PrimaryContext) {}
 
 // EnterTypeList is called when production typeList is entered.
 func (s *BaseGScriptListener) EnterTypeList(ctx *TypeListContext) {}

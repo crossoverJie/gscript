@@ -116,13 +116,13 @@ classOrInterfaceType
 
 literal
 //    : integerLiteral #Int
-    : DECIMAL_LITERAL #Int
+    : DECIMAL_LITERAL
 //    | floatLiteral #Float
-    | FLOAT_LITERAL #Float
+    | FLOAT_LITERAL
 //    | CHAR_LITERAL
-    | STRING_LITERAL #String
-    | BOOL_LITERAL # Bool
-    | NULL_LITERAL # Null
+    | STRING_LITERAL
+    | BOOL_LITERAL
+    | NULL_LITERAL
     ;
 
 prog
@@ -181,31 +181,31 @@ functionCall
 
 
 expr
-    : primary #PrimaryExpr
+    : primary
     | expr bop='.'
       ( IDENTIFIER
       | functionCall
-      ) #DotExpr
-    | functionCall #FuncCallExpr
-    | lhs=expr postfix=('++' | '--') #PostfixExpr
-    | prefix=('~'|'!') rhs=expr #NotExpr
-    | lhs=expr bop=( MULT | DIV ) rhs=expr #MultDivExpr
-    | lhs=expr bop=MOD rhs=expr            #ModExpr
-    | lhs=expr bop=( PLUS | SUB ) rhs=expr #PlusSubExpr
-    | expr bop=(LE | GE | GT | LT ) expr # GLeExpr
-    | expr bop=(EQUAL | NOTEQUAL) expr # EqualOrNot
+      )
+    | functionCall
+    | lhs=expr postfix=('++' | '--')
+    | prefix=('~'|'!') rhs=expr
+    | lhs=expr bop=( MULT | DIV ) rhs=expr
+    | lhs=expr bop=MOD rhs=expr
+    | lhs=expr bop=( PLUS | SUB ) rhs=expr
+    | lhs=expr bop=(LE | GE | GT | LT ) rhs=expr
+    | lhs=expr bop=(EQUAL | NOTEQUAL) rhs=expr
     // 表明结合性是右结合的，内部原理使用循环代替递归。
     | <assoc=right> lhs=expr
       bop=('=' | '+=' | '-=' | '*=')
-      rhs=expr  #AssignExpr
+      rhs=expr
     ;
 
 primary
-    : '(' expr ')' #ExprPrimary
+    : '(' expr ')'
     //| THIS
     //| SUPER
-    | literal #LiterPrimary
-    | IDENTIFIER #IdentifierPrimary
+    | literal
+    | IDENTIFIER
     // | typeTypeOrVoid '.' CLASS
     ;
 

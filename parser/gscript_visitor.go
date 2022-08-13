@@ -71,20 +71,8 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#classOrInterfaceType.
 	VisitClassOrInterfaceType(ctx *ClassOrInterfaceTypeContext) interface{}
 
-	// Visit a parse tree produced by GScriptParser#Int.
-	VisitInt(ctx *IntContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#Float.
-	VisitFloat(ctx *FloatContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#String.
-	VisitString(ctx *StringContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#Bool.
-	VisitBool(ctx *BoolContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#Null.
-	VisitNull(ctx *NullContext) interface{}
+	// Visit a parse tree produced by GScriptParser#literal.
+	VisitLiteral(ctx *LiteralContext) interface{}
 
 	// Visit a parse tree produced by GScriptParser#prog.
 	VisitProg(ctx *ProgContext) interface{}
@@ -134,47 +122,11 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#functionCall.
 	VisitFunctionCall(ctx *FunctionCallContext) interface{}
 
-	// Visit a parse tree produced by GScriptParser#MultDivExpr.
-	VisitMultDivExpr(ctx *MultDivExprContext) interface{}
+	// Visit a parse tree produced by GScriptParser#expr.
+	VisitExpr(ctx *ExprContext) interface{}
 
-	// Visit a parse tree produced by GScriptParser#PostfixExpr.
-	VisitPostfixExpr(ctx *PostfixExprContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#PlusSubExpr.
-	VisitPlusSubExpr(ctx *PlusSubExprContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#PrimaryExpr.
-	VisitPrimaryExpr(ctx *PrimaryExprContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#NotExpr.
-	VisitNotExpr(ctx *NotExprContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#ModExpr.
-	VisitModExpr(ctx *ModExprContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#DotExpr.
-	VisitDotExpr(ctx *DotExprContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#EqualOrNot.
-	VisitEqualOrNot(ctx *EqualOrNotContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#GLeExpr.
-	VisitGLeExpr(ctx *GLeExprContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#FuncCallExpr.
-	VisitFuncCallExpr(ctx *FuncCallExprContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#AssignExpr.
-	VisitAssignExpr(ctx *AssignExprContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#ExprPrimary.
-	VisitExprPrimary(ctx *ExprPrimaryContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#LiterPrimary.
-	VisitLiterPrimary(ctx *LiterPrimaryContext) interface{}
-
-	// Visit a parse tree produced by GScriptParser#IdentifierPrimary.
-	VisitIdentifierPrimary(ctx *IdentifierPrimaryContext) interface{}
+	// Visit a parse tree produced by GScriptParser#primary.
+	VisitPrimary(ctx *PrimaryContext) interface{}
 
 	// Visit a parse tree produced by GScriptParser#typeList.
 	VisitTypeList(ctx *TypeListContext) interface{}

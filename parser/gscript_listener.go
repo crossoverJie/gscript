@@ -71,20 +71,8 @@ type GScriptListener interface {
 	// EnterClassOrInterfaceType is called when entering the classOrInterfaceType production.
 	EnterClassOrInterfaceType(c *ClassOrInterfaceTypeContext)
 
-	// EnterInt is called when entering the Int production.
-	EnterInt(c *IntContext)
-
-	// EnterFloat is called when entering the Float production.
-	EnterFloat(c *FloatContext)
-
-	// EnterString is called when entering the String production.
-	EnterString(c *StringContext)
-
-	// EnterBool is called when entering the Bool production.
-	EnterBool(c *BoolContext)
-
-	// EnterNull is called when entering the Null production.
-	EnterNull(c *NullContext)
+	// EnterLiteral is called when entering the literal production.
+	EnterLiteral(c *LiteralContext)
 
 	// EnterProg is called when entering the prog production.
 	EnterProg(c *ProgContext)
@@ -134,47 +122,11 @@ type GScriptListener interface {
 	// EnterFunctionCall is called when entering the functionCall production.
 	EnterFunctionCall(c *FunctionCallContext)
 
-	// EnterMultDivExpr is called when entering the MultDivExpr production.
-	EnterMultDivExpr(c *MultDivExprContext)
+	// EnterExpr is called when entering the expr production.
+	EnterExpr(c *ExprContext)
 
-	// EnterPostfixExpr is called when entering the PostfixExpr production.
-	EnterPostfixExpr(c *PostfixExprContext)
-
-	// EnterPlusSubExpr is called when entering the PlusSubExpr production.
-	EnterPlusSubExpr(c *PlusSubExprContext)
-
-	// EnterPrimaryExpr is called when entering the PrimaryExpr production.
-	EnterPrimaryExpr(c *PrimaryExprContext)
-
-	// EnterNotExpr is called when entering the NotExpr production.
-	EnterNotExpr(c *NotExprContext)
-
-	// EnterModExpr is called when entering the ModExpr production.
-	EnterModExpr(c *ModExprContext)
-
-	// EnterDotExpr is called when entering the DotExpr production.
-	EnterDotExpr(c *DotExprContext)
-
-	// EnterEqualOrNot is called when entering the EqualOrNot production.
-	EnterEqualOrNot(c *EqualOrNotContext)
-
-	// EnterGLeExpr is called when entering the GLeExpr production.
-	EnterGLeExpr(c *GLeExprContext)
-
-	// EnterFuncCallExpr is called when entering the FuncCallExpr production.
-	EnterFuncCallExpr(c *FuncCallExprContext)
-
-	// EnterAssignExpr is called when entering the AssignExpr production.
-	EnterAssignExpr(c *AssignExprContext)
-
-	// EnterExprPrimary is called when entering the ExprPrimary production.
-	EnterExprPrimary(c *ExprPrimaryContext)
-
-	// EnterLiterPrimary is called when entering the LiterPrimary production.
-	EnterLiterPrimary(c *LiterPrimaryContext)
-
-	// EnterIdentifierPrimary is called when entering the IdentifierPrimary production.
-	EnterIdentifierPrimary(c *IdentifierPrimaryContext)
+	// EnterPrimary is called when entering the primary production.
+	EnterPrimary(c *PrimaryContext)
 
 	// EnterTypeList is called when entering the typeList production.
 	EnterTypeList(c *TypeListContext)
@@ -260,20 +212,8 @@ type GScriptListener interface {
 	// ExitClassOrInterfaceType is called when exiting the classOrInterfaceType production.
 	ExitClassOrInterfaceType(c *ClassOrInterfaceTypeContext)
 
-	// ExitInt is called when exiting the Int production.
-	ExitInt(c *IntContext)
-
-	// ExitFloat is called when exiting the Float production.
-	ExitFloat(c *FloatContext)
-
-	// ExitString is called when exiting the String production.
-	ExitString(c *StringContext)
-
-	// ExitBool is called when exiting the Bool production.
-	ExitBool(c *BoolContext)
-
-	// ExitNull is called when exiting the Null production.
-	ExitNull(c *NullContext)
+	// ExitLiteral is called when exiting the literal production.
+	ExitLiteral(c *LiteralContext)
 
 	// ExitProg is called when exiting the prog production.
 	ExitProg(c *ProgContext)
@@ -323,47 +263,11 @@ type GScriptListener interface {
 	// ExitFunctionCall is called when exiting the functionCall production.
 	ExitFunctionCall(c *FunctionCallContext)
 
-	// ExitMultDivExpr is called when exiting the MultDivExpr production.
-	ExitMultDivExpr(c *MultDivExprContext)
+	// ExitExpr is called when exiting the expr production.
+	ExitExpr(c *ExprContext)
 
-	// ExitPostfixExpr is called when exiting the PostfixExpr production.
-	ExitPostfixExpr(c *PostfixExprContext)
-
-	// ExitPlusSubExpr is called when exiting the PlusSubExpr production.
-	ExitPlusSubExpr(c *PlusSubExprContext)
-
-	// ExitPrimaryExpr is called when exiting the PrimaryExpr production.
-	ExitPrimaryExpr(c *PrimaryExprContext)
-
-	// ExitNotExpr is called when exiting the NotExpr production.
-	ExitNotExpr(c *NotExprContext)
-
-	// ExitModExpr is called when exiting the ModExpr production.
-	ExitModExpr(c *ModExprContext)
-
-	// ExitDotExpr is called when exiting the DotExpr production.
-	ExitDotExpr(c *DotExprContext)
-
-	// ExitEqualOrNot is called when exiting the EqualOrNot production.
-	ExitEqualOrNot(c *EqualOrNotContext)
-
-	// ExitGLeExpr is called when exiting the GLeExpr production.
-	ExitGLeExpr(c *GLeExprContext)
-
-	// ExitFuncCallExpr is called when exiting the FuncCallExpr production.
-	ExitFuncCallExpr(c *FuncCallExprContext)
-
-	// ExitAssignExpr is called when exiting the AssignExpr production.
-	ExitAssignExpr(c *AssignExprContext)
-
-	// ExitExprPrimary is called when exiting the ExprPrimary production.
-	ExitExprPrimary(c *ExprPrimaryContext)
-
-	// ExitLiterPrimary is called when exiting the LiterPrimary production.
-	ExitLiterPrimary(c *LiterPrimaryContext)
-
-	// ExitIdentifierPrimary is called when exiting the IdentifierPrimary production.
-	ExitIdentifierPrimary(c *IdentifierPrimaryContext)
+	// ExitPrimary is called when exiting the primary production.
+	ExitPrimary(c *PrimaryContext)
 
 	// ExitTypeList is called when exiting the typeList production.
 	ExitTypeList(c *TypeListContext)

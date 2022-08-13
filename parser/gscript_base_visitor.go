@@ -92,23 +92,7 @@ func (v *BaseGScriptVisitor) VisitClassOrInterfaceType(ctx *ClassOrInterfaceType
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitInt(ctx *IntContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitFloat(ctx *FloatContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitString(ctx *StringContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitBool(ctx *BoolContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitNull(ctx *NullContext) interface{} {
+func (v *BaseGScriptVisitor) VisitLiteral(ctx *LiteralContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
@@ -176,59 +160,11 @@ func (v *BaseGScriptVisitor) VisitFunctionCall(ctx *FunctionCallContext) interfa
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitMultDivExpr(ctx *MultDivExprContext) interface{} {
+func (v *BaseGScriptVisitor) VisitExpr(ctx *ExprContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
-func (v *BaseGScriptVisitor) VisitPostfixExpr(ctx *PostfixExprContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitPlusSubExpr(ctx *PlusSubExprContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitPrimaryExpr(ctx *PrimaryExprContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitNotExpr(ctx *NotExprContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitModExpr(ctx *ModExprContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitDotExpr(ctx *DotExprContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitEqualOrNot(ctx *EqualOrNotContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitGLeExpr(ctx *GLeExprContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitFuncCallExpr(ctx *FuncCallExprContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitAssignExpr(ctx *AssignExprContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitExprPrimary(ctx *ExprPrimaryContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitLiterPrimary(ctx *LiterPrimaryContext) interface{} {
-	return v.VisitChildren(ctx)
-}
-
-func (v *BaseGScriptVisitor) VisitIdentifierPrimary(ctx *IdentifierPrimaryContext) interface{} {
+func (v *BaseGScriptVisitor) VisitPrimary(ctx *PrimaryContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

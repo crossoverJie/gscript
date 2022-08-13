@@ -34,32 +34,61 @@ func (s *RefResolver) EnterVariableDeclarators(ctx *parser.VariableDeclaratorsCo
 	}
 }
 
-func (s *RefResolver) ExitIdentifierPrimary(ctx *parser.IdentifierPrimaryContext) {
-	idName := ctx.IDENTIFIER().GetText()
-	scope := s.at.FindEncloseScopeOfNode(ctx)
-	variable := s.at.FindVariable(scope, idName)
-	if variable == nil {
-		// todo crossoverJie 区分返回的是函数
+//func (s *RefResolver) ExitIdentifierPrimary(ctx *parser.IdentifierPrimaryContext) {
+//	idName := ctx.IDENTIFIER().GetText()
+//	scope := s.at.FindEncloseScopeOfNode(ctx)
+//	variable := s.at.FindVariable(scope, idName)
+//	if variable == nil {
+//		// todo crossoverJie 区分返回的是函数
+//
+//		// todo crossoverJie 完善编译报错信息
+//		line := ctx.GetStart().GetLine()
+//		column := ctx.GetStart().GetColumn()
+//		panic(fmt.Sprintf("unknown variable %s, at %d and column:%d", idName, line, column))
+//	}
+//
+//	s.at.PutSymbolOfNode(ctx, variable)
+//
+//	// 写入类型1
+//	s.at.PutTypeOfNode(ctx.GetParent().(*parser.ExprContext), variable.GetType())
+//}
 
-		// todo crossoverJie 完善编译报错信息
-		line := ctx.GetStart().GetLine()
-		column := ctx.GetStart().GetColumn()
-		panic(fmt.Sprintf("unknown variable %s, at %d and column:%d", idName, line, column))
+//func (s *RefResolver) ExitLiterPrimary(ctx *parser.LiterPrimaryContext) {
+//	symbolType := s.at.GetTypeOfNode()[ctx]
+//	s.at.PutTypeOfNode(ctx, symbolType)
+//}
+//
+//func (s *RefResolver) ExitExprPrimary(ctx *parser.ExprPrimaryContext) {
+//	symbolType := s.at.GetTypeOfNode()[ctx]
+//	s.at.PutTypeOfNode(ctx, symbolType)
+//}
+
+func (s *RefResolver) ExitPrimary(ctx *parser.PrimaryContext) {
+	// todo crossoverJie type 提出来
+	scope := s.at.FindEncloseScopeOfNode(ctx)
+	var symbolType symbol.Type
+	if ctx.Expr() != nil {
+		symbolType = s.at.GetTypeOfNode()[ctx.Expr()]
+	}
+	if ctx.Literal() != nil {
+		symbolType = s.at.GetTypeOfNode()[ctx.Literal()]
+	}
+	if ctx.IDENTIFIER() != nil {
+		idName := ctx.IDENTIFIER().GetText()
+		variable := s.at.FindVariable(scope, idName)
+		if variable == nil {
+			// todo crossoverJie 区分返回的是函数
+
+			// todo crossoverJie 完善编译报错信息
+			line := ctx.GetStart().GetLine()
+			column := ctx.GetStart().GetColumn()
+			panic(fmt.Sprintf("unknown variable %s, at %d and column:%d", idName, line, column))
+		} else {
+			s.at.PutSymbolOfNode(ctx, variable)
+			symbolType = variable.GetType()
+		}
 	}
 
-	s.at.PutSymbolOfNode(ctx, variable)
-
-	// 写入类型1
-	s.at.PutTypeOfNode(ctx.GetParent().(*parser.PrimaryExprContext), variable.GetType())
-}
-
-func (s *RefResolver) ExitLiterPrimary(ctx *parser.LiterPrimaryContext) {
-	symbolType := s.at.GetTypeOfNode()[ctx]
-	s.at.PutTypeOfNode(ctx, symbolType)
-}
-
-func (s *RefResolver) ExitExprPrimary(ctx *parser.ExprPrimaryContext) {
-	symbolType := s.at.GetTypeOfNode()[ctx]
 	s.at.PutTypeOfNode(ctx, symbolType)
 }
 
@@ -91,26 +120,42 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 
 }
 
-func (s *RefResolver) ExitPrimaryExpr(ctx *parser.PrimaryExprContext) {
-	symbolType := s.at.GetTypeOfNode()[ctx]
-	s.at.PutTypeOfNode(ctx, symbolType)
+func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
+	if ctx.Primary() != nil {
+		symbolType := s.at.GetTypeOfNode()[ctx.Primary()]
+		s.at.PutTypeOfNode(ctx, symbolType)
+	} else if ctx.FunctionCall() != nil {
+		symbolType := s.at.GetTypeOfNode()[ctx.FunctionCall()]
+		s.at.PutTypeOfNode(ctx, symbolType)
+	}
 }
 
-func (s *RefResolver) ExitFuncCallExpr(ctx *parser.FuncCallExprContext) {
-	symbolType := s.at.GetTypeOfNode()[ctx]
-	s.at.PutTypeOfNode(ctx, symbolType)
-}
+//func (s *RefResolver) ExitPrimaryExpr(ctx *parser.PrimaryExprContext) {
+//	symbolType := s.at.GetTypeOfNode()[ctx]
+//	s.at.PutTypeOfNode(ctx, symbolType)
+//}
+
+//func (s *RefResolver) ExitFuncCallExpr(ctx *parser.FuncCallExprContext) {
+//	symbolType := s.at.GetTypeOfNode()[ctx]
+//	s.at.PutTypeOfNode(ctx, symbolType)
+//}
 
 // 查询函数的参数列表
 func (s *RefResolver) getParamTypes(ctx *parser.FunctionCallContext) []symbol.Type {
 	var paraTypes []symbol.Type
 	for _, context := range ctx.ExpressionList().(*parser.ExpressionListContext).AllExpr() {
-		symbolType := s.at.GetTypeOfNode()[context.(*parser.PrimaryExprContext)]
+		symbolType := s.at.GetTypeOfNode()[context.(*parser.ExprContext)]
 		paraTypes = append(paraTypes, symbolType)
 	}
 	return paraTypes
 }
 
-func (s *RefResolver) ExitInt(ctx *parser.IntContext) {
-	s.at.PutTypeOfNode(ctx.GetParent().(*parser.LiterPrimaryContext), symbol.Int)
+//func (s *RefResolver) ExitInt(ctx *parser.IntContext) {
+//	s.at.PutTypeOfNode(ctx.GetParent().(*parser.PrimaryContext), symbol.Int)
+//}
+
+func (s *RefResolver) ExitLiteral(ctx *parser.LiteralContext) {
+	if ctx.DECIMAL_LITERAL() != nil {
+		s.at.PutTypeOfNode(ctx, symbol.Int)
+	}
 }
