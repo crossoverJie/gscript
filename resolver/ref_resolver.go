@@ -125,7 +125,9 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 		symbolType := s.at.GetTypeOfNode()[ctx.Primary()]
 		s.at.PutTypeOfNode(ctx, symbolType)
 	} else if ctx.FunctionCall() != nil {
+		// 获取方法返回值类型
 		symbolType := s.at.GetTypeOfNode()[ctx.FunctionCall()]
+		// 设置方法返回值类型
 		s.at.PutTypeOfNode(ctx, symbolType)
 	}
 }

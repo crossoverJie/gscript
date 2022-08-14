@@ -243,12 +243,12 @@ func (f *Func) AppendParameter(v *Variable) {
 }
 
 // MatchParameterTypes 通过参数类型匹配函数是否一致
-func (f *Func) MatchParameterTypes(types []Type) bool {
-	if len(f.parameters) != len(types) {
+func (f *Func) MatchParameterTypes(paramTypes []Type) bool {
+	if len(f.parameters) != len(paramTypes) {
 		return false
 	}
 	match := true
-	for i, t := range types {
+	for i, t := range paramTypes {
 		variable := f.parameters[i]
 		if !variable.t.IsType(t) {
 			match = false
