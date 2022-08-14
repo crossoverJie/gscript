@@ -175,6 +175,7 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 			ret = ret.(*LeftValue).GetValue()
 		}
 		// 为变量赋值
+		// int e=10   int e = foo()
 		leftValue.SetValue(ret)
 	}
 	return ret
@@ -333,6 +334,7 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 			case *LeftValue:
 				r = val2.(*LeftValue).GetValue()
 			}
+			// e = e+10
 			l.SetValue(r)
 		}
 

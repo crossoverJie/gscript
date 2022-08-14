@@ -154,11 +154,12 @@ int foo(int age){
 }
 int myfunc(int a,int b) {
 	int e = foo(10);
+	e = e+10;
 	return a+b+3+e;
 }
 myfunc(2,20);
 `
 	compiler := NewCompiler().Compiler(script)
 	fmt.Println(compiler)
-	assert.Equal(t, compiler, 45)
+	assert.Equal(t, compiler, 55)
 }
