@@ -53,6 +53,7 @@ func (v *Visitor) getLeftValue(variable *sym.Variable) *LeftValue {
 	frame := v.stack.Peek().(*stack.Frame)
 	var object stack.Object
 	for frame != nil {
+		// 按照作用域获取变量值，内部作用域覆盖外部作用域。
 		if frame.GetScope().ContainsSymbol(variable) {
 			object = frame.GetObject()
 			break
@@ -467,6 +468,9 @@ func (v *Visitor) getFunctionObject(ctx *parser.FunctionCallContext) *stack.Func
 // 构建函数调用的参数值 myfunc(2+2+a) 2+2+a 的值
 func (v *Visitor) buildParamValues(ctx *parser.FunctionCallContext) []interface{} {
 	ret := make([]interface{}, 0)
+	if ctx.ExpressionList() == nil {
+		return ret
+	}
 	for _, context := range ctx.ExpressionList().(*parser.ExpressionListContext).AllExpr() {
 		value := v.Visit(context)
 		switch value.(type) {
@@ -492,13 +496,15 @@ func (v *Visitor) executeFunctionCall(functionObject *stack.FuncObject, paramVal
 	// 拿到函数声明时所对应的 ctx, type_scope_resolver.go EnterFunctionDeclaration, g4:functionDeclaration
 	declarationContext := functionObject.GetFunction().GetCtx().(*parser.FunctionDeclarationContext)
 	formalParametersContext := declarationContext.FormalParameters().(*parser.FormalParametersContext)
-	for i, context := range formalParametersContext.FormalParameterList().(*parser.FormalParameterListContext).AllFormalParameter() {
-		parameterContext := context.(*parser.FormalParameterContext)
-		value := v.VisitVariableDeclaratorId(parameterContext.VariableDeclaratorId().(*parser.VariableDeclaratorIdContext))
-		switch value.(type) {
-		case *LeftValue:
-			leftValue := value.(*LeftValue)
-			leftValue.SetValue(paramValues[i])
+	if formalParametersContext.FormalParameterList() != nil {
+		for i, context := range formalParametersContext.FormalParameterList().(*parser.FormalParameterListContext).AllFormalParameter() {
+			parameterContext := context.(*parser.FormalParameterContext)
+			value := v.VisitVariableDeclaratorId(parameterContext.VariableDeclaratorId().(*parser.VariableDeclaratorIdContext))
+			switch value.(type) {
+			case *LeftValue:
+				leftValue := value.(*LeftValue)
+				leftValue.SetValue(paramValues[i])
+			}
 		}
 	}
 

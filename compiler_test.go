@@ -118,3 +118,47 @@ myfunc(2,10);
 	fmt.Println(compiler)
 	assert.Equal(t, compiler, 25)
 }
+func TestCompiler_FunctionCall3(t *testing.T) {
+	script := `
+int b= 10;
+int myfunc(int a,int b) {
+	return a+b+3;
+}
+myfunc(2,20);
+`
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
+	assert.Equal(t, compiler, 25)
+}
+func TestCompiler_FunctionCall4(t *testing.T) {
+	script := `
+int b= 10;
+int foo(){
+	return b;
+}
+int myfunc(int a,int b) {
+	int e = foo();
+	return a+b+3+e;
+}
+myfunc(2,20);
+`
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
+	assert.Equal(t, compiler, 35)
+}
+func TestCompiler_FunctionCall5(t *testing.T) {
+	script := `
+int b= 10;
+int foo(int age){
+	return b+age;
+}
+int myfunc(int a,int b) {
+	int e = foo(10);
+	return a+b+3+e;
+}
+myfunc(2,20);
+`
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
+	assert.Equal(t, compiler, 45)
+}

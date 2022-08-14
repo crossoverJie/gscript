@@ -143,6 +143,9 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 // 查询函数的参数列表
 func (s *RefResolver) getParamTypes(ctx *parser.FunctionCallContext) []symbol.Type {
 	var paraTypes []symbol.Type
+	if ctx.ExpressionList() == nil {
+		return paraTypes
+	}
 	for _, context := range ctx.ExpressionList().(*parser.ExpressionListContext).AllExpr() {
 		symbolType := s.at.GetTypeOfNode()[context.(*parser.ExprContext)]
 		paraTypes = append(paraTypes, symbolType)
