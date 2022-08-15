@@ -17,6 +17,7 @@ This is a small script language, and helps beginners to learn compilation princi
 ```java
 int b= 10;
 int foo(int age){
+	b++;
 	return b+age;
 }
 int add(int a,int b) {
@@ -25,7 +26,7 @@ int add(int a,int b) {
 	return a+b+3+e;
 }
 add(2,20);
-// Output:55
+// Output:56
 ```
 
 # Installation

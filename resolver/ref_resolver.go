@@ -161,6 +161,7 @@ func (s *RefResolver) getParamTypes(ctx *parser.FunctionCallContext) []symbol.Ty
 
 func (s *RefResolver) ExitLiteral(ctx *parser.LiteralContext) {
 	if ctx.DECIMAL_LITERAL() != nil {
+		// 设置标识符类型
 		s.at.PutTypeOfNode(ctx, symbol.Int)
 	}
 }
