@@ -152,14 +152,32 @@ int b= 10;
 int foo(int age){
 	return b+age;
 }
-int myfunc(int a,int b) {
+int add(int a,int b) {
 	int e = foo(10);
 	e = e+10;
 	return a+b+3+e;
 }
-myfunc(2,20);
+add(2,20);
 `
 	compiler := NewCompiler().Compiler(script)
 	fmt.Println(compiler)
 	assert.Equal(t, compiler, 55)
 }
+
+//func TestCompiler_FunctionCall6(t *testing.T) {
+//	script := `
+//int b= 10;
+//int,int foo(int age){
+//	return b+age,100;
+//}
+//int myfunc(int a,int b) {
+//	int e,f = foo(10);
+//	e = e+10;
+//	return a+b+3+e;
+//}
+//myfunc(2,20);
+//`
+//	compiler := NewCompiler().Compiler(script)
+//	fmt.Println(compiler)
+//	assert.Equal(t, compiler, 55)
+//}

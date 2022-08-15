@@ -103,6 +103,7 @@ func (t *TypeResolver) ExitTypeTypeOrVoid(ctx *parser.TypeTypeOrVoidContext) {
 	if ctx.TypeType() != nil {
 		// ExitTypeType 写入的类型
 		typeType := t.at.GetTypeOfNode()[ctx.TypeType()]
+		// 方法返回值的类型
 		t.at.PutTypeOfNode(ctx, typeType)
 	} else if ctx.VOID() != nil {
 		t.at.PutTypeOfNode(ctx, symbol.Void)
