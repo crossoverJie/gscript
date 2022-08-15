@@ -3,7 +3,7 @@ BINARY=gscript
 GOBUILD=go build -ldflags "-s -w" -o ${BINARY}
 GOCLEAN=go clean
 RMTARGZ=rm -rf *.gz
-VERSION=v0.0.3
+VERSION=v0.0.4
 
 # Build
 build:
