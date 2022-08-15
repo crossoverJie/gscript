@@ -31,7 +31,8 @@ func (t *TypeResolver) ExitVariableDeclarators(ctx *parser.VariableDeclaratorsCo
 		// 在 ExitTypeType 设置的类型
 		symbolType := t.at.GetTypeOfNode()[ctx.TypeType()]
 		for _, context := range ctx.AllVariableDeclarator() {
-			s := t.at.GetSymbolOfNode()[context]
+			// 为变量设置类型
+			s := t.at.GetSymbolOfNode()[context.(*parser.VariableDeclaratorContext).VariableDeclaratorId().(*parser.VariableDeclaratorIdContext)]
 			switch s.(type) {
 			case *symbol.Variable:
 				s.(*symbol.Variable).SetType(symbolType)

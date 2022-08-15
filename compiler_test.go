@@ -163,6 +163,28 @@ add(2,20);
 	fmt.Println(compiler)
 	assert.Equal(t, compiler, 55)
 }
+func TestCompiler_FunctionCall7(t *testing.T) {
+	script := `
+int a=10;
+int b=30;
+int fun(int f){
+	return f+100+b;
+}
+fun(a);
+`
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
+	assert.Equal(t, compiler, 140)
+}
+func TestCompiler_FunctionCall8(t *testing.T) {
+	script := `
+int a=10;
+a;
+`
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
+	//assert.Equal(t, compiler, 55)
+}
 
 //func TestCompiler_FunctionCall6(t *testing.T) {
 //	script := `
