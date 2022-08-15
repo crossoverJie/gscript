@@ -1,57 +1,91 @@
 grammar GScript;
 
-prog
-    : blockStatements
+
+classDeclaration
+    : CLASS IDENTIFIER
+
+      (IMPLEMENTS typeList)?
+      classBody
     ;
 
-blockStatements
-    : blockStatement* #BlockStms
+classBody
+    : '{' classBodyDeclaration* '}'
     ;
 
-blockStatement
-    : variableDeclarators #BlockVarDeclar
-    | statement # BlockStm
-   // | localTypeDeclaration
-    //| functionDeclaration
-    //| classDeclaration
+// interfaceBody
+//     : '{' interfaceBodyDeclaration* '}'
+//     ;
+
+classBodyDeclaration
+    : ';'
+    //| STATIC? block
+    | memberDeclaration
+    ;
+
+memberDeclaration
+    : functionDeclaration
+//    | genericFunctionDeclaration
+    | fieldDeclaration
+    // | constructorDeclaration
+    // | genericConstructorDeclaration
+//     | interfaceDeclaration
+    // | annotationTypeDeclaration
+     | classDeclaration
+    // | enumDeclaration
+    ;
+functionDeclaration
+    : typeTypeOrVoid? IDENTIFIER formalParameters ('[' ']')*
+      (THROWS qualifiedNameList)?
+      functionBody
+    ;
+
+functionBody
+    : block
+    | ';'
+    ;
+
+typeTypeOrVoid
+    : typeType
+    | VOID
+    ;
+
+qualifiedNameList
+    : qualifiedName (',' qualifiedName)*
+    ;
+
+formalParameters
+    : '(' formalParameterList? ')'
+    ;
+
+formalParameterList
+    : formalParameter (',' formalParameter)* (',' lastFormalParameter)?
+    | lastFormalParameter
+    ;
+
+formalParameter
+    : variableModifier* typeType variableDeclaratorId
+    ;
+
+lastFormalParameter
+    : variableModifier* typeType '...' variableDeclaratorId
+    ;
+
+variableModifier
+// todo final require?
+    : FINAL
+    //| annotation
+    ;
+
+qualifiedName
+    : IDENTIFIER ('.' IDENTIFIER)*
     ;
 
 
-parse
- : expr_list+=expr+ EOF
- ;
-
-expr
-    : '(' expr ')'                        #NestedExpr
-    | liter=literal #Liter
-    | SUB expr                            #UnaryExpr
-    | lhs=expr bop=( MULT | DIV ) rhs=expr #MultDivExpr
-    | lhs=expr bop=MOD rhs=expr            #ModExpr
-    | lhs=expr bop=( PLUS | SUB ) rhs=expr #PlusSubExpr
-    | expr bop=(LE | GE | GT | LT ) expr # GLe
-    | expr bop=(EQUAL | NOTEQUAL) expr # EqualOrNot
+fieldDeclaration
+    //: typeType variableDeclarators ';'
+    : variableDeclarators ';'
     ;
 
-block
-    : '{' blockStatements '}'
-    ;
-
-statement
-    : blockLabel=block #blockLabel
-    | IF parExpression statement (ELSE statement)? #IfElse
-    //| FOR '(' forControl ')' statement #For
-    | RETURN expr?  #Return
-    | statementExpression=expr #StmExpr
-    ;
-
-forControl
-    : forInit? ';' expr? ';' forUpdate=expressionList?
-    ;
-
-forInit
-    : variableDeclarators
-    | expressionList
-    ;
 variableDeclarators
     : typeType variableDeclarator (',' variableDeclarator)*
     ;
@@ -65,19 +99,144 @@ variableDeclaratorId
     ;
 
 variableInitializer
-    : expr
+    : arrayInitializer
+    | expr
     ;
+
+arrayInitializer
+    : '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
+    ;
+
+
+classOrInterfaceType
+    : IDENTIFIER ('.' IDENTIFIER)*
+    //: IDENTIFIER
+    ;
+
 
 literal
 //    : integerLiteral #Int
-    : DECIMAL_LITERAL #Int
+    : DECIMAL_LITERAL
 //    | floatLiteral #Float
-    | FLOAT_LITERAL #Float
+    | FLOAT_LITERAL
 //    | CHAR_LITERAL
-    | STRING_LITERAL #String
-    | BOOL_LITERAL # Bool
-    | NULL_LITERAL # Null
+    | STRING_LITERAL
+    | BOOL_LITERAL
+    | NULL_LITERAL
     ;
+
+prog
+    : blockStatements
+    ;
+
+block
+    : '{' blockStatements '}'
+    ;
+
+blockStatements
+    : blockStatement* #BlockStms
+    ;
+
+blockStatement
+    : variableDeclarators ';' #BlockVarDeclar
+    | statement # BlockStm
+   // | localTypeDeclaration
+    | functionDeclaration #BlockFunc
+    //| classDeclaration
+    ;
+
+statement
+    : blockLabel=block #StmBlockLabel
+    | IF parExpression statement (ELSE statement)? #StmIfElse
+    | FOR '(' forControl ')' statement #StmFor
+    | RETURN expr?  ';'#StmReturn
+    | statementExpression=expr ';'#StmExpr
+    ;
+
+forControl
+    : forInit? ';' expr? ';' forUpdate=expressionList?
+    ;
+
+forInit
+    : variableDeclarators
+    | expressionList
+    ;
+
+parExpression
+    : '(' expr ')'
+    ;
+
+
+expressionList
+    : expr (',' expr)*
+    ;
+
+
+
+functionCall
+    : IDENTIFIER '(' expressionList? ')'
+    | THIS '(' expressionList? ')'
+    | SUPER '(' expressionList? ')'
+    ;
+
+
+expr
+    : primary
+    | expr bop='.'
+      ( IDENTIFIER
+      | functionCall
+      )
+    | functionCall
+    | lhs=expr postfix=('++' | '--')
+    | prefix=('~'|'!') rhs=expr
+    | lhs=expr bop=( MULT | DIV ) rhs=expr
+    | lhs=expr bop=MOD rhs=expr
+    | lhs=expr bop=( PLUS | SUB ) rhs=expr
+    | lhs=expr bop=(LE | GE | GT | LT ) rhs=expr
+    | lhs=expr bop=(EQUAL | NOTEQUAL) rhs=expr
+    // 表明结合性是右结合的，内部原理使用循环代替递归。
+    | <assoc=right> lhs=expr
+      bop=('=' | '+=' | '-=' | '*=')
+      rhs=expr
+    ;
+
+primary
+    : '(' expr ')'
+    //| THIS
+    //| SUPER
+    | literal
+    | IDENTIFIER
+    // | typeTypeOrVoid '.' CLASS
+    ;
+
+
+
+
+
+
+typeList
+    : typeType (',' typeType)*
+    ;
+
+
+
+typeType
+    : (classOrInterfaceType| functionType | primitiveType) ('[' ']')*
+    ;
+
+
+functionType
+    : FUNCTION typeTypeOrVoid '(' typeList? ')'
+    ;
+
+primitiveType
+    : INT
+    | STRING
+    | FLOAT
+    | BOOLEAN
+    ;
+
+
 
 integerLiteral
     : DECIMAL_LITERAL
@@ -90,49 +249,57 @@ floatLiteral
 //    | HEX_FLOAT_LITERAL
     ;
 
-typeType
-    : (classOrInterfaceType| functionType | primitiveType) ('[' ']')*
-    ;
 
-primitiveType
-    : NUMBER
-    | STRING
-    ;
 
-functionType
-    : FUNCTION typeTypeOrVoid '(' typeList? ')'
-    ;
 
-typeList
-    : typeType (',' typeType)*
-    ;
 
-typeTypeOrVoid
-    : typeType
-    | VOID
-    ;
 
-classOrInterfaceType
-    : IDENTIFIER ('.' IDENTIFIER)*
-    //: IDENTIFIER
-    ;
+parse
+ : expr_list+=expr+ EOF
+ ;
 
-expressionList
-    : expr (',' expr)*
-    ;
+// Keywords
+CLASS:              'class';
+EXTENDS:            'extends';
+IMPLEMENTS:         'implements';
+FINAL:              'final';
+THROWS:             'throws';
+INT:                'int';
+STRING:             'string';
+FLOAT:              'float';
+BOOLEAN:            'bool';
+SUPER:              'super';
+SWITCH:             'switch';
+SYNCHRONIZED:       'synchronized';
+THIS:               'this';
 
-parExpression
-    : '(' expr ')'
-    ;
 
+// Separators
+
+LPAREN:             '(';
+RPAREN:             ')';
+LBRACE:             '{';
+RBRACE:             '}';
+LBRACK:             '[';
+RBRACK:             ']';
+
+ASSIGN:             '=';
+GT:                 '>';
+LT:                 '<';
+BANG:               '!';
+TILDE:              '~';
+INC:                '++';
+DEC:                '--';
 MULT : '*';
 DIV  : '/';
 PLUS : '+';
 SUB  : '-';
 MOD  : '%';
-ASSIGN:             '=';
-GT:                 '>';
-LT:                 '<';
+
+ADD_ASSIGN:         '+=';
+SUB_ASSIGN:         '-=';
+MUL_ASSIGN:         '*=';
+DIV_ASSIGN:         '/=';
 EQUAL:              '==';
 LE:                 '<=';
 GE:                 '>=';
@@ -149,6 +316,8 @@ BOOL_LITERAL:       'true'
             |       'false'
             ;
 
+
+
 //CHAR_LITERAL:       '\'' (~['\\\r\n] | EscapeSequence) '\'';
 
 STRING_LITERAL:     '"' (~["\\\r\n] | EscapeSequence)* '"';
@@ -164,11 +333,7 @@ fragment Digits
     : [0-9] ([0-9_]* [0-9])?
     ;
 
-NUMBER
- : ( D* '.' )? D+
- ;
 
-STRING:             'string';
 
 SPACES
  : [ \t\r\n] -> skip

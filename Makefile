@@ -1,9 +1,9 @@
 # Binary name
 BINARY=gscript
-GOBUILD=go build -ldflags "-s -w" -o ${BINARY}
+GOBUILD=go build -ldflags "-s -w" cmd/main.go -o ${BINARY}
 GOCLEAN=go clean
-RMTARGZ=rm -rf *.gz
-VERSION=v0.0.3
+RMTARGZ=rm -rf *.gz && rm -rf main
+VERSION=v0.0.4
 
 # Build
 build:
@@ -41,5 +41,6 @@ release:
 	tar czvf ${BINARY}-win64-${VERSION}.tar.gz ./${BINARY}.exe
 	$(GOCLEAN)
 
+# ANTLR Parser Generator  Version 4.9.2
 antlr:
-	antlr -Dlanguage=Go -o parser -visitor -no-listener GScript.g4
+	antlr -Dlanguage=Go -o parser -visitor -listener  GScript.g4
