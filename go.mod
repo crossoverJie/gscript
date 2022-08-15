@@ -1,6 +1,6 @@
 module github.com/crossoverJie/gscript
 
-go 1.16
+go 1.17
 
 require (
 	github.com/antlr/antlr4/runtime/Go/antlr v0.0.0-20220104200011-60a98e12bb56
