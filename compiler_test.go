@@ -150,6 +150,7 @@ func TestCompiler_FunctionCall5(t *testing.T) {
 	script := `
 int b= 10;
 int foo(int age){
+	b++;
 	return b+age;
 }
 int add(int a,int b) {
@@ -161,7 +162,7 @@ add(2,20);
 `
 	compiler := NewCompiler().Compiler(script)
 	fmt.Println(compiler)
-	assert.Equal(t, compiler, 55)
+	assert.Equal(t, compiler, 56)
 }
 func TestCompiler_FunctionCall7(t *testing.T) {
 	script := `
