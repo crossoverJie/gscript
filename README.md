@@ -8,9 +8,9 @@
 
 ```
 
-This is a small script language, and helps beginners to learn compilation principles.
+This is an experimental script language. and helps beginners to learn compilation principles.
 
-> It is called Gscript because it is written with Go.
+> It is called GScript because it is written with Go.
 
 # Demo
 
