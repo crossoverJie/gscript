@@ -36,6 +36,7 @@ func (v *Visitor) pushStack(frame *stack.Frame) {
 	// todo crossoverJie parentFrame 设置
 	if !v.stack.IsEmpty() {
 		if frame.GetParent() == nil {
+			// 上一级作用域作为本级作用域的父级
 			frame.SetParent(v.stack.Peek().(*stack.Frame))
 		}
 
@@ -499,6 +500,7 @@ func (v *Visitor) executeFunctionCall(functionObject *stack.FuncObject, paramVal
 	declarationContext := functionObject.GetFunction().GetCtx().(*parser.FunctionDeclarationContext)
 	formalParametersContext := declarationContext.FormalParameters().(*parser.FormalParametersContext)
 	if formalParametersContext.FormalParameterList() != nil {
+		// 为函数参数赋值
 		for i, context := range formalParametersContext.FormalParameterList().(*parser.FormalParameterListContext).AllFormalParameter() {
 			parameterContext := context.(*parser.FormalParameterContext)
 			value := v.VisitVariableDeclaratorId(parameterContext.VariableDeclaratorId().(*parser.VariableDeclaratorIdContext))
