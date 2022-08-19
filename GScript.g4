@@ -3,7 +3,7 @@ grammar GScript;
 
 classDeclaration
     : CLASS IDENTIFIER
-
+      (EXTENDS typeType)?
       (IMPLEMENTS typeList)?
       classBody
     ;
@@ -30,7 +30,7 @@ memberDeclaration
     // | genericConstructorDeclaration
 //     | interfaceDeclaration
     // | annotationTypeDeclaration
-     | classDeclaration
+     //| classDeclaration
     // | enumDeclaration
     ;
 functionDeclaration
@@ -142,7 +142,7 @@ blockStatement
     | statement # BlockStm
    // | localTypeDeclaration
     | functionDeclaration #BlockFunc
-    //| classDeclaration
+    | classDeclaration #BlockClassDeclar
     ;
 
 statement
@@ -282,6 +282,7 @@ LBRACE:             '{';
 RBRACE:             '}';
 LBRACK:             '[';
 RBRACK:             ']';
+DOT:                '.';
 
 ASSIGN:             '=';
 GT:                 '>';

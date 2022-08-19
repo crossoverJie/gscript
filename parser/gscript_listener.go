@@ -92,6 +92,9 @@ type GScriptListener interface {
 	// EnterBlockFunc is called when entering the BlockFunc production.
 	EnterBlockFunc(c *BlockFuncContext)
 
+	// EnterBlockClassDeclar is called when entering the BlockClassDeclar production.
+	EnterBlockClassDeclar(c *BlockClassDeclarContext)
+
 	// EnterStmBlockLabel is called when entering the StmBlockLabel production.
 	EnterStmBlockLabel(c *StmBlockLabelContext)
 
@@ -232,6 +235,9 @@ type GScriptListener interface {
 
 	// ExitBlockFunc is called when exiting the BlockFunc production.
 	ExitBlockFunc(c *BlockFuncContext)
+
+	// ExitBlockClassDeclar is called when exiting the BlockClassDeclar production.
+	ExitBlockClassDeclar(c *BlockClassDeclarContext)
 
 	// ExitStmBlockLabel is called when exiting the StmBlockLabel production.
 	ExitStmBlockLabel(c *StmBlockLabelContext)

@@ -90,3 +90,17 @@ func (t *TypeScopeResolver) EnterFunctionDeclaration(ctx *parser.FunctionDeclara
 func (t *TypeScopeResolver) ExitFunctionDeclaration(ctx *parser.FunctionDeclarationContext) {
 	t.popScope()
 }
+
+func (t *TypeScopeResolver) EnterClassDeclaration(ctx *parser.ClassDeclarationContext) {
+	className := ctx.IDENTIFIER().GetText()
+	class := symbol.NewClass(ctx, className)
+	t.currentScope().AddSymbol(class)
+	t.at.AppendType(class)
+
+	// todo crossoverJie 重复校验
+	t.pushScope(ctx, class)
+}
+
+func (t *TypeScopeResolver) ExitClassDeclaration(ctx *parser.ClassDeclarationContext) {
+	t.popScope()
+}

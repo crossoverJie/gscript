@@ -92,6 +92,9 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#BlockFunc.
 	VisitBlockFunc(ctx *BlockFuncContext) interface{}
 
+	// Visit a parse tree produced by GScriptParser#BlockClassDeclar.
+	VisitBlockClassDeclar(ctx *BlockClassDeclarContext) interface{}
+
 	// Visit a parse tree produced by GScriptParser#StmBlockLabel.
 	VisitStmBlockLabel(ctx *StmBlockLabelContext) interface{}
 

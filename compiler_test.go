@@ -206,3 +206,15 @@ a;
 //	fmt.Println(compiler)
 //	assert.Equal(t, compiler, 55)
 //}
+
+func TestCompiler_Class(t *testing.T) {
+	script := `
+class Person{
+   int age=10;
+}
+Person xx= Person();
+print(xx.age);
+`
+	NewCompiler().Compiler(script)
+	//assert.Equal(t, compiler, 55)
+}

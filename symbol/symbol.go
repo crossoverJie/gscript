@@ -53,6 +53,7 @@ type Scope interface {
 	SetCtx(ctx antlr.ParserRuleContext)
 	GetVariable(name string) *Variable
 	GetFunction(name string, paramTypes []Type) *Func
+	GetClass(name string) *Class
 	String() string
 }
 
@@ -89,6 +90,9 @@ func (s *scope) GetVariable(name string) *Variable {
 func (s *scope) GetFunction(name string, paramTypes []Type) *Func {
 	return GetFunction(s, name, paramTypes)
 }
+func (s *scope) GetClass(name string) *Class {
+	return GetClass(s, name)
+}
 
 // GetVariable 从 scope 中通过变量名称查询变量
 func GetVariable(scope Scope, name string) *Variable {
@@ -103,7 +107,9 @@ func GetVariable(scope Scope, name string) *Variable {
 	return nil
 }
 
+// GetFunction 在 scope 中查询函数，需要入参相同
 func GetFunction(scope Scope, name string, paramTypes []Type) *Func {
+	// todo crossoverJie 返回值校验
 	for _, s := range scope.GetSymbols() {
 		switch s.(type) {
 		case *Func:
@@ -114,6 +120,20 @@ func GetFunction(scope Scope, name string, paramTypes []Type) *Func {
 		}
 	}
 
+	return nil
+}
+
+// GetClass 在 scope 中查找 class 的 symbol
+func GetClass(scope Scope, name string) *Class {
+	for _, s := range scope.GetSymbols() {
+		switch s.(type) {
+		case *Class:
+			c := s.(*Class)
+			if c.GetName() == name {
+				return c
+			}
+		}
+	}
 	return nil
 }
 

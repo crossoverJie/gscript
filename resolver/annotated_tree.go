@@ -16,6 +16,7 @@ type AnnotatedTree struct {
 	// ctx 中存放的所有类型
 	typeOfNode map[antlr.ParserRuleContext]symbol.Type
 
+	// 所有的 class，function 的 type
 	types []symbol.Type
 }
 
@@ -76,6 +77,13 @@ func (a *AnnotatedTree) FindEncloseScopeOfNode(ctx antlr.ParserRuleContext) symb
 	}
 
 	return ret
+}
+func (a *AnnotatedTree) FindClass(scope symbol.Scope, name string) *symbol.Class {
+	class := scope.GetClass(name)
+	if class == nil && scope.GetEncloseScope() != nil {
+		class = a.FindClass(scope.GetEncloseScope(), name)
+	}
+	return class
 }
 
 // FindVariable 根据变量名称在 scope 中逐级查找变量

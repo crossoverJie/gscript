@@ -114,13 +114,56 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 		}
 	}
 
-	// todo crossoverJie 查找是否是类的构造函数
+	// 查找是否是类的构造函数
+	if !found {
+		// 构造函数没有返回值
+		class := s.at.FindClass(scope, name)
+		if class != nil {
+			// 查找显式的构造函数
+			function := class.GetConstructorFunc(paramTypes)
+			if function != nil {
+				found = true
+				s.at.PutSymbolOfNode(ctx, function)
+			} else if len(paramTypes) == 0 {
+				// 查找默认的构造函数
+				found = true
+				s.at.PutSymbolOfNode(ctx, class.GetDefaultConstructorFunc())
+			} else {
+				// todo crossoverJie 完善编译报错信息
+			}
+		}
+	}
 
 	// todo crossoverJie 查找是否为函数变量
 
 }
 
 func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
+	if ctx.GetBop() != nil && ctx.GetBop().GetTokenType() == parser.GScriptParserDOT {
+		// 获取到 xx.age 中写入的 symbol
+		sym := s.at.GetSymbolOfNode()[ctx.Expr(0)]
+		switch sym.(type) {
+		case *symbol.Variable:
+			variable := sym.(*symbol.Variable)
+			switch variable.GetType().(type) {
+			case *symbol.Class:
+				// 在 class 中通过变量名称查找变量
+				name := ctx.IDENTIFIER().GetText()
+				class := variable.GetType().(*symbol.Class)
+				findVariable := s.at.FindVariable(class, name)
+				if findVariable != nil {
+					s.at.PutSymbolOfNode(ctx, findVariable)
+				} else {
+					// todo crossoverJie 编译报错信息
+				}
+			}
+		}
+	} else if ctx.Primary() != nil {
+		// Person xx=Person();
+		// xx.age 中的 xx
+		sym := s.at.GetSymbolOfNode()[ctx.Primary()]
+		s.at.PutSymbolOfNode(ctx, sym)
+	}
 	if ctx.Primary() != nil {
 		symbolType := s.at.GetTypeOfNode()[ctx.Primary()]
 		s.at.PutTypeOfNode(ctx, symbolType)

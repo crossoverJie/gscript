@@ -125,13 +125,19 @@ func (v *Visitor) Visit(tree antlr.ParseTree) interface{} {
 	//case *parser.FuncCallExprContext:
 	//	return v.VisitFuncCallExpr(ctx)
 	case *parser.BlockFuncContext:
-		return v.VisitBlockFunc(ctx)
+		return nil
 	case *parser.ExprContext:
 		return v.VisitExpr(ctx)
 	case *parser.PrimaryContext:
 		return v.VisitPrimary(ctx)
 	case *parser.LiteralContext:
 		return v.VisitLiteral(ctx)
+	case *parser.BlockClassDeclarContext:
+		return nil
+	case *parser.ClassDeclarationContext:
+		return v.VisitClassDeclaration(ctx)
+	case *parser.ClassBodyContext:
+		return v.VisitClassBody(ctx)
 	default:
 		panic("Unknown context")
 	}
@@ -340,6 +346,27 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 		}
 
 	}
+	if ctx.GetBop() != nil && ctx.GetBop().GetTokenType() == parser.GScriptParserDOT {
+		l := v.VisitExpr(ctx.Expr(0).(*parser.ExprContext))
+		switch l.(type) {
+		case *LeftValue:
+			left := l.(*LeftValue)
+			switch left.GetValue().(type) {
+			case *stack.ClassObject:
+				classObject := left.GetValue().(*stack.ClassObject)
+				if ctx.IDENTIFIER() != nil {
+					_ = v.at.GetSymbolOfNode()[ctx.Expr(0)].(*sym.Variable)
+					// todo crossoverJie this/super 从父级查找
+
+					variable := v.at.GetSymbolOfNode()[ctx].(*sym.Variable)
+
+					// person.age， 返回的是 age 的左值
+					return NewLeftValue(variable, classObject)
+				}
+			}
+
+		}
+	}
 	if ctx.GetPostfix() != nil {
 		lhs := ctx.GetLhs()
 		value := v.Visit(lhs)
@@ -426,11 +453,20 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 // VisitFunctionCall 函数调用
 func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{} {
 	var ret interface{}
-	//name := ctx.IDENTIFIER().GetText()
+	name := ctx.IDENTIFIER().GetText()
 	// todo crossoverJie 内置函数校验
+	if name == "print" {
+		v.print(ctx)
+		return ret
+	}
 
-	//symbol := v.at.GetSymbolOfNode()[ctx]
 	// todo crossoverJie 默认构造函数
+	symbol := v.at.GetSymbolOfNode()[ctx]
+	switch symbol.(type) {
+	case *sym.DefaultConstructorFunc:
+		class := symbol.(*sym.DefaultConstructorFunc).GetClass()
+		return v.initClassObject(class)
+	}
 
 	functionObject := v.getFunctionObject(ctx)
 
@@ -442,6 +478,52 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 	// 执行函数调用
 	ret = v.executeFunctionCall(functionObject, paramValues)
 	return ret
+}
+
+func (v *Visitor) print(ctx *parser.FunctionCallContext) {
+	if ctx.ExpressionList() != nil {
+		ret := v.VisitExpressionList(ctx.ExpressionList().(*parser.ExpressionListContext))
+		switch ret.(type) {
+		case *LeftValue:
+			ret = ret.(*LeftValue).GetValue()
+		}
+		fmt.Println(ret)
+	} else {
+		fmt.Println("")
+	}
+}
+
+// 初始化 classObject 对象
+func (v *Visitor) initClassObject(class *sym.Class) *stack.ClassObject {
+	object := stack.NewClassObject(class)
+
+	var tempStack stack.Stack
+	tempStack.Push(class)
+
+	v.pushStack(stack.NewClassStackFrame(object))
+	// todo crossoverJie 如果有父类需要一次初始化
+	for !tempStack.IsEmpty() {
+		pop := tempStack.Pop().(*sym.Class)
+		v.initClassObjectField(pop, object)
+	}
+	v.popStack()
+	return object
+}
+
+// 初始化 classObject 中的变量数据
+func (v *Visitor) initClassObjectField(class *sym.Class, object *stack.ClassObject) {
+	for _, symbol := range class.GetSymbols() {
+		switch symbol.(type) {
+		case *sym.Variable:
+			// 为 class 中的变量初始化为空值
+			object.SetValue(symbol.(*sym.Variable), nil)
+		}
+	}
+
+	// 初始化变量，比如 class X{**int a=10**}
+	ctx := class.GetCtx().(*parser.ClassDeclarationContext)
+	v.VisitClassDeclaration(ctx)
+
 }
 
 // 获取函数的 object 对象，需要用来压栈
@@ -525,6 +607,36 @@ func (v *Visitor) VisitFunctionDeclaration(ctx *parser.FunctionDeclarationContex
 
 func (v *Visitor) VisitFunctionBody(ctx *parser.FunctionBodyContext) interface{} {
 	return v.VisitBlock(ctx.Block().(*parser.BlockContext))
+}
+
+func (v *Visitor) VisitClassDeclaration(ctx *parser.ClassDeclarationContext) interface{} {
+	if ctx.ClassBody() != nil {
+		return v.VisitClassBody(ctx.ClassBody().(*parser.ClassBodyContext))
+	}
+	return nil
+}
+
+func (v *Visitor) VisitClassBody(ctx *parser.ClassBodyContext) interface{} {
+	var ret interface{}
+	for _, context := range ctx.AllClassBodyDeclaration() {
+		ret = v.VisitClassBodyDeclaration(context.(*parser.ClassBodyDeclarationContext))
+	}
+	return ret
+}
+
+func (v *Visitor) VisitClassBodyDeclaration(ctx *parser.ClassBodyDeclarationContext) interface{} {
+	return v.VisitMemberDeclaration(ctx.MemberDeclaration().(*parser.MemberDeclarationContext))
+}
+
+func (v *Visitor) VisitMemberDeclaration(ctx *parser.MemberDeclarationContext) interface{} {
+	if ctx.FieldDeclaration() != nil {
+		return v.VisitFieldDeclaration(ctx.FieldDeclaration().(*parser.FieldDeclarationContext))
+	}
+	return nil
+}
+
+func (v *Visitor) VisitFieldDeclaration(ctx *parser.FieldDeclarationContext) interface{} {
+	return v.VisitVariableDeclarators(ctx.VariableDeclarators().(*parser.VariableDeclaratorsContext))
 }
 
 //func (v *Visitor) VisitNotExpr(ctx *parser.NotExprContext) interface{} {

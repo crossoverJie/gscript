@@ -120,6 +120,10 @@ func (v *BaseGScriptVisitor) VisitBlockFunc(ctx *BlockFuncContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseGScriptVisitor) VisitBlockClassDeclar(ctx *BlockClassDeclarContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseGScriptVisitor) VisitStmBlockLabel(ctx *StmBlockLabelContext) interface{} {
 	return v.VisitChildren(ctx)
 }

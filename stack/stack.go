@@ -50,6 +50,9 @@ func NewObjectStackFrame(object *FuncObject) *Frame {
 func NewBlockScopeFrame(scope symbol.Scope) *Frame {
 	return &Frame{scope: scope, object: NewEmptyObject()}
 }
+func NewClassStackFrame(classObject *ClassObject) *Frame {
+	return &Frame{scope: classObject.class, object: classObject}
+}
 
 func (s *Frame) GetScope() symbol.Scope {
 	return s.scope
@@ -119,4 +122,16 @@ func (f *FuncObject) GetFunction() *symbol.Func {
 
 func (f *FuncObject) SetValue(variable *symbol.Variable, value interface{}) {
 	f.fields[variable] = value
+}
+
+type ClassObject struct {
+	*object
+	class *symbol.Class
+}
+
+func NewClassObject(class *symbol.Class) *ClassObject {
+	return &ClassObject{
+		object: &object{fields: make(map[*symbol.Variable]interface{})},
+		class:  class,
+	}
 }

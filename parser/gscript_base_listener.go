@@ -189,6 +189,12 @@ func (s *BaseGScriptListener) EnterBlockFunc(ctx *BlockFuncContext) {}
 // ExitBlockFunc is called when production BlockFunc is exited.
 func (s *BaseGScriptListener) ExitBlockFunc(ctx *BlockFuncContext) {}
 
+// EnterBlockClassDeclar is called when production BlockClassDeclar is entered.
+func (s *BaseGScriptListener) EnterBlockClassDeclar(ctx *BlockClassDeclarContext) {}
+
+// ExitBlockClassDeclar is called when production BlockClassDeclar is exited.
+func (s *BaseGScriptListener) ExitBlockClassDeclar(ctx *BlockClassDeclarContext) {}
+
 // EnterStmBlockLabel is called when production StmBlockLabel is entered.
 func (s *BaseGScriptListener) EnterStmBlockLabel(ctx *StmBlockLabelContext) {}
 
