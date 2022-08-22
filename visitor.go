@@ -360,8 +360,12 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 
 					variable := v.at.GetSymbolOfNode()[ctx].(*sym.Variable)
 
-					// person.age， 返回的是 age 的左值
+					// person.age; 返回的是 age 的左值
 					return NewLeftValue(variable, classObject)
+				} else if ctx.FunctionCall() != nil {
+					// person.getAge();
+					// todo crossoverJie isSuper 赋值
+					return v.receiveFunctionCall(ctx.FunctionCall().(*parser.FunctionCallContext), classObject, false)
 				}
 			}
 
@@ -458,6 +462,9 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 	if name == "print" {
 		v.print(ctx)
 		return ret
+	} else if name == "assertEqual" {
+		v.assertEqual(ctx)
+		return ret
 	}
 
 	// todo crossoverJie 默认构造函数
@@ -478,19 +485,6 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 	// 执行函数调用
 	ret = v.executeFunctionCall(functionObject, paramValues)
 	return ret
-}
-
-func (v *Visitor) print(ctx *parser.FunctionCallContext) {
-	if ctx.ExpressionList() != nil {
-		ret := v.VisitExpressionList(ctx.ExpressionList().(*parser.ExpressionListContext))
-		switch ret.(type) {
-		case *LeftValue:
-			ret = ret.(*LeftValue).GetValue()
-		}
-		fmt.Println(ret)
-	} else {
-		fmt.Println("")
-	}
 }
 
 // 初始化 classObject 对象
@@ -598,6 +592,23 @@ func (v *Visitor) executeFunctionCall(functionObject *stack.FuncObject, paramVal
 	ret = v.VisitFunctionDeclaration(declarationContext)
 
 	v.popStack()
+	return ret
+}
+
+// 类函数调用
+func (v *Visitor) receiveFunctionCall(ctx *parser.FunctionCallContext, classObject *stack.ClassObject, isSuper bool) interface{} {
+
+	// 拿到该 ctx 的functionObject
+	funcObject := v.getFunctionObject(ctx)
+
+	// todo crossoverJie 父类构造函数调用
+
+	paramValues := v.buildParamValues(ctx)
+
+	v.pushStack(stack.NewClassStackFrame(classObject))
+	ret := v.executeFunctionCall(funcObject, paramValues)
+	v.popStack()
+
 	return ret
 }
 

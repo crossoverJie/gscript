@@ -186,7 +186,7 @@ a;
 `
 	compiler := NewCompiler().Compiler(script)
 	fmt.Println(compiler)
-	//assert.Equal(t, compiler, 55)
+	//assertEqual.Equal(t, compiler, 55)
 }
 
 //func TestCompiler_FunctionCall6(t *testing.T) {
@@ -204,17 +204,25 @@ a;
 //`
 //	compiler := NewCompiler().Compiler(script)
 //	fmt.Println(compiler)
-//	assert.Equal(t, compiler, 55)
+//	assertEqual.Equal(t, compiler, 55)
 //}
 
 func TestCompiler_Class(t *testing.T) {
 	script := `
 class Person{
-   int age=10;
+	int age=10;
+	int getAge(){
+		return 100+age;
+	}
 }
 Person xx= Person();
 print(xx.age);
+print(xx.getAge());
+int r1 = xx.age;
+int r2 = xx.getAge();
+assertEqual(r1,10);
+assertEqual(r2,110);
 `
 	NewCompiler().Compiler(script)
-	//assert.Equal(t, compiler, 55)
+	//assertEqual.Equal(t, compiler, 55)
 }

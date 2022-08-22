@@ -104,6 +104,29 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 	found := false
 
 	// todo crossoverJie . 符号级联调用
+	context, ok := ctx.GetParent().(*parser.ExprContext)
+	if ok {
+		if context.GetBop() != nil && context.GetBop().GetTokenType() == parser.GScriptParserDOT {
+			sym := s.at.GetSymbolOfNode()[context.Expr(0)]
+			switch sym.(type) {
+			case *symbol.Variable:
+				variable := sym.(*symbol.Variable)
+				switch variable.GetType().(type) {
+				case *symbol.Class:
+					class := variable.GetType().(*symbol.Class)
+					function := class.GetFunction(name, paramTypes)
+					if function != nil {
+						found = true
+						s.at.PutSymbolOfNode(ctx, function)
+						s.at.PutTypeOfNode(ctx, function.GetReturnType())
+					} else {
+						// todo crossoverJie 函数变量
+					}
+
+				}
+			}
+		}
+	}
 
 	if !found {
 		function := s.at.FindFunction(scope, name, paramTypes)
@@ -148,14 +171,20 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 			switch variable.GetType().(type) {
 			case *symbol.Class:
 				// 在 class 中通过变量名称查找变量
-				name := ctx.IDENTIFIER().GetText()
-				class := variable.GetType().(*symbol.Class)
-				findVariable := s.at.FindVariable(class, name)
-				if findVariable != nil {
-					s.at.PutSymbolOfNode(ctx, findVariable)
-				} else {
-					// todo crossoverJie 编译报错信息
+				if ctx.IDENTIFIER() != nil {
+					name := ctx.IDENTIFIER().GetText()
+					class := variable.GetType().(*symbol.Class)
+					findVariable := s.at.FindVariable(class, name)
+					if findVariable != nil {
+						s.at.PutSymbolOfNode(ctx, findVariable)
+					} else {
+						// todo crossoverJie 编译报错信息
+					}
+				} else if ctx.FunctionCall() != nil {
+					symbolType := s.at.GetTypeOfNode()[ctx.FunctionCall()]
+					s.at.PutTypeOfNode(ctx, symbolType)
 				}
+
 			}
 		}
 	} else if ctx.Primary() != nil {

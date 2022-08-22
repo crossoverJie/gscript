@@ -329,6 +329,12 @@ DECIMAL_LITERAL:    ('0' | [1-9] (Digits? | '_'+ Digits)) [lL]?;
 FLOAT_LITERAL:      (Digits '.' Digits? | '.' Digits) ExponentPart? [fFdD]?
              |       Digits (ExponentPart [fFdD]? | [fFdD])
              ;
+
+// Whitespace and comments
+
+WS:                 [ \t\r\n\u000C]+ -> channel(HIDDEN);
+COMMENT:            '/*' .*? '*/'    -> channel(HIDDEN);
+LINE_COMMENT:       '//' ~[\r\n]*    -> channel(HIDDEN);
 IDENTIFIER:         Letter LetterOrDigit*;
 fragment Digits
     : [0-9] ([0-9_]* [0-9])?
