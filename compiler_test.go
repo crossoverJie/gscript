@@ -222,6 +222,9 @@ int r1 = xx.age;
 int r2 = xx.getAge();
 assertEqual(r1,10);
 assertEqual(r2,110);
+xx.age=200;
+print(xx.age);
+assertEqual(xx.age,200);
 `
 	NewCompiler().Compiler(script)
 	//assertEqual.Equal(t, compiler, 55)
