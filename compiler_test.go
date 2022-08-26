@@ -227,5 +227,4 @@ print(xx.age);
 assertEqual(xx.age,200);
 `
 	NewCompiler().Compiler(script)
-	//assertEqual.Equal(t, compiler, 55)
 }
