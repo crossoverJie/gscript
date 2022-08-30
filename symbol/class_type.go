@@ -56,6 +56,12 @@ func (c *Class) GetDefaultConstructorFunc() *DefaultConstructorFunc {
 	return c.defaultConstructorFunc
 }
 
+// AddSymbol 要实现改函数，不然走的是 scope 的函数
+func (c *Class) AddSymbol(symbol Symbol) {
+	c.symbols = append(c.symbols, symbol)
+	symbol.SetEncloseScope(c)
+}
+
 type DefaultConstructorFunc struct {
 	*scope
 }

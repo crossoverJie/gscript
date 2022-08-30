@@ -467,7 +467,7 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return ret
 	}
 
-	// todo crossoverJie 默认构造函数
+	// 默认构造函数
 	symbol := v.at.GetSymbolOfNode()[ctx]
 	switch symbol.(type) {
 	case *sym.DefaultConstructorFunc:
@@ -477,7 +477,13 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 
 	functionObject := v.getFunctionObject(ctx)
 
-	// todo crossoverJie 如果对象的构造函数
+	// 如果对象的构造函数 Person(10)
+	if functionObject.GetFunction().IsConstructor() {
+		// 获取当前函数所归属的 class
+		classObject := v.initClassObject(functionObject.GetFunction().GetEncloseScope().(*sym.Class))
+		v.receiveFunctionCall(ctx, classObject, false)
+		return classObject
+	}
 
 	// 构建函数调用的参数值
 	paramValues := v.buildParamValues(ctx)

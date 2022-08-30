@@ -228,3 +228,36 @@ assertEqual(xx.age,200);
 `
 	NewCompiler().Compiler(script)
 }
+
+func TestCompiler_Class2(t *testing.T) {
+	script := `
+class Person{
+	int age=0;
+	Person(int a){
+		age = a;
+	}
+}
+Person xx= Person(10);
+print(xx.age);
+assertEqual(10,xx.age);
+`
+	NewCompiler().Compiler(script)
+}
+func TestCompiler_Class3(t *testing.T) {
+	script := `
+class Person{
+	int age=0;
+	int number=0;
+	Person(int a,int n){
+		age = a;
+		number = n;
+	}
+}
+Person xx= Person(10,20);
+print(xx.age);
+print(xx.number);
+assertEqual(10,xx.age);
+assertEqual(20,xx.number);
+`
+	NewCompiler().Compiler(script)
+}

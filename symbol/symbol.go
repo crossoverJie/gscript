@@ -51,6 +51,7 @@ type Scope interface {
 	ContainsSymbol(symbol Symbol) bool
 	GetSymbols() []Symbol
 	SetCtx(ctx antlr.ParserRuleContext)
+	GetCtx() antlr.ParserRuleContext
 	GetVariable(name string) *Variable
 	GetFunction(name string, paramTypes []Type) *Func
 	GetClass(name string) *Class
@@ -288,4 +289,13 @@ func (f *Func) GetName() string {
 
 func (f *Func) SetEncloseScope(scope Scope) {
 	f.encloseScope = scope
+}
+
+// IsConstructor 当前函数是否为构造函数，也就是函数名称是否与函数声明所在的 class 名称相同
+func (f *Func) IsConstructor() bool {
+	class, ok := f.scope.encloseScope.(*Class)
+	if ok && class.GetName() == f.name {
+		return true
+	}
+	return false
 }
