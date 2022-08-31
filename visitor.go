@@ -80,38 +80,6 @@ func (v *Visitor) Visit(tree antlr.ParseTree) interface{} {
 		return v.VisitVariableDeclarators(ctx)
 	case *parser.ParseContext:
 		return v.VisitParse(ctx)
-	//case *parser.PostfixExprContext:
-	//	return v.VisitPostfixExpr(ctx)
-	//case *parser.NotExprContext:
-	//	return v.VisitNotExpr(ctx)
-	//case *parser.MultDivExprContext:
-	//	return v.VisitMultDivExpr(ctx)
-	//case *parser.PrimaryExprContext:
-	//	return v.VisitPrimaryExpr(ctx)
-	//case *parser.LiterPrimaryContext:
-	//	return v.VisitLiterPrimary(ctx)
-	//case *parser.IdentifierPrimaryContext:
-	//	return v.VisitIdentifierPrimary(ctx)
-	//case *parser.IntContext:
-	//	return v.VisitInt(ctx)
-	//case *parser.FloatContext:
-	//	return v.VisitFloat(ctx)
-	//case *parser.StringContext:
-	//	return v.VisitString(ctx)
-	//case *parser.BoolContext:
-	//	return v.VisitBool(ctx)
-	//case *parser.NullContext:
-	//	return v.VisitNull(ctx)
-	//case *parser.PlusSubExprContext:
-	//	return v.VisitPlusSubExpr(ctx)
-	//case *parser.ExprPrimaryContext:
-	//	return v.VisitExprPrimary(ctx)
-	//case *parser.ModExprContext:
-	//	return v.VisitModExpr(ctx)
-	//case *parser.GLeExprContext:
-	//	return v.VisitGLeExpr(ctx)
-	//case *parser.EqualOrNotContext:
-	//	return v.VisitEqualOrNot(ctx)
 	case *parser.StmIfElseContext:
 		return v.VisitStmIfElse(ctx)
 	case *parser.StmReturnContext:
@@ -120,10 +88,6 @@ func (v *Visitor) Visit(tree antlr.ParseTree) interface{} {
 		return v.VisitStmExpr(ctx)
 	case *parser.StmForContext:
 		return v.VisitStmFor(ctx)
-	//case *parser.AssignExprContext:
-	//	return v.VisitAssignExpr(ctx)
-	//case *parser.FuncCallExprContext:
-	//	return v.VisitFuncCallExpr(ctx)
 	case *parser.BlockFuncContext:
 		return nil
 	case *parser.ExprContext:
@@ -417,43 +381,6 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 	return ret
 }
 
-//func (v *Visitor) VisitPrimaryExpr(ctx *parser.PrimaryExprContext) interface{} {
-//	return v.Visit(ctx.Primary())
-//}
-
-//func (v *Visitor) VisitPostfixExpr(ctx *parser.PostfixExprContext) interface{} {
-//	lhs := ctx.GetLhs()
-//	value := v.Visit(lhs)
-//	switch value.(type) {
-//	case *LeftValue:
-//		leftValue := value.(*LeftValue)
-//		switch ctx.GetPostfix().GetTokenType() {
-//		case parser.GScriptParserINC:
-//			leftValue.SetValue(leftValue.GetValue().(int) + 1)
-//			return value
-//		case parser.GScriptParserDEC:
-//			leftValue.SetValue(leftValue.GetValue().(int) - 1)
-//			return value
-//		}
-//	case int:
-//		switch ctx.GetPostfix().GetTokenType() {
-//		case parser.GScriptParserINC:
-//			value = value.(int) + 1
-//			return value
-//
-//		case parser.GScriptParserDEC:
-//			value = value.(int) - 1
-//			return value
-//		}
-//	}
-//
-//	panic("invalid postfix")
-//}
-
-//func (v *Visitor) VisitFuncCallExpr(ctx *parser.FuncCallExprContext) interface{} {
-//	return v.VisitFunctionCall(ctx.FunctionCall().(*parser.FunctionCallContext))
-//}
-
 // VisitFunctionCall 函数调用
 func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{} {
 	var ret interface{}
@@ -656,175 +583,6 @@ func (v *Visitor) VisitFieldDeclaration(ctx *parser.FieldDeclarationContext) int
 	return v.VisitVariableDeclarators(ctx.VariableDeclarators().(*parser.VariableDeclaratorsContext))
 }
 
-//func (v *Visitor) VisitNotExpr(ctx *parser.NotExprContext) interface{} {
-//	rhs := ctx.GetRhs()
-//	value := v.Visit(rhs)
-//	switch value.(type) {
-//	case bool:
-//		return !value.(bool)
-//	}
-//	line := ctx.GetStart().GetLine()
-//	column := ctx.GetStart().GetColumn()
-//	panic(fmt.Sprintf("invalid ! symbol in line:%d and column:%d", line, column))
-//}
-
-//func (v *Visitor) VisitMultDivExpr(ctx *parser.MultDivExprContext) interface{} {
-//	val1 := v.Visit(ctx.GetLhs())
-//	val2 := v.Visit(ctx.GetRhs())
-//
-//	var (
-//		v1i int
-//		v1f float64
-//		v2i int
-//		v2f float64
-//	)
-//	switch val1.(type) {
-//	case int:
-//		v1i = val1.(int)
-//	case float64:
-//		v1f = val1.(float64)
-//	}
-//
-//	switch val2.(type) {
-//	case int:
-//		v2i = val2.(int)
-//	case float64:
-//		v2f = val2.(float64)
-//	}
-//
-//	if ctx.GetBop().GetTokenType() == parser.GScriptParserMULT {
-//		if v1i != 0 && v2i != 0 {
-//			return v1i * v2i
-//		}
-//		if v1i != 0 && v2f != 0 {
-//			return float64(v1i) * v2f
-//		}
-//		if v1f != 0 && v2i != 0 {
-//			return v1f * float64(v2i)
-//		}
-//		if v1f != 0 && v2f != 0 {
-//			return v1f * v2f
-//		}
-//	} else {
-//		if v1i != 0 && v2i != 0 {
-//			return v1i / v2i
-//		}
-//		if v1i != 0 && v2f != 0 {
-//			return float64(v1i) / v2f
-//		}
-//		if v1f != 0 && v2i != 0 {
-//			return v1f / float64(v2i)
-//		}
-//		if v1f != 0 && v2f != 0 {
-//			return v1f / v2f
-//		}
-//	}
-//	return 0
-//}
-
-//func (v *Visitor) VisitPlusSubExpr(ctx *parser.PlusSubExprContext) interface{} {
-//	val1 := v.Visit(ctx.GetLhs())
-//	val2 := v.Visit(ctx.GetRhs())
-//
-//	var (
-//		v1i int
-//		v1f float64
-//		v2i int
-//		v2f float64
-//	)
-//	switch val1.(type) {
-//	case int:
-//		v1i = val1.(int)
-//	case float64:
-//		v1f = val1.(float64)
-//	case *LeftValue:
-//		value := val1.(*LeftValue).GetValue()
-//		switch value.(type) {
-//		case int:
-//			v1i = value.(int)
-//		case float64:
-//			v1f = value.(float64)
-//		}
-//	}
-//
-//	switch val2.(type) {
-//	case int:
-//		v2i = val2.(int)
-//	case float64:
-//		v2f = val2.(float64)
-//	}
-//
-//	// todo crossoverJie v1i 值为0的情况
-//	if ctx.GetBop().GetTokenType() == parser.GScriptLexerPLUS {
-//		if v1i != 0 && v2i != 0 {
-//			return v1i + v2i
-//		}
-//		if v1i != 0 && v2f != 0 {
-//			return float64(v1i) + v2f
-//		}
-//		if v1f != 0 && v2i != 0 {
-//			return v1f + float64(v2i)
-//		}
-//		if v1f != 0 && v2f != 0 {
-//			return v1f + v2f
-//		}
-//	} else {
-//		if v1i != 0 && v2i != 0 {
-//			return v1i - v2i
-//		}
-//		if v1i != 0 && v2f != 0 {
-//			return float64(v1i) - v2f
-//		}
-//		if v1f != 0 && v2i != 0 {
-//			return v1f - float64(v2i)
-//		}
-//		if v1f != 0 && v2f != 0 {
-//			return v1f - v2f
-//		}
-//	}
-//	return 0
-//}
-
-//func (v *Visitor) VisitLiterPrimary(ctx *parser.LiterPrimaryContext) interface{} {
-//	return v.Visit(ctx.Literal())
-//}
-
-//func (v *Visitor) VisitIdentifierPrimary(ctx *parser.IdentifierPrimaryContext) interface{} {
-//	var ret interface{}
-//	//fmt.Println(ctx.IDENTIFIER().GetText())
-//	//if ctx.IDENTIFIER() != nil {
-//	symbol := v.at.GetSymbolOfNode()[ctx]
-//	switch symbol.(type) {
-//	case *sym.Variable:
-//		ret = v.getLeftValue(symbol.(*sym.Variable))
-//	}
-//	//}
-//	return ret
-//}
-
-//func (v *Visitor) VisitInt(ctx *parser.IntContext) interface{} {
-//	val, _ := strconv.Atoi(ctx.GetText())
-//	return val
-//}
-//
-//func (v *Visitor) VisitFloat(ctx *parser.FloatContext) interface{} {
-//	val, _ := strconv.ParseFloat(ctx.GetText(), 0)
-//	return val
-//}
-//
-//func (v *Visitor) VisitString(ctx *parser.StringContext) interface{} {
-//	return ctx.GetText()[1 : len(ctx.GetText())-1]
-//}
-//
-//func (v *Visitor) VisitBool(ctx *parser.BoolContext) interface{} {
-//	val, _ := strconv.ParseBool(ctx.GetText())
-//	return val
-//}
-//
-//func (v *Visitor) VisitNull(ctx *parser.NullContext) interface{} {
-//	return nil
-//}
-
 func (v *Visitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 	if ctx.DECIMAL_LITERAL() != nil {
 		val, _ := strconv.Atoi(ctx.GetText())
@@ -873,74 +631,6 @@ func (v *Visitor) VisitPrimary(ctx *parser.PrimaryContext) interface{} {
 	}
 	return nil
 }
-
-//
-//func (v *Visitor) VisitModExpr(ctx *parser.ModExprContext) interface{} {
-//	lhs := v.Visit(ctx.GetLhs())
-//	rhs := v.Visit(ctx.GetRhs())
-//	return lhs.(int) % rhs.(int)
-//}
-
-//func (v *Visitor) VisitGLeExpr(ctx *parser.GLeExprContext) interface{} {
-//	var left, right int
-//	l := v.Visit(ctx.Expr(0))
-//	switch l.(type) {
-//	case *LeftValue:
-//		left = l.(*LeftValue).GetValue().(int)
-//	case int:
-//		left = l.(int)
-//	}
-//	r := v.Visit(ctx.Expr(1))
-//	switch r.(type) {
-//	case *LeftValue:
-//		right = r.(*LeftValue).GetValue().(int)
-//	case int:
-//		right = r.(int)
-//	}
-//
-//	switch ctx.GetBop().GetTokenType() {
-//	case parser.GScriptParserGT:
-//		return left > right
-//	case parser.GScriptParserLT:
-//		return left < right
-//	case parser.GScriptParserGE:
-//		return left >= right
-//	case parser.GScriptParserLE:
-//		return left <= right
-//	default:
-//		panic("invalid symbol")
-//	}
-//}
-
-//func (v *Visitor) VisitEqualOrNot(ctx *parser.EqualOrNotContext) interface{} {
-//	left := v.Visit(ctx.Expr(0)).(int)
-//	right := v.Visit(ctx.Expr(1)).(int)
-//	switch ctx.GetBop().GetTokenType() {
-//	case parser.GScriptParserEQUAL:
-//		return left == right
-//	case parser.GScriptParserNOTEQUAL:
-//		return left != right
-//	default:
-//		panic("invalid symbol")
-//	}
-//}
-
-//func (v *Visitor) VisitAssignExpr(ctx *parser.AssignExprContext) interface{} {
-//	lhs := ctx.GetLhs()
-//	rhs := ctx.GetRhs()
-//	l := v.Visit(lhs).(*LeftValue)
-//	r := v.Visit(rhs)
-//	switch v.Visit(rhs).(type) {
-//	case *LeftValue:
-//		r = v.Visit(rhs).(*LeftValue).GetValue()
-//	}
-//	switch ctx.GetBop().GetTokenType() {
-//	case parser.GScriptParserASSIGN:
-//		l.SetValue(r)
-//	}
-//	return r
-//
-//}
 
 func (v *Visitor) VisitStmIfElse(ctx *parser.StmIfElseContext) interface{} {
 	condition := v.VisitParExpression(ctx.ParExpression().(*parser.ParExpressionContext)).(bool)
