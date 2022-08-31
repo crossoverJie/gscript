@@ -42,3 +42,33 @@ func (v *VoidType) GetEncloseScope() Scope {
 func (v *VoidType) IsType(t Type) bool {
 	return v == t
 }
+
+func GetUpperType(t1, t2 Type) Type {
+	if t1 == String || t2 == String {
+		return String
+	} else if t1 == String && t2 == String {
+		return String
+	} else if t1 == Int && t2 == Int {
+		return Int
+	} else if t1 == Float && t2 == Float {
+		return Float
+	} else if t1 == Int && t2 == Float {
+		return Float
+	} else if t1 == Float && t2 == Int {
+		return Float
+	} else {
+		// todo crossoverJie 记录异常
+		return nil
+	}
+}
+
+func Value2Float(v interface{}) float64 {
+	switch v.(type) {
+	case float64:
+		return v.(float64)
+	case int:
+		return float64(v.(int))
+	default:
+		return 0
+	}
+}

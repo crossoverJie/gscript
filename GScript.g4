@@ -270,7 +270,6 @@ FLOAT:              'float';
 BOOLEAN:            'bool';
 SUPER:              'super';
 SWITCH:             'switch';
-SYNCHRONIZED:       'synchronized';
 THIS:               'this';
 
 

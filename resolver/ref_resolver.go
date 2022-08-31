@@ -148,6 +148,8 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 					findVariable := s.at.FindVariable(class, name)
 					if findVariable != nil {
 						s.at.PutSymbolOfNode(ctx, findVariable)
+						// 写入变量类型
+						s.at.PutTypeOfNode(ctx, findVariable.GetType())
 					} else {
 						// todo crossoverJie 编译报错信息
 					}
@@ -172,6 +174,33 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 		symbolType := s.at.GetTypeOfNode()[ctx.FunctionCall()]
 		// 设置方法返回值类型
 		s.at.PutTypeOfNode(ctx, symbolType)
+	} else if ctx.GetBop() != nil && len(ctx.AllExpr()) >= 2 {
+		type1 := s.at.GetTypeOfNode()[ctx.Expr(0)]
+		type2 := s.at.GetTypeOfNode()[ctx.Expr(1)]
+		switch ctx.GetBop().GetTokenType() {
+		case parser.GScriptParserMULT:
+			deriveType := symbol.GetUpperType(type1, type2)
+			s.at.PutTypeOfNode(ctx, deriveType)
+		case parser.GScriptParserDIV:
+			deriveType := symbol.GetUpperType(type1, type2)
+			s.at.PutTypeOfNode(ctx, deriveType)
+		case parser.GScriptParserPLUS:
+			deriveType := symbol.GetUpperType(type1, type2)
+			s.at.PutTypeOfNode(ctx, deriveType)
+		case parser.GScriptParserSUB:
+			if type1 == symbol.String || type2 == symbol.String {
+				// todo crossoverJie 记录编译错误
+				return
+			}
+			deriveType := symbol.GetUpperType(type1, type2)
+			s.at.PutTypeOfNode(ctx, deriveType)
+		case parser.GScriptParserMOD:
+			if type1 == symbol.Int && type2 == symbol.Int {
+				s.at.PutTypeOfNode(ctx, symbol.Int)
+			} else {
+				// todo crossoverJie 记录编译错误
+			}
+		}
 	}
 }
 
@@ -192,5 +221,11 @@ func (s *RefResolver) ExitLiteral(ctx *parser.LiteralContext) {
 	if ctx.DECIMAL_LITERAL() != nil {
 		// 设置标识符类型
 		s.at.PutTypeOfNode(ctx, symbol.Int)
+	} else if ctx.FLOAT_LITERAL() != nil {
+		s.at.PutTypeOfNode(ctx, symbol.Float)
+	} else if ctx.STRING_LITERAL() != nil {
+		s.at.PutTypeOfNode(ctx, symbol.String)
+	} else if ctx.BOOL_LITERAL() != nil {
+		s.at.PutTypeOfNode(ctx, symbol.Bool)
 	}
 }

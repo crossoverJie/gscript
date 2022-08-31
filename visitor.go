@@ -204,100 +204,127 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 	if ctx.GetBop() != nil && len(ctx.AllExpr()) >= 2 {
 		val1 := v.Visit(ctx.GetLhs())
 		val2 := v.Visit(ctx.GetRhs())
-		var (
-			v1i int
-			v1f float64
-			v2i int
-			v2f float64
-		)
+		leftObject := val1
+		rightObject := val2
 		switch val1.(type) {
-		case int:
-			v1i = val1.(int)
-		case float64:
-			v1f = val1.(float64)
 		case *LeftValue:
-			v1i = val1.(*LeftValue).GetValue().(int)
+			leftObject = val1.(*LeftValue).GetValue()
+		}
+		switch val2.(type) {
+		case *LeftValue:
+			rightObject = val2.(*LeftValue).GetValue()
 		}
 
-		switch val2.(type) {
-		case int:
-			v2i = val2.(int)
-		case float64:
-			v2f = val2.(float64)
-		case *LeftValue:
-			v2i = val2.(*LeftValue).GetValue().(int)
-		}
+		//推导出来的该节点类型
+		deriveType := v.at.GetTypeOfNode()[ctx]
+		type1 := v.at.GetTypeOfNode()[ctx.Expr(0)]
+		type2 := v.at.GetTypeOfNode()[ctx.Expr(1)]
+
 		switch ctx.GetBop().GetTokenType() {
 		case parser.GScriptParserMULT:
-			if v1i != 0 && v2i != 0 {
-				return v1i * v2i
-			}
-			if v1i != 0 && v2f != 0 {
-				return float64(v1i) * v2f
-			}
-			if v1f != 0 && v2i != 0 {
-				return v1f * float64(v2i)
-			}
-			if v1f != 0 && v2f != 0 {
-				return v1f * v2f
+			if deriveType == sym.Int {
+				return leftObject.(int) * rightObject.(int)
+			} else if deriveType == sym.Float {
+				return leftObject.(float64) * rightObject.(float64)
+			} else {
+				// todo crossoverJie 运行时错误
 			}
 		case parser.GScriptParserDIV:
-			if v1i != 0 && v2i != 0 {
-				return v1i / v2i
-			}
-			if v1i != 0 && v2f != 0 {
-				return float64(v1i) / v2f
-			}
-			if v1f != 0 && v2i != 0 {
-				return v1f / float64(v2i)
-			}
-			if v1f != 0 && v2f != 0 {
-				return v1f / v2f
+			if deriveType == sym.Int {
+				return leftObject.(int) / rightObject.(int)
+			} else if deriveType == sym.Float {
+				return leftObject.(float64) / rightObject.(float64)
+			} else {
+				// todo crossoverJie 运行时错误
 			}
 
 		case parser.GScriptParserPLUS:
-			if v1i != 0 && v2i != 0 {
-				return v1i + v2i
-			}
-			if v1i != 0 && v2f != 0 {
-				return float64(v1i) + v2f
-			}
-			if v1f != 0 && v2i != 0 {
-				return v1f + float64(v2i)
-			}
-			if v1f != 0 && v2f != 0 {
-				return v1f + v2f
+			if deriveType == sym.String {
+				return fmt.Sprintf("%v", leftObject) + fmt.Sprintf("%v", rightObject)
+			} else if deriveType == sym.Int {
+				return leftObject.(int) + rightObject.(int)
+			} else if deriveType == sym.Float {
+				return sym.Value2Float(leftObject) + sym.Value2Float(rightObject)
+			} else {
+				// todo crossoverJie 运行时错误
 			}
 		case parser.GScriptParserSUB:
-			if v1i != 0 && v2i != 0 {
-				return v1i - v2i
-			}
-			if v1i != 0 && v2f != 0 {
-				return float64(v1i) - v2f
-			}
-			if v1f != 0 && v2i != 0 {
-				return v1f - float64(v2i)
-			}
-			if v1f != 0 && v2f != 0 {
-				return v1f - v2f
+			if deriveType == sym.Int {
+				return leftObject.(int) - rightObject.(int)
+			} else if deriveType == sym.Float {
+				return sym.Value2Float(leftObject) - sym.Value2Float(rightObject)
+			} else {
+				// todo crossoverJie 运行时错误
 			}
 
 		case parser.GScriptParserMOD:
-			lhs := v.Visit(ctx.GetLhs())
-			rhs := v.Visit(ctx.GetRhs())
-			return lhs.(int) % rhs.(int)
+			return leftObject.(int) % rightObject.(int)
 		case parser.GScriptParserGT:
-			return v1i > v2i
+			deriveType = sym.GetUpperType(type1, type2)
+			if deriveType == sym.String {
+				// todo crossoverJie 运行时错误 字符串不能比较
+			} else if deriveType == sym.Int {
+				return leftObject.(int) > rightObject.(int)
+			} else if deriveType == sym.Float {
+				return leftObject.(float64) > rightObject.(float64)
+			} else {
+				// todo crossoverJie 运行时错误
+			}
 		case parser.GScriptParserLT:
-			return v1i < v2i
+			deriveType = sym.GetUpperType(type1, type2)
+			if deriveType == sym.String {
+				// todo crossoverJie 运行时错误 字符串不能比较
+			} else if deriveType == sym.Int {
+				return leftObject.(int) < rightObject.(int)
+			} else if deriveType == sym.Float {
+				return leftObject.(float64) < rightObject.(float64)
+			} else {
+				// todo crossoverJie 运行时错误
+			}
 		case parser.GScriptParserGE:
-			return v1i >= v2i
+			deriveType = sym.GetUpperType(type1, type2)
+			if deriveType == sym.String {
+				// todo crossoverJie 运行时错误 字符串不能比较
+			} else if deriveType == sym.Int {
+				return leftObject.(int) >= rightObject.(int)
+			} else if deriveType == sym.Float {
+				return leftObject.(float64) >= rightObject.(float64)
+			} else {
+				// todo crossoverJie 运行时错误
+			}
 		case parser.GScriptParserLE:
-			return v1i <= v2i
+			deriveType = sym.GetUpperType(type1, type2)
+			if deriveType == sym.String {
+				// todo crossoverJie 运行时错误 字符串不能比较
+			} else if deriveType == sym.Int {
+				return leftObject.(int) <= rightObject.(int)
+			} else if deriveType == sym.Float {
+				return leftObject.(float64) <= rightObject.(float64)
+			} else {
+				// todo crossoverJie 运行时错误
+			}
 		case parser.GScriptParserEQUAL:
-			return v1i == v2i
+			deriveType = sym.GetUpperType(type1, type2)
+			if deriveType == sym.String {
+				return fmt.Sprintf("%v", leftObject) == fmt.Sprintf("%v", rightObject)
+			} else if deriveType == sym.Int {
+				return leftObject.(int) == rightObject.(int)
+			} else if deriveType == sym.Float {
+				return leftObject.(float64) == rightObject.(float64)
+			} else {
+				// todo crossoverJie 运行时错误
+			}
 		case parser.GScriptParserNOTEQUAL:
-			return v1i != v2i
+			deriveType = sym.GetUpperType(type1, type2)
+			if deriveType == sym.String {
+				return fmt.Sprintf("%v", leftObject) != fmt.Sprintf("%v", rightObject)
+			} else if deriveType == sym.Int {
+				return leftObject.(int) != rightObject.(int)
+			} else if deriveType == sym.Float {
+				return leftObject.(float64) != rightObject.(float64)
+			} else {
+				// todo crossoverJie 运行时错误
+			}
 		case parser.GScriptParserASSIGN:
 			l := v.Visit(ctx.GetLhs()).(*LeftValue)
 			r := val2

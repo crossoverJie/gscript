@@ -211,8 +211,24 @@ func TestCompiler_Class(t *testing.T) {
 	script := `
 class Person{
 	int age=10;
+	string name="abc";
 	int getAge(){
 		return 100+age;
+	}
+	int sub(){
+		return age-10;
+	}
+	int div(){
+		return age/10;
+	}
+	int mul(){
+		return age*10;
+	}
+	int mod(){
+		return age%10;
+	}
+	string getName(){
+		return age+name;
 	}
 }
 Person xx= Person();
@@ -225,6 +241,35 @@ assertEqual(r2,110);
 xx.age=200;
 print(xx.age);
 assertEqual(xx.age,200);
+print(xx.getName());
+assertEqual(xx.getName(),"200abc");
+assertEqual(xx.sub(),190);
+assertEqual(xx.div(),20);
+assertEqual(xx.mul(),2000);
+assertEqual(xx.mod(),0);
+
+if(10>2){
+	print("10>2");
+}
+if(2<xx.age){
+	print("2<xx.age");
+}
+if(2<=2){
+	print("2<=2");
+}
+if(2>=2){
+	print("2>=2");
+}
+if(200==xx.age){
+	print("200==xx.age");
+}
+if(xx.getName()=="200abc"){
+	print("xx.getName()==200abc");
+}
+if(xx.getName()!="200abc1"){
+	print("xx.getName()!=200abc1");
+}
+
 `
 	NewCompiler().Compiler(script)
 }

@@ -21,7 +21,7 @@ func (v *Visitor) print(ctx *parser.FunctionCallContext) {
 func (v *Visitor) assertEqual(ctx *parser.FunctionCallContext) {
 	paramValues := v.buildParamValues(ctx)
 	if len(paramValues) != 2 {
-		// todo crossoverJie 改为编译器校验
+		// todo crossoverJie 编译器报错
 		panic("")
 	}
 	if paramValues[0] != paramValues[1] {

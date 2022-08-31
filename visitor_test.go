@@ -23,31 +23,14 @@ func TestGScriptVisitor_Visit_Lexer(t *testing.T) {
 	}
 }
 func TestGScriptVisitor_Visit(t *testing.T) {
-	expression := "(2+3) * 2"
-	input := antlr.NewInputStream(expression)
-	lexer := parser.NewGScriptLexer(input)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-	parser := parser.NewGScriptParser(stream)
-	tree := parser.Parse()
-
-	visitor := Visitor{}
-
-	var result = visitor.Visit(tree)
+	expression := "(2+3) * 2;"
+	var result = NewCompiler().Compiler(expression)
 	fmt.Println(expression, "=", result)
 	assert.Equal(t, result, 10)
 }
 func TestGScriptVisitor_Visit2(t *testing.T) {
-	expression := "5%2"
-	input := antlr.NewInputStream(expression)
-	lexer := parser.NewGScriptLexer(input)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-	parser := parser.NewGScriptParser(stream)
-	parser.BuildParseTrees = true
-	tree := parser.Parse()
-
-	visitor := Visitor{}
-
-	var result = visitor.Visit(tree)
+	expression := "5%2;"
+	var result = NewCompiler().Compiler(expression)
 	fmt.Println(expression, "=", result)
 	assert.Equal(t, result, 1)
 }
@@ -57,60 +40,6 @@ func TestMod(t *testing.T) {
 	fmt.Println(5 % 2)
 }
 
-func TestGScriptVisitor_VisitIfElse(t *testing.T) {
-	expression := "1<=2"
-	input := antlr.NewInputStream(expression)
-	lexer := parser.NewGScriptLexer(input)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-	parser := parser.NewGScriptParser(stream)
-	parser.BuildParseTrees = true
-	tree := parser.Parse()
-
-	visitor := Visitor{}
-
-	var result = visitor.Visit(tree)
-	fmt.Println(expression, " result:", result)
-	assert.Equal(t, result, true)
-}
-func TestGScriptVisitor_VisitIfElse2(t *testing.T) {
-	expression := "1>=2"
-	input := antlr.NewInputStream(expression)
-	lexer := parser.NewGScriptLexer(input)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-	parser := parser.NewGScriptParser(stream)
-	parser.BuildParseTrees = true
-	tree := parser.Parse()
-	visitor := Visitor{}
-	var result = visitor.Visit(tree)
-	fmt.Println(expression, " result:", result)
-	assert.Equal(t, result, false)
-}
-func TestGScriptVisitor_VisitIfElse3(t *testing.T) {
-	expression := "1==2"
-	input := antlr.NewInputStream(expression)
-	lexer := parser.NewGScriptLexer(input)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-	parser := parser.NewGScriptParser(stream)
-	parser.BuildParseTrees = true
-	tree := parser.Parse()
-	visitor := Visitor{}
-	var result = visitor.Visit(tree)
-	fmt.Println(expression, " result:", result)
-	assert.Equal(t, result, false)
-}
-func TestGScriptVisitor_VisitIfElse4(t *testing.T) {
-	expression := "2==2"
-	input := antlr.NewInputStream(expression)
-	lexer := parser.NewGScriptLexer(input)
-	stream := antlr.NewCommonTokenStream(lexer, 0)
-	parser := parser.NewGScriptParser(stream)
-	parser.BuildParseTrees = true
-	tree := parser.Parse()
-	visitor := Visitor{}
-	var result = visitor.Visit(tree)
-	fmt.Println(expression, " result:", result)
-	assert.Equal(t, result, true)
-}
 func TestGScriptVisitor_VisitIfElse5(t *testing.T) {
 	expression := `
 if(3==(1+2)){
