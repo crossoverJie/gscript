@@ -36,6 +36,9 @@ func (c *Compiler) Compiler(script string) interface{} {
 	// 消解变量、函数的引用
 	walker.Walk(resolver.NewRefResolver(at), tree)
 
+	// 闭包分析
+	resolver.NewClosureResolver(at).Analyze()
+
 	visitor := NewVisitor(at)
 	return visitor.Visit(tree)
 }

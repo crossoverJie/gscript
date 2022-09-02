@@ -1,6 +1,7 @@
 package stack
 
 import (
+	"fmt"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -29,4 +30,20 @@ func TestStack_Peek(t *testing.T) {
 
 	empty := s.IsEmpty()
 	assert.Equal(t, empty, true)
+}
+
+func TestStack_Get(t *testing.T) {
+	s := &Stack{}
+	s.Push("1")
+	s.Push("2")
+	s.Push("3")
+	for i := s.Size() - 1; i >= 0; i-- {
+		fmt.Println(s.Get(i))
+	}
+	fmt.Println()
+	s.Pop()
+	for i := s.Size() - 1; i >= 0; i-- {
+		fmt.Println(s.Get(i))
+	}
+
 }

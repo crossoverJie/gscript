@@ -95,6 +95,15 @@ func (a *AnnotatedTree) FindVariable(scope symbol.Scope, name string) *symbol.Va
 	return ret
 }
 
+// FindFunctionVariable 查找函数类型的变量：变量中存放的值是 functionObject
+func (a *AnnotatedTree) FindFunctionVariable(scope symbol.Scope, name string, paramTypes []symbol.Type) *symbol.Variable {
+	var ret = scope.GetFunctionVariable(name, paramTypes)
+	if ret == nil && scope.GetEncloseScope() != nil {
+		ret = a.FindFunctionVariable(scope.GetEncloseScope(), name, paramTypes)
+	}
+	return ret
+}
+
 // FindFunction 根据方法名称+方法参数查询方法
 func (a *AnnotatedTree) FindFunction(scope symbol.Scope, name string, paramTypes []symbol.Type) *symbol.Func {
 	var ret = scope.GetFunction(name, paramTypes)
@@ -102,4 +111,39 @@ func (a *AnnotatedTree) FindFunction(scope symbol.Scope, name string, paramTypes
 		ret = a.FindFunction(scope.GetEncloseScope(), name, paramTypes)
 	}
 	return ret
+}
+
+// FindFunctionWithName 只通过函数名称查询
+// 先查询 class 的method，再查询 function
+func (a *AnnotatedTree) FindFunctionWithName(scope symbol.Scope, name string) *symbol.Func {
+	var fun *symbol.Func
+	class, ok := scope.(*symbol.Class)
+	if ok {
+		fun = a.findMethodWithName(class, name)
+	} else {
+		fun = a.findFunctionOnlyWithName(scope, name)
+	}
+
+	if fun == nil && scope.GetEncloseScope() != nil {
+		fun = a.FindFunctionWithName(scope.GetEncloseScope(), name)
+	}
+
+	return fun
+}
+
+// 查找 class 的 method
+func (a *AnnotatedTree) findMethodWithName(class *symbol.Class, name string) *symbol.Func {
+	// todo crossoverJie 父类查询
+	return a.findFunctionOnlyWithName(class, name)
+}
+
+func (a *AnnotatedTree) findFunctionOnlyWithName(scope symbol.Scope, name string) *symbol.Func {
+	// todo crossoverJie 函数名重复的情况，应该在写入 symbol 时就行编译报错
+	for _, s := range scope.GetSymbols() {
+		function, ok := s.(*symbol.Func)
+		if ok && function.GetName() == name {
+			return function
+		}
+	}
+	return nil
 }

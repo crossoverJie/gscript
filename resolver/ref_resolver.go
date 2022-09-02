@@ -1,7 +1,6 @@
 package resolver
 
 import (
-	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/symbol"
@@ -48,12 +47,18 @@ func (s *RefResolver) ExitPrimary(ctx *parser.PrimaryContext) {
 		idName := ctx.IDENTIFIER().GetText()
 		variable := s.at.FindVariable(scope, idName)
 		if variable == nil {
-			// todo crossoverJie 区分返回的是函数
+			// 区分返回的是函数，函数可以传递
+			fun := s.at.FindFunctionWithName(scope, idName)
+			if fun != nil {
+				s.at.PutSymbolOfNode(ctx, fun)
+				symbolType = fun
+			} else {
+				// todo crossoverJie 完善编译报错信息
+			}
 
-			// todo crossoverJie 完善编译报错信息
-			line := ctx.GetStart().GetLine()
-			column := ctx.GetStart().GetColumn()
-			panic(fmt.Sprintf("unknown variable %s, at %d and column:%d", idName, line, column))
+			//line := ctx.GetStart().GetLine()
+			//column := ctx.GetStart().GetColumn()
+			//panic(fmt.Sprintf("unknown variable %s, at %d and column:%d", idName, line, column))
 		} else {
 			s.at.PutSymbolOfNode(ctx, variable)
 			symbolType = variable.GetType()
@@ -91,7 +96,16 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 						s.at.PutSymbolOfNode(ctx, function)
 						s.at.PutTypeOfNode(ctx, function.GetReturnType())
 					} else {
-						// todo crossoverJie 函数变量
+						// 类的变量是一个函数变量
+						functionVariable := class.GetClassFunctionVariable(name, paramTypes)
+						if functionVariable != nil {
+							found = true
+							s.at.PutSymbolOfNode(ctx, functionVariable)
+							// 改函数变量的返回类型
+							s.at.PutTypeOfNode(ctx, functionVariable.GetType().(symbol.FuncType).GetReturnType())
+						} else {
+							// todo crossoverJie 完善编译报错信息
+						}
 					}
 
 				}
@@ -125,10 +139,20 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 			} else {
 				// todo crossoverJie 完善编译报错信息
 			}
+			s.at.PutTypeOfNode(ctx, class)
+		} else {
+			// 普通变量查找是否为函数变量
+			functionVariable := s.at.FindFunctionVariable(scope, name, paramTypes)
+			if functionVariable != nil {
+				found = true
+				s.at.PutSymbolOfNode(ctx, functionVariable)
+				s.at.PutTypeOfNode(ctx, functionVariable.GetType())
+			} else {
+				// todo crossoverJie 完善编译报错信息
+			}
+
 		}
 	}
-
-	// todo crossoverJie 查找是否为函数变量
 
 }
 

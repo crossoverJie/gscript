@@ -118,12 +118,15 @@ func (t *TypeResolver) ExitTypeTypeOrVoid(ctx *parser.TypeTypeOrVoidContext) {
 
 // ExitTypeType 在 ExitPrimitiveType 之后记录当前 ctx 的基本类型
 func (t *TypeResolver) ExitTypeType(ctx *parser.TypeTypeContext) {
-	// todo crossoverJie func class 的 type 还未处理
+	// todo crossoverJie class 的 type 还未处理
 	if ctx.PrimitiveType() != nil {
 		symbolType := t.at.GetTypeOfNode()[ctx.PrimitiveType()]
 		t.at.PutTypeOfNode(ctx, symbolType)
 	} else if ctx.ClassOrInterfaceType() != nil {
 		symbolType := t.at.GetTypeOfNode()[ctx.ClassOrInterfaceType()]
+		t.at.PutTypeOfNode(ctx, symbolType)
+	} else if ctx.FunctionType() != nil {
+		symbolType := t.at.GetTypeOfNode()[ctx.FunctionType()]
 		t.at.PutTypeOfNode(ctx, symbolType)
 	}
 }
@@ -150,4 +153,19 @@ func (t *TypeResolver) ExitPrimitiveType(ctx *parser.PrimitiveTypeContext) {
 		symbolType = symbol.Bool
 	}
 	t.at.PutTypeOfNode(ctx, symbolType)
+}
+
+// ExitFunctionType 函数类型
+func (t *TypeResolver) ExitFunctionType(ctx *parser.FunctionTypeContext) {
+	returnType := t.at.GetTypeOfNode()[ctx.TypeTypeOrVoid()]
+	declareFunctionType := symbol.NewDeclareFunctionType(returnType)
+	t.at.AppendType(declareFunctionType)
+	t.at.PutTypeOfNode(ctx, declareFunctionType)
+
+	if ctx.TypeList() != nil {
+		for _, context := range ctx.TypeList().(*parser.TypeListContext).AllTypeType() {
+			t := t.at.GetTypeOfNode()[context]
+			declareFunctionType.AppendParameterType(t)
+		}
+	}
 }

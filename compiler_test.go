@@ -24,7 +24,7 @@ return a;
 `
 	compiler := NewCompiler().Compiler(script)
 	fmt.Println(compiler)
-	assert.Equal(t, compiler.(*LeftValue).GetValue().(int), 11)
+	assert.Equal(t, compiler, 11)
 }
 func TestCompiler_CompilerFor(t *testing.T) {
 	script := `
@@ -36,7 +36,7 @@ return age;
 `
 	compiler := NewCompiler().Compiler(script)
 	fmt.Println(compiler)
-	assert.Equal(t, compiler.(*LeftValue).GetValue().(int), 100)
+	assert.Equal(t, compiler, 100)
 }
 func TestCompiler_CompilerFor3(t *testing.T) {
 	script := `
@@ -52,7 +52,7 @@ return age;
 `
 	compiler := NewCompiler().Compiler(script)
 	fmt.Println(compiler)
-	assert.Equal(t, compiler.(*LeftValue).GetValue().(int), 100*100)
+	assert.Equal(t, compiler, 100*100)
 }
 func TestCompiler_CompilerFor2(t *testing.T) {
 	script := `
@@ -64,7 +64,7 @@ return age;
 `
 	compiler := NewCompiler().Compiler(script)
 	fmt.Println(compiler)
-	assert.Equal(t, compiler.(*LeftValue).GetValue().(int), 101)
+	assert.Equal(t, compiler, 101)
 }
 func TestCompiler_CompilerIf(t *testing.T) {
 	script := `
@@ -78,7 +78,7 @@ return age;
 `
 	compiler := NewCompiler().Compiler(script)
 	fmt.Println(compiler)
-	assert.Equal(t, compiler.(*LeftValue).GetValue().(int), 9)
+	assert.Equal(t, compiler, 9)
 }
 func TestCompiler_CompilerIf2(t *testing.T) {
 	script := `
@@ -303,6 +303,9 @@ print(xx.age);
 print(xx.number);
 assertEqual(10,xx.age);
 assertEqual(20,xx.number);
+int age=0;
+assertEqual(age+10,10);
+assertEqual(10+1.1, 11.1);
 `
 	NewCompiler().Compiler(script)
 }

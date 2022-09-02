@@ -35,6 +35,31 @@ func ArithmeticOperators(script string) interface{} {
 func (v *Visitor) pushStack(frame *stack.Frame) {
 	// todo crossoverJie parentFrame 设置
 	if !v.stack.IsEmpty() {
+		// 栈顶开始查找
+		for i := v.stack.Size() - 1; i > 0; i-- {
+			f := v.stack.Get(i).(*stack.Frame)
+
+			// 函数是一等公民时，需要根据变量的作用域进行判断
+			funcObject, ok := frame.GetObject().(*stack.FuncObject)
+
+			// 新写入的栈帧的 parent 与当前的 parent 相同时
+			if f.GetScope().GetEncloseScope() == frame.GetScope().GetEncloseScope() {
+				frame.SetParent(f.GetParent())
+				break
+			} else if f.GetScope() == frame.GetScope().GetEncloseScope() {
+				// 新写入的栈帧是某个已有的栈帧的下级
+				frame.SetParent(f)
+				break
+			} else if ok {
+				referenceVariable := funcObject.GetReferenceVariable()
+				if referenceVariable != nil && referenceVariable.GetEncloseScope() == f.GetScope() {
+					frame.SetParent(f)
+					break
+				}
+			}
+
+		}
+
 		if frame.GetParent() == nil {
 			// 上一级作用域作为本级作用域的父级
 			frame.SetParent(v.stack.Peek().(*stack.Frame))
@@ -62,7 +87,17 @@ func (v *Visitor) getLeftValue(variable *sym.Variable) *LeftValue {
 		frame = frame.GetParent()
 	}
 
-	// todo crossoverJie 闭包查询
+	// 闭包查询，闭包的变量不在父 scope 中，得一级一级的栈帧中查找。
+	if object == nil {
+		frame = v.stack.Peek().(*stack.Frame)
+		for frame != nil {
+			if frame.ContainsVariable(variable) {
+				object = frame.GetObject()
+				break
+			}
+			frame = frame.GetParent()
+		}
+	}
 	return NewLeftValue(variable, object)
 }
 
@@ -266,7 +301,7 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 			} else if deriveType == sym.Int {
 				return leftObject.(int) > rightObject.(int)
 			} else if deriveType == sym.Float {
-				return leftObject.(float64) > rightObject.(float64)
+				return sym.Value2Float(leftObject) > sym.Value2Float(rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -277,7 +312,7 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 			} else if deriveType == sym.Int {
 				return leftObject.(int) < rightObject.(int)
 			} else if deriveType == sym.Float {
-				return leftObject.(float64) < rightObject.(float64)
+				return sym.Value2Float(leftObject) < sym.Value2Float(rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -288,7 +323,7 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 			} else if deriveType == sym.Int {
 				return leftObject.(int) >= rightObject.(int)
 			} else if deriveType == sym.Float {
-				return leftObject.(float64) >= rightObject.(float64)
+				return sym.Value2Float(leftObject) >= sym.Value2Float(rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -299,7 +334,7 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 			} else if deriveType == sym.Int {
 				return leftObject.(int) <= rightObject.(int)
 			} else if deriveType == sym.Float {
-				return leftObject.(float64) <= rightObject.(float64)
+				return sym.Value2Float(leftObject) <= sym.Value2Float(rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -310,7 +345,7 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 			} else if deriveType == sym.Int {
 				return leftObject.(int) == rightObject.(int)
 			} else if deriveType == sym.Float {
-				return leftObject.(float64) == rightObject.(float64)
+				return sym.Value2Float(leftObject) == sym.Value2Float(rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -321,7 +356,7 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 			} else if deriveType == sym.Int {
 				return leftObject.(int) != rightObject.(int)
 			} else if deriveType == sym.Float {
-				return leftObject.(float64) != rightObject.(float64)
+				return sym.Value2Float(leftObject) != sym.Value2Float(rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -334,6 +369,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 			}
 			// e = e+10
 			l.SetValue(r)
+			return r
+
 		}
 
 	}
@@ -444,6 +481,8 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 
 	// 执行函数调用
 	ret = v.executeFunctionCall(functionObject, paramValues)
+
+	// todo crossoverJie 支持 return
 	return ret
 }
 
@@ -490,7 +529,16 @@ func (v *Visitor) getFunctionObject(ctx *parser.FunctionCallContext) *stack.Func
 	switch symbol.(type) {
 	case *sym.Func:
 		function = symbol.(*sym.Func)
-		// todo crossoverJie symbol 是函数变量类型
+	case *sym.Variable:
+		// symbol 是函数变量类型
+		variable := symbol.(*sym.Variable)
+		value := v.getLeftValue(variable).GetValue()
+		functionObject, ok := value.(*stack.FuncObject)
+		if ok {
+			function = functionObject.GetFunction()
+			return functionObject
+		}
+
 	default:
 		// todo crossoverJie 函数提示
 		name := ctx.IDENTIFIER().GetText()
@@ -559,7 +607,9 @@ func (v *Visitor) executeFunctionCall(functionObject *stack.FuncObject, paramVal
 func (v *Visitor) receiveFunctionCall(ctx *parser.FunctionCallContext, classObject *stack.ClassObject, isSuper bool) interface{} {
 
 	// 拿到该 ctx 的functionObject
+	v.pushStack(stack.NewClassStackFrame(classObject)) //这个入栈是为了类变量是函数
 	funcObject := v.getFunctionObject(ctx)
+	v.popStack()
 
 	// todo crossoverJie 父类构造函数调用
 
@@ -632,10 +682,6 @@ func (v *Visitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 	return nil
 }
 
-//func (v *Visitor) VisitExprPrimary(ctx *parser.ExprPrimaryContext) interface{} {
-//	return v.Visit(ctx.Expr())
-//}
-
 func (v *Visitor) VisitPrimary(ctx *parser.PrimaryContext) interface{} {
 	if ctx.Expr() != nil {
 		return v.Visit(ctx.Expr())
@@ -653,6 +699,10 @@ func (v *Visitor) VisitPrimary(ctx *parser.PrimaryContext) interface{} {
 		switch symbol.(type) {
 		case *sym.Variable:
 			ret = v.getLeftValue(symbol.(*sym.Variable))
+		case *sym.Func:
+			// 函数变量
+			funcObject := stack.NewFuncObject(symbol.(*sym.Func))
+			ret = funcObject
 		}
 		return ret
 	}
@@ -735,9 +785,46 @@ func (v *Visitor) VisitExpressionList(ctx *parser.ExpressionListContext) interfa
 
 func (v *Visitor) VisitStmReturn(ctx *parser.StmReturnContext) interface{} {
 	if ctx.Expr() != nil {
-		return v.Visit(ctx.Expr())
+		ret := v.Visit(ctx.Expr())
+		switch ret.(type) {
+		case *LeftValue:
+			ret = ret.(*LeftValue).GetValue()
+		case *stack.FuncObject:
+			funcObject := ret.(*stack.FuncObject)
+			v.setClosureValues(funcObject)
+		case *stack.ClassObject:
+			//classObject := ret.(*stack.ClassObject)
+		}
+		// todo crossoverJie class 类的闭包
+
+		// todo crossoverJie 支持 return
+		return ret
 	}
 	return nil
+}
+
+// 将闭包变量复制到当前 functionObject 中，同时赋值。
+func (v *Visitor) setClosureValues(funcObject *stack.FuncObject) {
+	if funcObject.GetFunction().GetEncloseScope() == nil {
+		return
+	}
+
+	closureVar := funcObject.GetFunction().GetClosureVar()
+	for _, val := range closureVar.List() {
+		variable := val.(*sym.Variable)
+		leftValue := v.getLeftValue(variable)
+		funcObject.SetValue(variable, leftValue.GetValue())
+	}
+}
+
+// 将闭包变量复制到当前的 classObject 中
+func (v *Visitor) setClassClosureValues(classObject *stack.ClassObject) {
+	//object := stack.NewEmptyObject()
+	//for variable, v := range classObject.AllField() {
+	//	if v!=nil {
+	//
+	//	}
+	//}
 }
 
 func (v *Visitor) VisitStmExpr(ctx *parser.StmExprContext) interface{} {

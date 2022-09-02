@@ -34,9 +34,16 @@ func (c *Class) GetVariable(name string) *Variable {
 	return c.scope.GetVariable(name)
 }
 
+// GetFunction 查找类中的函数
 func (c *Class) GetFunction(name string, paramTypes []Type) *Func {
 	// todo crossoverJie 查找父类的函数
 	return c.scope.GetFunction(name, paramTypes)
+}
+
+// GetClassFunctionVariable 查找类中的函数变量
+func (c *Class) GetClassFunctionVariable(name string, paramTypes []Type) *Variable {
+	// todo crossoverJie 查找父类的函数
+	return c.scope.GetFunctionVariable(name, paramTypes)
 }
 
 func (c *Class) ContainsSymbol(symbol Symbol) bool {

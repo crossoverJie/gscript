@@ -26,7 +26,11 @@ func (l *LeftValue) GetValue() interface{} {
 func (l *LeftValue) SetValue(value interface{}) {
 	l.object.SetValue(l.variable, value)
 
-	// todo crossoverJie variable 是函数类型
+	// variable 是函数类型
+	funcObject, ok := value.(*stack.FuncObject)
+	if ok {
+		funcObject.SetReferenceVariable(l.variable)
+	}
 }
 
 func (l *LeftValue) String() string {
