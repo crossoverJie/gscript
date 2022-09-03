@@ -160,15 +160,14 @@ func (v *Visitor) VisitProg(ctx *parser.ProgContext) interface{} {
 func (v *Visitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{} {
 	var ret interface{}
 	for _, context := range ctx.AllBlockStatement() {
-		retTemp := v.Visit(context)
-		switch retTemp.(type) {
+		ret = v.Visit(context)
+		switch ret.(type) {
 		case *stack.ContinueObject:
-			return retTemp
+			return ret
+		case *stack.BreakObject:
+			break
 		}
-		ret = retTemp
-		//if retTemp !=nil{
-		//	ret = retTemp
-		//}
+		//ret = retTemp
 	}
 	return ret
 }

@@ -329,6 +329,7 @@ for(a<=10){
 		break;
 	}
 }
+assertEqual(a,4);
 `
 	NewCompiler().Compiler(script)
 }
@@ -342,6 +343,7 @@ for(a<3){
 	}
 	print(a);
 }
+assertEqual(a,3);
 `
 	NewCompiler().Compiler(script)
 }
