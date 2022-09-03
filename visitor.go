@@ -165,7 +165,9 @@ func (v *Visitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{} {
 		case *stack.ContinueObject:
 			return ret
 		case *stack.BreakObject:
-			break
+			return ret
+		case *stack.ReturnObject:
+			return ret
 		}
 		//ret = retTemp
 	}
@@ -612,6 +614,12 @@ func (v *Visitor) executeFunctionCall(functionObject *stack.FuncObject, paramVal
 	// 执行方法体
 	ret = v.VisitFunctionDeclaration(declarationContext)
 
+	//如果是 returnObject，需要把真正的数据取出
+	switch ret.(type) {
+	case *stack.ReturnObject:
+		ret = ret.(*stack.ReturnObject).GetReturnObject()
+	}
+
 	v.popStack()
 	return ret
 }
@@ -769,8 +777,15 @@ func (v *Visitor) VisitStmWhile(ctx *parser.StmWhileContext) interface{} {
 		}
 
 		ret := v.Visit(ctx.Statement())
+		// break
 		_, b := ret.(*stack.BreakObject)
 		if b {
+			break
+		}
+
+		// return
+		_, r := ret.(*stack.ReturnObject)
+		if r {
 			break
 		}
 	}
@@ -801,8 +816,15 @@ func (v *Visitor) VisitForControl(ctx *parser.ForControlContext) interface{} {
 			}
 			ret = v.Visit(ctx.GetParent().(*parser.StmForContext).Statement())
 
+			// break
 			_, b := ret.(*stack.BreakObject)
 			if b {
+				break
+			}
+
+			// return
+			_, r := ret.(*stack.ReturnObject)
+			if r {
 				break
 			}
 
@@ -836,8 +858,9 @@ func (v *Visitor) VisitExpressionList(ctx *parser.ExpressionListContext) interfa
 }
 
 func (v *Visitor) VisitStmReturn(ctx *parser.StmReturnContext) interface{} {
+	var ret interface{}
 	if ctx.Expr() != nil {
-		ret := v.Visit(ctx.Expr())
+		ret = v.Visit(ctx.Expr())
 		switch ret.(type) {
 		case *LeftValue:
 			ret = ret.(*LeftValue).GetValue()
@@ -849,10 +872,11 @@ func (v *Visitor) VisitStmReturn(ctx *parser.StmReturnContext) interface{} {
 		}
 		// todo crossoverJie class 类的闭包
 
-		// todo crossoverJie 支持 return
-		return ret
 	}
-	return nil
+	// 支持 return
+	ret = stack.NewReturnObject(ret)
+	return ret
+
 }
 
 func (v *Visitor) VisitStmBreak(ctx *parser.StmBreakContext) interface{} {

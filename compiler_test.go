@@ -2,6 +2,7 @@ package gscript
 
 import (
 	"fmt"
+	"github.com/crossoverJie/gscript/stack"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -23,8 +24,9 @@ a++;
 return a;
 `
 	compiler := NewCompiler().Compiler(script)
-	fmt.Println(compiler)
-	assert.Equal(t, compiler, 11)
+	object := compiler.(*stack.ReturnObject)
+	fmt.Println(object.GetReturnObject())
+	assert.Equal(t, object.GetReturnObject(), 11)
 }
 func TestCompiler_CompilerFor(t *testing.T) {
 	script := `
@@ -35,8 +37,9 @@ for(int i = 0;i<100;i++) {
 return age;
 `
 	compiler := NewCompiler().Compiler(script)
-	fmt.Println(compiler)
-	assert.Equal(t, compiler, 100)
+	object := compiler.(*stack.ReturnObject)
+	fmt.Println(object.GetReturnObject())
+	assert.Equal(t, object.GetReturnObject(), 100)
 }
 func TestCompiler_CompilerFor3(t *testing.T) {
 	script := `
@@ -51,8 +54,9 @@ for(int i = 0;i<100;i++) {
 return age;
 `
 	compiler := NewCompiler().Compiler(script)
-	fmt.Println(compiler)
-	assert.Equal(t, compiler, 100*100)
+	object := compiler.(*stack.ReturnObject)
+	fmt.Println(object.GetReturnObject())
+	assert.Equal(t, object.GetReturnObject(), 100*100)
 }
 func TestCompiler_CompilerFor2(t *testing.T) {
 	script := `
@@ -63,8 +67,9 @@ for(int i = 0;i<100;i++) {
 return age;
 `
 	compiler := NewCompiler().Compiler(script)
-	fmt.Println(compiler)
-	assert.Equal(t, compiler, 101)
+	object := compiler.(*stack.ReturnObject)
+	fmt.Println(object.GetReturnObject())
+	assert.Equal(t, object.GetReturnObject(), 101)
 }
 func TestCompiler_CompilerIf(t *testing.T) {
 	script := `
@@ -77,8 +82,9 @@ if (age>10){
 return age;
 `
 	compiler := NewCompiler().Compiler(script)
-	fmt.Println(compiler)
-	assert.Equal(t, compiler, 9)
+	object := compiler.(*stack.ReturnObject)
+	fmt.Println(object.GetReturnObject())
+	assert.Equal(t, object.GetReturnObject(), 9)
 }
 func TestCompiler_CompilerIf2(t *testing.T) {
 	script := `
@@ -91,7 +97,8 @@ if (age>10){
 return abc;
 `
 	compiler := NewCompiler().Compiler(script)
-	fmt.Println(compiler)
+	object := compiler.(*stack.ReturnObject)
+	fmt.Println(object.GetReturnObject())
 }
 
 func TestCompiler_FunctionCall(t *testing.T) {
@@ -329,7 +336,7 @@ for(a<=10){
 		break;
 	}
 }
-assertEqual(a,4);
+assertEqual(a,5);
 `
 	NewCompiler().Compiler(script)
 }
@@ -366,6 +373,31 @@ for(int i=0;i<5;i++){
 	}
 	print(i);
 }
+`
+	NewCompiler().Compiler(script)
+}
+func TestCompiler_Return(t *testing.T) {
+	script := `
+for(int i=0;i<5;i++){
+	if (i==3){
+		return;
+	}
+	print(i);
+}
+`
+	NewCompiler().Compiler(script)
+}
+func TestCompiler_Return2(t *testing.T) {
+	script := `
+int a=0;
+for(a<=10){
+	print(a);
+	a++;
+	if(a==5){
+		return;
+	}
+}
+assertEqual(a,5);
 `
 	NewCompiler().Compiler(script)
 }

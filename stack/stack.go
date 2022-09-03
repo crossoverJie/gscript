@@ -171,3 +171,17 @@ var (
 
 type BreakObject struct{}
 type ContinueObject struct{}
+type ReturnObject struct {
+	returnObject interface{}
+}
+
+func NewReturnObject(object interface{}) *ReturnObject {
+	return &ReturnObject{returnObject: object}
+}
+
+func (r *ReturnObject) GetReturnObject() interface{} {
+	return r.returnObject
+}
+func (r *ReturnObject) String() string {
+	return fmt.Sprintf("%d", r.returnObject)
+}

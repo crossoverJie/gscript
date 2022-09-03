@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/crossoverJie/gscript/parser"
+	"github.com/crossoverJie/gscript/stack"
 	"github.com/stretchr/testify/assert"
 	"strconv"
 	"testing"
@@ -47,7 +48,8 @@ if(3==(1+2)){
 }`
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(expression, " result:", result)
-	assert.Equal(t, result, 7)
+	object := result.(*stack.ReturnObject)
+	assert.Equal(t, object.GetReturnObject(), 7)
 }
 func TestGScriptVisitor_VisitIfElse6(t *testing.T) {
 	expression := `
@@ -58,7 +60,8 @@ if(3<(1+2)){
 }`
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(expression, " result:", result)
-	assert.Equal(t, result, int(2))
+	object := result.(*stack.ReturnObject)
+	assert.Equal(t, object.GetReturnObject(), 2)
 }
 func TestGScriptVisitor_VisitIfElse7(t *testing.T) {
 	expression := `
@@ -69,7 +72,8 @@ if(3<(1+2)){
 }`
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(expression, " result:", result)
-	assert.Equal(t, result, "123")
+	object := result.(*stack.ReturnObject)
+	assert.Equal(t, object.GetReturnObject(), "123")
 }
 func TestGScriptVisitor_VisitIfElse8(t *testing.T) {
 	expression := `
@@ -80,7 +84,8 @@ if(3!=(1+2)){
 }`
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(expression, " result:", result)
-	assert.Equal(t, result, false)
+	object := result.(*stack.ReturnObject)
+	assert.Equal(t, object.GetReturnObject(), false)
 }
 
 func TestArithmeticOperators(t *testing.T) {
@@ -92,7 +97,8 @@ if(4==(2+2)){
 }`
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(result)
-	assert.Equal(t, result, int(4))
+	object := result.(*stack.ReturnObject)
+	assert.Equal(t, object.GetReturnObject(), 4)
 }
 func TestArithmeticOperators2(t *testing.T) {
 	expression := `(10+20)*20;`
@@ -119,7 +125,8 @@ if ( (10 +10 ) == 20 ) {
 `
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(result)
-	assert.Equal(t, result, true)
+	object := result.(*stack.ReturnObject)
+	assert.Equal(t, object.GetReturnObject(), true)
 
 }
 func TestArithmeticOperators5(t *testing.T) {
@@ -132,7 +139,8 @@ if ( (10 +10 ) == 20 ) {
 `
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(result)
-	assert.Equal(t, result, 11)
+	object := result.(*stack.ReturnObject)
+	assert.Equal(t, object.GetReturnObject(), 11)
 }
 func TestArithmeticOperators6(t *testing.T) {
 	expression := `
@@ -144,7 +152,8 @@ if ( (10 +10 ) == 20 ) {
 `
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(result)
-	assert.Equal(t, result, false)
+	object := result.(*stack.ReturnObject)
+	assert.Equal(t, object.GetReturnObject(), false)
 	expression = `
 if ( (10 +10 ) == 20 ) {
 	return !(1+1!=2) ;
@@ -154,7 +163,8 @@ if ( (10 +10 ) == 20 ) {
 `
 	result = NewCompiler().Compiler(expression)
 	fmt.Println(result)
-	assert.Equal(t, result, true)
+	object = result.(*stack.ReturnObject)
+	assert.Equal(t, object.GetReturnObject(), true)
 }
 func TestArithmeticOperators7(t *testing.T) {
 	expression := `
