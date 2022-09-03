@@ -792,7 +792,10 @@ func (v *Visitor) VisitForControl(ctx *parser.ForControlContext) interface{} {
 			}
 			ret = v.Visit(ctx.GetParent().(*parser.StmForContext).Statement())
 
-			// todo crossoverJie break/return
+			_, b := ret.(*stack.BreakObject)
+			if b {
+				break
+			}
 
 			// i++
 			if ctx.GetForUpdate() != nil {

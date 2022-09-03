@@ -332,3 +332,14 @@ for(a<=10){
 `
 	NewCompiler().Compiler(script)
 }
+func TestCompiler_For3(t *testing.T) {
+	script := `
+for(int i=0;i<5;i++){
+	print(i);
+	if (i==3){
+		break;
+	}
+}
+`
+	NewCompiler().Compiler(script)
+}
