@@ -121,6 +121,8 @@ func (v *Visitor) Visit(tree antlr.ParseTree) interface{} {
 		return v.VisitStmReturn(ctx)
 	case *parser.StmBreakContext:
 		return v.VisitStmBreak(ctx)
+	case *parser.StmContinueContext:
+		return v.VisitStmContinue(ctx)
 	case *parser.StmExprContext:
 		return v.VisitStmExpr(ctx)
 	case *parser.StmForContext:
@@ -158,7 +160,15 @@ func (v *Visitor) VisitProg(ctx *parser.ProgContext) interface{} {
 func (v *Visitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{} {
 	var ret interface{}
 	for _, context := range ctx.AllBlockStatement() {
-		ret = v.Visit(context)
+		retTemp := v.Visit(context)
+		switch retTemp.(type) {
+		case *stack.ContinueObject:
+			return retTemp
+		}
+		ret = retTemp
+		//if retTemp !=nil{
+		//	ret = retTemp
+		//}
 	}
 	return ret
 }
@@ -851,7 +861,7 @@ func (v *Visitor) VisitStmBreak(ctx *parser.StmBreakContext) interface{} {
 }
 
 func (v *Visitor) VisitStmContinue(ctx *parser.StmContinueContext) interface{} {
-	return v.VisitChildren(ctx)
+	return stack.ContinueObjectInstance
 }
 
 // 将闭包变量复制到当前 functionObject 中，同时赋值。

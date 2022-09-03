@@ -332,6 +332,19 @@ for(a<=10){
 `
 	NewCompiler().Compiler(script)
 }
+func TestCompiler_For0(t *testing.T) {
+	script := `
+int a=0;
+for(a<3){
+	a++;
+	if(a==2){
+		continue;
+	}
+	print(a);
+}
+`
+	NewCompiler().Compiler(script)
+}
 func TestCompiler_For3(t *testing.T) {
 	script := `
 for(int i=0;i<5;i++){
@@ -339,6 +352,17 @@ for(int i=0;i<5;i++){
 	if (i==3){
 		break;
 	}
+}
+`
+	NewCompiler().Compiler(script)
+}
+func TestCompiler_For4(t *testing.T) {
+	script := `
+for(int i=0;i<5;i++){
+	if (i==3){
+		continue;
+	}
+	print(i);
 }
 `
 	NewCompiler().Compiler(script)

@@ -164,6 +164,10 @@ func (c *ClassObject) AllField() map[*symbol.Variable]interface{} {
 	return c.fields
 }
 
-var BreakObjectInstance = &BreakObject{}
+var (
+	BreakObjectInstance    = &BreakObject{}
+	ContinueObjectInstance = &ContinueObject{}
+)
 
 type BreakObject struct{}
+type ContinueObject struct{}
