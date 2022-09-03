@@ -149,7 +149,10 @@ statement
     : blockLabel=block #StmBlockLabel
     | IF parExpression statement (ELSE statement)? #StmIfElse
     | FOR '(' forControl ')' statement #StmFor
+    | FOR parExpression statement #StmWhile
     | RETURN expr?  ';'#StmReturn
+    | BREAK IDENTIFIER? ';' #StmBreak
+    | CONTINUE IDENTIFIER? ';' # StmContinue
     | statementExpression=expr ';'#StmExpr
     ;
 
@@ -311,6 +314,8 @@ FOR:                'for';
 IF:                 'if';
 ELSE:               'else';
 RETURN:             'return';
+BREAK:              'break';
+CONTINUE:           'continue';
 
 BOOL_LITERAL:       'true'
             |       'false'

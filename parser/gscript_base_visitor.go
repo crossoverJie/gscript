@@ -136,7 +136,19 @@ func (v *BaseGScriptVisitor) VisitStmFor(ctx *StmForContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseGScriptVisitor) VisitStmWhile(ctx *StmWhileContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseGScriptVisitor) VisitStmReturn(ctx *StmReturnContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitStmBreak(ctx *StmBreakContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
+func (v *BaseGScriptVisitor) VisitStmContinue(ctx *StmContinueContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 

@@ -77,6 +77,18 @@ func (t *TypeScopeResolver) ExitStmFor(ctx *parser.StmForContext) {
 	t.popScope()
 }
 
+// EnterStmWhile is called when production StmWhile is entered.
+func (t *TypeScopeResolver) EnterStmWhile(ctx *parser.StmWhileContext) {
+	scope := symbol.NewBlockScope(ctx, "while", t.currentScope())
+	t.currentScope().AddSymbol(scope)
+	t.pushScope(ctx, scope)
+}
+
+// ExitStmWhile is called when production StmWhile is exited.
+func (t *TypeScopeResolver) ExitStmWhile(ctx *parser.StmWhileContext) {
+	t.popScope()
+}
+
 // EnterFunctionDeclaration 加入一个 func 的 scope
 func (t *TypeScopeResolver) EnterFunctionDeclaration(ctx *parser.FunctionDeclarationContext) {
 	//scope := symbol.NewBlockScope(ctx, "func", t.currentScope())

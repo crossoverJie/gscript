@@ -104,8 +104,17 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#StmFor.
 	VisitStmFor(ctx *StmForContext) interface{}
 
+	// Visit a parse tree produced by GScriptParser#StmWhile.
+	VisitStmWhile(ctx *StmWhileContext) interface{}
+
 	// Visit a parse tree produced by GScriptParser#StmReturn.
 	VisitStmReturn(ctx *StmReturnContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#StmBreak.
+	VisitStmBreak(ctx *StmBreakContext) interface{}
+
+	// Visit a parse tree produced by GScriptParser#StmContinue.
+	VisitStmContinue(ctx *StmContinueContext) interface{}
 
 	// Visit a parse tree produced by GScriptParser#StmExpr.
 	VisitStmExpr(ctx *StmExprContext) interface{}

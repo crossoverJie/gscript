@@ -163,3 +163,7 @@ func NewClassObject(class *symbol.Class) *ClassObject {
 func (c *ClassObject) AllField() map[*symbol.Variable]interface{} {
 	return c.fields
 }
+
+var BreakObjectInstance = &BreakObject{}
+
+type BreakObject struct{}

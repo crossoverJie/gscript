@@ -309,3 +309,26 @@ assertEqual(10+1.1, 11.1);
 `
 	NewCompiler().Compiler(script)
 }
+func TestCompiler_For(t *testing.T) {
+	script := `
+int a=0;
+for(a<=10){
+	print(a);
+	a++;
+}
+`
+	NewCompiler().Compiler(script)
+}
+func TestCompiler_For2(t *testing.T) {
+	script := `
+int a=0;
+for(a<=10){
+	print(a);
+	a++;
+	if(a==5){
+		break;
+	}
+}
+`
+	NewCompiler().Compiler(script)
+}

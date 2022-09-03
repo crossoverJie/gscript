@@ -119,10 +119,14 @@ func (v *Visitor) Visit(tree antlr.ParseTree) interface{} {
 		return v.VisitStmIfElse(ctx)
 	case *parser.StmReturnContext:
 		return v.VisitStmReturn(ctx)
+	case *parser.StmBreakContext:
+		return v.VisitStmBreak(ctx)
 	case *parser.StmExprContext:
 		return v.VisitStmExpr(ctx)
 	case *parser.StmForContext:
 		return v.VisitStmFor(ctx)
+	case *parser.StmWhileContext:
+		return v.VisitStmWhile(ctx)
 	case *parser.BlockFuncContext:
 		return nil
 	case *parser.ExprContext:
@@ -730,6 +734,42 @@ func (v *Visitor) VisitStmFor(ctx *parser.StmForContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *Visitor) VisitStmWhile(ctx *parser.StmWhileContext) interface{} {
+	scope := v.at.GetNode2Scope()[ctx]
+	v.pushStack(stack.NewBlockScopeFrame(scope))
+	parExpressionCtx := ctx.ParExpression().(*parser.ParExpressionContext)
+	for {
+		condition := true
+		value := v.VisitExpr(parExpressionCtx.Expr().(*parser.ExprContext))
+		switch value.(type) {
+		case *LeftValue:
+			c, ok := value.(*LeftValue).GetValue().(bool)
+			if ok {
+				condition = c
+			} else {
+				// todo crossoverJie 运行报错
+			}
+		case bool:
+			condition = value.(bool)
+		default:
+			// todo crossoverJie 运行报错
+		}
+
+		if !condition {
+			break
+		}
+
+		ret := v.Visit(ctx.Statement())
+		_, b := ret.(*stack.BreakObject)
+		if b {
+			break
+		}
+	}
+
+	v.popStack()
+	return nil
+}
+
 func (v *Visitor) VisitForControl(ctx *parser.ForControlContext) interface{} {
 	var ret interface{}
 	forInit := ctx.ForInit()
@@ -801,6 +841,14 @@ func (v *Visitor) VisitStmReturn(ctx *parser.StmReturnContext) interface{} {
 		return ret
 	}
 	return nil
+}
+
+func (v *Visitor) VisitStmBreak(ctx *parser.StmBreakContext) interface{} {
+	return stack.BreakObjectInstance
+}
+
+func (v *Visitor) VisitStmContinue(ctx *parser.StmContinueContext) interface{} {
+	return v.VisitChildren(ctx)
 }
 
 // 将闭包变量复制到当前 functionObject 中，同时赋值。

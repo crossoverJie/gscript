@@ -213,11 +213,29 @@ func (s *BaseGScriptListener) EnterStmFor(ctx *StmForContext) {}
 // ExitStmFor is called when production StmFor is exited.
 func (s *BaseGScriptListener) ExitStmFor(ctx *StmForContext) {}
 
+// EnterStmWhile is called when production StmWhile is entered.
+func (s *BaseGScriptListener) EnterStmWhile(ctx *StmWhileContext) {}
+
+// ExitStmWhile is called when production StmWhile is exited.
+func (s *BaseGScriptListener) ExitStmWhile(ctx *StmWhileContext) {}
+
 // EnterStmReturn is called when production StmReturn is entered.
 func (s *BaseGScriptListener) EnterStmReturn(ctx *StmReturnContext) {}
 
 // ExitStmReturn is called when production StmReturn is exited.
 func (s *BaseGScriptListener) ExitStmReturn(ctx *StmReturnContext) {}
+
+// EnterStmBreak is called when production StmBreak is entered.
+func (s *BaseGScriptListener) EnterStmBreak(ctx *StmBreakContext) {}
+
+// ExitStmBreak is called when production StmBreak is exited.
+func (s *BaseGScriptListener) ExitStmBreak(ctx *StmBreakContext) {}
+
+// EnterStmContinue is called when production StmContinue is entered.
+func (s *BaseGScriptListener) EnterStmContinue(ctx *StmContinueContext) {}
+
+// ExitStmContinue is called when production StmContinue is exited.
+func (s *BaseGScriptListener) ExitStmContinue(ctx *StmContinueContext) {}
 
 // EnterStmExpr is called when production StmExpr is entered.
 func (s *BaseGScriptListener) EnterStmExpr(ctx *StmExprContext) {}
