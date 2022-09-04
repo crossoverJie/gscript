@@ -19,8 +19,8 @@ int hash(bool s){}
 class EntryString{
     string key,value;
     EntryString(string k, string v){
-    key=k;
-    value=v;
+        key=k;
+        value=v;
     }
 }
 class MapString{
