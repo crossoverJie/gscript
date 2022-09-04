@@ -32,6 +32,14 @@ func (l *LeftValue) SetValue(value interface{}) {
 		funcObject.SetReferenceVariable(l.variable)
 	}
 }
+func (l *LeftValue) AppendArray(v interface{}) {
+	array, ok := l.GetValue().([]interface{})
+	if ok {
+		array = append(array, v)
+	} else {
+		// todo crossoverJie 运行时报错
+	}
+}
 
 func (l *LeftValue) String() string {
 	return l.object.String()

@@ -33,3 +33,20 @@ func (v *Visitor) assertEqual(ctx *parser.FunctionCallContext) {
 		panic(fmt.Sprintf("assertEqual fail [%v,%v] in line:%d and column:%d", paramValues[0], paramValues[1], line, column))
 	}
 }
+
+func (v *Visitor) append(ctx *parser.FunctionCallContext) []interface{} {
+	paramValues := v.buildParamValues(ctx)
+	if len(paramValues) != 2 {
+		// todo crossoverJie 运行时报错
+		panic("")
+	}
+	switch paramValues[0].(type) {
+	case []interface{}:
+		array := paramValues[0].([]interface{})
+		array = append(array, paramValues[1])
+		return array
+	default:
+		// todo crossoverJie 运行时报错
+	}
+	return nil
+}

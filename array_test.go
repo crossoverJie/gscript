@@ -42,3 +42,16 @@ for(int i=0;i<3;i++){
 `
 	NewCompiler().Compiler(script)
 }
+func Test_array5(t *testing.T) {
+	script := `
+int[] a={1,2,3};
+print(a);
+print();
+a = append(a,4);
+print(a);
+for(int i=0;i<4;i++){
+	print(a[i]);
+}
+`
+	NewCompiler().Compiler(script)
+}

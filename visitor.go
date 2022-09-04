@@ -509,6 +509,8 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 	} else if name == "assertEqual" {
 		v.assertEqual(ctx)
 		return ret
+	} else if name == "append" {
+		return v.append(ctx)
 	}
 
 	// 默认构造函数
