@@ -218,7 +218,9 @@ func (v *Visitor) VisitVariableInitializer(ctx *parser.VariableInitializerContex
 	// array init
 	if ctx.ArrayInitializer() != nil {
 		allContext := ctx.ArrayInitializer().(*parser.ArrayInitializerContext)
-		var array []interface{}
+		length := v.VisitArrayInitializer(ctx.ArrayInitializer().(*parser.ArrayInitializerContext))
+		//var array []interface{}
+		array := make([]interface{}, length.(int))
 		for _, context := range allContext.AllVariableInitializer() {
 			val := v.VisitVariableInitializer(context.(*parser.VariableInitializerContext))
 			array = append(array, val)
@@ -226,6 +228,14 @@ func (v *Visitor) VisitVariableInitializer(ctx *parser.VariableInitializerContex
 		return array
 	}
 	return nil
+}
+
+func (v *Visitor) VisitArrayInitializer(ctx *parser.ArrayInitializerContext) interface{} {
+	if ctx.LBRACK() != nil && ctx.RBRACK() != nil {
+		val, _ := strconv.Atoi(ctx.DECIMAL_LITERAL().GetText())
+		return val
+	}
+	return 0
 }
 
 func (v *Visitor) VisitBlockStm(ctx *parser.BlockStmContext) interface{} {
@@ -448,6 +458,16 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 					// todo crossoverJie isSuper 赋值
 					return v.receiveFunctionCall(ctx.FunctionCall().(*parser.FunctionCallContext), classObject, false)
 				}
+			case *LeftValue:
+				leftValue := left.GetValue().(*LeftValue)
+				if ctx.IDENTIFIER() != nil {
+					v1 := v.at.GetSymbolOfNode()[ctx].(*sym.Variable)
+					switch leftValue.GetValue().(type) {
+					case *stack.ClassObject:
+						classObject := leftValue.GetValue().(*stack.ClassObject)
+						return NewLeftValue(v1, classObject)
+					}
+				}
 			}
 
 		}
@@ -513,6 +533,8 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return v.append(ctx)
 	} else if name == "len" {
 		return v.len(ctx)
+	} else if name == "hash" {
+		return v.hash(ctx)
 	}
 
 	// 默认构造函数

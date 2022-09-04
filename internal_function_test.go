@@ -1,6 +1,8 @@
 package gscript
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestFunction(t *testing.T) {
 	script := `

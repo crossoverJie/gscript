@@ -3,6 +3,7 @@ package gscript
 import (
 	"fmt"
 	"github.com/crossoverJie/gscript/parser"
+	"hash/fnv"
 )
 
 func (v *Visitor) print(ctx *parser.FunctionCallContext) {
@@ -62,4 +63,23 @@ func (v *Visitor) len(ctx *parser.FunctionCallContext) int {
 		return len(paramValues[0].([]interface{}))
 	}
 	return 0
+}
+func (v *Visitor) hash(ctx *parser.FunctionCallContext) int {
+	paramValues := v.buildParamValues(ctx)
+	if len(paramValues) != 1 {
+		// todo crossoverJie 运行时报错
+		panic("")
+	}
+	return hash(paramValues[0])
+}
+
+func hash(v interface{}) int {
+	//hash := sha256.New()
+	//hash.Write([]byte(fmt.Sprintf("%v", v)))
+
+	h := fnv.New32a()
+	h.Write([]byte(fmt.Sprintf("%v", v)))
+	return int(h.Sum32())
+
+	//return fmt.Sprintf("%x", hash.Sum(nil))
 }

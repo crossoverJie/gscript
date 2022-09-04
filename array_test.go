@@ -97,3 +97,12 @@ for(int i=0;i<len(d);i++){
 `
 	NewCompiler().Compiler(script)
 }
+func Test_array8(t *testing.T) {
+	script := `
+int[] a=[10]{};
+print(len(a));
+a = append(a,1);
+print(len(a));
+`
+	NewCompiler().Compiler(script)
+}
