@@ -70,3 +70,30 @@ assertEqual(len(a),4);
 `
 	NewCompiler().Compiler(script)
 }
+func Test_array7(t *testing.T) {
+	script := `
+string[] a={"1","2","3"};
+int[] b={1,2,3};
+if (3==len(a)){
+	print("3==len(a)");
+}
+for(int i=0;i<len(a);i++){
+	print(a[i]);
+}
+print("======");
+for(int i=0;i<len(b);i++){
+	print(b[i]);
+}
+print("======");
+bool[] c ={true,true,false}
+for(int i=0;i<len(c);i++){
+	print(c[i]);
+}
+print("======");
+float[] d ={10.1,1.1,2.1};
+for(int i=0;i<len(d);i++){
+	print(d[i]);
+}
+`
+	NewCompiler().Compiler(script)
+}

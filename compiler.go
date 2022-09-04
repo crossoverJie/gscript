@@ -5,6 +5,7 @@ import (
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/resolver"
 	"log"
+	"os"
 )
 
 type Compiler struct {
@@ -20,6 +21,8 @@ func (c *Compiler) Compiler(script string) interface{} {
 			log.Println(r)
 		}
 	}()
+	internal := c.loadInternal()
+	script = internal + script
 	input := antlr.NewInputStream(script)
 	lexer := parser.NewGScriptLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
@@ -41,4 +44,13 @@ func (c *Compiler) Compiler(script string) interface{} {
 
 	visitor := NewVisitor(at)
 	return visitor.Visit(tree)
+}
+
+func (c *Compiler) loadInternal() string {
+	file, err := os.ReadFile("internal/internal.gs")
+	if err != nil {
+		panic(err)
+	}
+	return string(file)
+
 }
