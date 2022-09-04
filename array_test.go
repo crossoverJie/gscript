@@ -85,7 +85,7 @@ for(int i=0;i<len(b);i++){
 	print(b[i]);
 }
 print("======");
-bool[] c ={true,true,false}
+bool[] c ={true,true,false};
 for(int i=0;i<len(c);i++){
 	print(c[i]);
 }
