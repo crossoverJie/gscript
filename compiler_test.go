@@ -2,7 +2,6 @@ package gscript
 
 import (
 	"fmt"
-	"github.com/crossoverJie/gscript/stack"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -24,7 +23,7 @@ a++;
 return a;
 `
 	compiler := NewCompiler().Compiler(script)
-	object := compiler.(*stack.ReturnObject)
+	object := compiler.(*ReturnObject)
 	fmt.Println(object.GetReturnObject())
 	assert.Equal(t, object.GetReturnObject(), 11)
 }
@@ -37,7 +36,7 @@ for(int i = 0;i<100;i++) {
 return age;
 `
 	compiler := NewCompiler().Compiler(script)
-	object := compiler.(*stack.ReturnObject)
+	object := compiler.(*ReturnObject)
 	fmt.Println(object.GetReturnObject())
 	assert.Equal(t, object.GetReturnObject(), 100)
 }
@@ -54,7 +53,7 @@ for(int i = 0;i<100;i++) {
 return age;
 `
 	compiler := NewCompiler().Compiler(script)
-	object := compiler.(*stack.ReturnObject)
+	object := compiler.(*ReturnObject)
 	fmt.Println(object.GetReturnObject())
 	assert.Equal(t, object.GetReturnObject(), 100*100)
 }
@@ -67,7 +66,7 @@ for(int i = 0;i<100;i++) {
 return age;
 `
 	compiler := NewCompiler().Compiler(script)
-	object := compiler.(*stack.ReturnObject)
+	object := compiler.(*ReturnObject)
 	fmt.Println(object.GetReturnObject())
 	assert.Equal(t, object.GetReturnObject(), 101)
 }
@@ -82,7 +81,7 @@ if (age>10){
 return age;
 `
 	compiler := NewCompiler().Compiler(script)
-	object := compiler.(*stack.ReturnObject)
+	object := compiler.(*ReturnObject)
 	fmt.Println(object.GetReturnObject())
 	assert.Equal(t, object.GetReturnObject(), 9)
 }
@@ -97,7 +96,7 @@ if (age>10){
 return abc;
 `
 	compiler := NewCompiler().Compiler(script)
-	object := compiler.(*stack.ReturnObject)
+	object := compiler.(*ReturnObject)
 	fmt.Println(object.GetReturnObject())
 }
 

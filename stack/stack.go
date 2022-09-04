@@ -163,25 +163,3 @@ func NewClassObject(class *symbol.Class) *ClassObject {
 func (c *ClassObject) AllField() map[*symbol.Variable]interface{} {
 	return c.fields
 }
-
-var (
-	BreakObjectInstance    = &BreakObject{}
-	ContinueObjectInstance = &ContinueObject{}
-)
-
-type BreakObject struct{}
-type ContinueObject struct{}
-type ReturnObject struct {
-	returnObject interface{}
-}
-
-func NewReturnObject(object interface{}) *ReturnObject {
-	return &ReturnObject{returnObject: object}
-}
-
-func (r *ReturnObject) GetReturnObject() interface{} {
-	return r.returnObject
-}
-func (r *ReturnObject) String() string {
-	return fmt.Sprintf("%d", r.returnObject)
-}

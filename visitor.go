@@ -162,11 +162,11 @@ func (v *Visitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{} {
 	for _, context := range ctx.AllBlockStatement() {
 		ret = v.Visit(context)
 		switch ret.(type) {
-		case *stack.ContinueObject:
+		case *ContinueObject:
 			return ret
-		case *stack.BreakObject:
+		case *BreakObject:
 			return ret
-		case *stack.ReturnObject:
+		case *ReturnObject:
 			return ret
 		}
 		//ret = retTemp
@@ -654,8 +654,8 @@ func (v *Visitor) executeFunctionCall(functionObject *stack.FuncObject, paramVal
 
 	//如果是 returnObject，需要把真正的数据取出
 	switch ret.(type) {
-	case *stack.ReturnObject:
-		ret = ret.(*stack.ReturnObject).GetReturnObject()
+	case *ReturnObject:
+		ret = ret.(*ReturnObject).GetReturnObject()
 	}
 
 	v.popStack()
@@ -816,13 +816,13 @@ func (v *Visitor) VisitStmWhile(ctx *parser.StmWhileContext) interface{} {
 
 		ret := v.Visit(ctx.Statement())
 		// break
-		_, b := ret.(*stack.BreakObject)
+		_, b := ret.(*BreakObject)
 		if b {
 			break
 		}
 
 		// return
-		_, r := ret.(*stack.ReturnObject)
+		_, r := ret.(*ReturnObject)
 		if r {
 			break
 		}
@@ -855,13 +855,13 @@ func (v *Visitor) VisitForControl(ctx *parser.ForControlContext) interface{} {
 			ret = v.Visit(ctx.GetParent().(*parser.StmForContext).Statement())
 
 			// break
-			_, b := ret.(*stack.BreakObject)
+			_, b := ret.(*BreakObject)
 			if b {
 				break
 			}
 
 			// return
-			_, r := ret.(*stack.ReturnObject)
+			_, r := ret.(*ReturnObject)
 			if r {
 				break
 			}
@@ -912,17 +912,17 @@ func (v *Visitor) VisitStmReturn(ctx *parser.StmReturnContext) interface{} {
 
 	}
 	// 支持 return
-	ret = stack.NewReturnObject(ret)
+	ret = NewReturnObject(ret)
 	return ret
 
 }
 
 func (v *Visitor) VisitStmBreak(ctx *parser.StmBreakContext) interface{} {
-	return stack.BreakObjectInstance
+	return BreakObjectInstance
 }
 
 func (v *Visitor) VisitStmContinue(ctx *parser.StmContinueContext) interface{} {
-	return stack.ContinueObjectInstance
+	return ContinueObjectInstance
 }
 
 // 将闭包变量复制到当前 functionObject 中，同时赋值。
