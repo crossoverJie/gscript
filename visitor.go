@@ -194,6 +194,10 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 		switch ret.(type) {
 		case *LeftValue:
 			ret = ret.(*LeftValue).GetValue()
+		case *ArrayObject:
+			// 数组赋值 int b=a[0];
+			arrayObject := ret.(*ArrayObject)
+			ret = arrayObject.GetIndexValue()
 		}
 		// 为变量赋值
 		// int e=10   int e = foo()
@@ -208,9 +212,18 @@ func (v *Visitor) VisitVariableDeclaratorId(ctx *parser.VariableDeclaratorIdCont
 	return value
 }
 func (v *Visitor) VisitVariableInitializer(ctx *parser.VariableInitializerContext) interface{} {
-	// todo array init
 	if ctx.Expr() != nil {
 		return v.Visit(ctx.Expr())
+	}
+	// array init
+	if ctx.ArrayInitializer() != nil {
+		allContext := ctx.ArrayInitializer().(*parser.ArrayInitializerContext)
+		var array []interface{}
+		for _, context := range allContext.AllVariableInitializer() {
+			val := v.VisitVariableInitializer(context.(*parser.VariableInitializerContext))
+			array = append(array, val)
+		}
+		return array
 	}
 	return nil
 }
@@ -249,6 +262,20 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 	var ret interface{}
 	if ctx.Primary() != nil {
 		ret = v.Visit(ctx.Primary())
+	}
+
+	// 获取数组数据
+	if ctx.GetArray() != nil && ctx.GetIndex() != nil {
+		left := v.VisitExpr(ctx.GetArray().(*parser.ExprContext))
+		index := v.VisitExpr(ctx.GetIndex().(*parser.ExprContext))
+		switch index.(type) {
+		case int:
+			ret = NewArrayObject(left.(*LeftValue), index.(int))
+		case *LeftValue:
+			leftValue := index.(*LeftValue)
+			ret = NewArrayObject(left.(*LeftValue), leftValue.GetValue().(int))
+		}
+
 	}
 
 	if ctx.GetBop() != nil && len(ctx.AllExpr()) >= 2 {
@@ -376,15 +403,26 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				// todo crossoverJie 运行时错误
 			}
 		case parser.GScriptParserASSIGN:
-			l := v.Visit(ctx.GetLhs()).(*LeftValue)
-			r := val2
-			switch val2.(type) {
+			switch val1.(type) {
 			case *LeftValue:
-				r = val2.(*LeftValue).GetValue()
+				l := val1.(*LeftValue)
+				r := val2
+				switch val2.(type) {
+				case *LeftValue:
+					r = val2.(*LeftValue).GetValue()
+				}
+				// e = e+10
+				l.SetValue(r)
+				return r
+			case *ArrayObject:
+				// 数组赋值 a[1]=3;
+				arrayObject := val1.(*ArrayObject)
+				arrayObject.SetIndexValue(val2)
+				//array,ok := arrayObject.GetLeftValue().GetValue().([]interface{})
+				//if ok {
+				//	array[arrayObject.GetIndex()] = val2
+				//}
 			}
-			// e = e+10
-			l.SetValue(r)
-			return r
 
 		}
 

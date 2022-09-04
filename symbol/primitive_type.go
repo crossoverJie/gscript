@@ -9,7 +9,8 @@ var (
 )
 
 type PrimitiveType struct {
-	name string
+	name    string
+	isArray bool
 }
 
 func (b *PrimitiveType) GetName() string {
@@ -26,6 +27,11 @@ func (b *PrimitiveType) IsType(t Type) bool {
 
 func (b *PrimitiveType) String() string {
 	return b.name
+}
+
+func (b *PrimitiveType) IsArray() bool {
+	// todo crossoverJie 数组校验
+	return false
 }
 
 type VoidType struct {

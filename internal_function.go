@@ -11,6 +11,9 @@ func (v *Visitor) print(ctx *parser.FunctionCallContext) {
 		switch ret.(type) {
 		case *LeftValue:
 			ret = ret.(*LeftValue).GetValue()
+		case *ArrayObject:
+			arrayObject := ret.(*ArrayObject)
+			ret = arrayObject.GetIndexValue()
 		}
 		fmt.Println(ret)
 	} else {

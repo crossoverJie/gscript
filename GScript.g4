@@ -189,6 +189,7 @@ expr
       ( IDENTIFIER
       | functionCall
       )
+    | array=expr '[' index=expr ']'
     | functionCall
     | lhs=expr postfix=('++' | '--')
     | prefix=('~'|'!') rhs=expr
