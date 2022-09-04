@@ -511,6 +511,8 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return ret
 	} else if name == "append" {
 		return v.append(ctx)
+	} else if name == "len" {
+		return v.len(ctx)
 	}
 
 	// 默认构造函数

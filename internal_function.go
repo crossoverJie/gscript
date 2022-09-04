@@ -50,3 +50,16 @@ func (v *Visitor) append(ctx *parser.FunctionCallContext) []interface{} {
 	}
 	return nil
 }
+
+func (v *Visitor) len(ctx *parser.FunctionCallContext) int {
+	paramValues := v.buildParamValues(ctx)
+	if len(paramValues) != 1 {
+		// todo crossoverJie 运行时报错
+		panic("")
+	}
+	switch paramValues[0].(type) {
+	case []interface{}:
+		return len(paramValues[0].([]interface{}))
+	}
+	return 0
+}

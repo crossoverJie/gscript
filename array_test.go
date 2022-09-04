@@ -55,3 +55,18 @@ for(int i=0;i<4;i++){
 `
 	NewCompiler().Compiler(script)
 }
+func Test_array6(t *testing.T) {
+	script := `
+int[] a={1,2,3};
+print(a);
+assertEqual(len(a),3);
+print();
+a = append(a,4);
+print(a);
+for(int i=0;i<len(a);i++){
+	print(a[i]);
+}
+assertEqual(len(a),4);
+`
+	NewCompiler().Compiler(script)
+}
