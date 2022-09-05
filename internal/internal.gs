@@ -119,7 +119,7 @@ class LinkedList{
     dump(){
         LinkedNode start = first;
         for (start != nil){
-            print(start.value);
+            println(start.value);
             start = start.next;
         }
     }

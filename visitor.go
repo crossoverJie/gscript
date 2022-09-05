@@ -405,7 +405,7 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 					return false
 				}
 			} else {
-				// todo crossoverJie 运行时错误
+				return leftObject == rightObject
 			}
 		case parser.GScriptParserNOTEQUAL:
 			deriveType = sym.GetUpperType(type1, type2)

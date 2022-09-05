@@ -11,6 +11,21 @@ import (
 )
 
 func main() {
+
+	if len(os.Args) >= 2 {
+		file, err := os.ReadFile(os.Args[1])
+		if err != nil {
+			panic(fmt.Sprintf("read script fail, err:%+v", err))
+		}
+		gscript.NewCompiler().Compiler(string(file))
+
+	} else {
+		repl()
+	}
+
+}
+
+func repl() {
 	s := flag.String("x", "run", "debug or run, the debug mode will print the AST tree.")
 	flag.Parse()
 	if *s == "debug" {

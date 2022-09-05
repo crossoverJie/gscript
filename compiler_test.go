@@ -486,6 +486,20 @@ println("999")
 `
 	NewCompiler().Compiler(script)
 }
+func TestCompiler_Class_EQ(t *testing.T) {
+	script := `
+class Test{
+	int value;
+	Test(int v){
+		value =v;
+	}
+}
+Test t1 = Test(1);
+Test t2 = t1;
+println(t1==t2);
+`
+	NewCompiler().Compiler(script)
+}
 
 func TestNativeReturn(t *testing.T) {
 	s := testReturn()
