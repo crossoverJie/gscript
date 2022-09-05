@@ -32,7 +32,7 @@ list = append(list,m2);
 print(list);
 print(len(list));
 `
-	NewCompiler().Compiler(script)
+	NewCompiler().CompilerWithoutNative(script)
 }
 func Test_map2(t *testing.T) {
 	script := `
@@ -100,6 +100,16 @@ for (int i=0;i<count;i++){
 	print("key="+key+ ":"+ value);
 	assertEqual(key,value);
 }
+`
+	NewCompiler().Compiler(script)
+}
+func Test_map6(t *testing.T) {
+	script := `
+int count =100;
+MapString m1 = MapString();
+m1.put("","");
+print(m1.getSize());
+assertEqual(m1.getSize(),0);
 `
 	NewCompiler().Compiler(script)
 }
