@@ -8,9 +8,23 @@
 
 ```
 
+<div align="center">  
+
+
+📘[Features](#features) 🌰[Demo](#demo)💡 [Contact Author](#contact-author)|🇨🇳[中文文档](https://github.com/crossoverjie/gscript/blob/master/README-ZH.md)
+
+
+
+</div><br>
+
+# Introduction
+
 This is an experimental script language. and helps beginners to learn compilation principles.
 
 > It is called GScript because it is written with Go.
+
+
+
 
 # Demo
 
@@ -51,4 +65,12 @@ Or download the [binary file](https://github.com/crossoverJie/gscript/releases) 
 - [ ] OOP
 
 ![](doc/run.jpg)
+
+
+## Contact author
+
+
+> crossoverJie#gmail.com
+
+![qrcode_for_gh_3a954a025f10_258.jpg](https://i.loli.net/2019/07/09/5d245f3e955ce61699.jpg) 
 
