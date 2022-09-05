@@ -58,7 +58,7 @@ class MapString{
             }
 
         } else {
-            // 参看 jdk1.7 链表头插法
+            // 参考 jdk1.7 链表头插法
             table[i] = EntryString(key,value,nil);
             size++;
         }
