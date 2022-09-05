@@ -239,6 +239,7 @@ class Person{
 }
 Person xx= Person();
 println(xx.age);
+assertEqual(xx.age, 10);
 println(xx.getAge());
 int r1 = xx.age;
 int r2 = xx.getAge();
