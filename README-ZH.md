@@ -22,6 +22,11 @@
 
 > 当前版本仅供学习与实验。
 
+运行：
+
+```shell
+gscript example/hello_world.gs
+```
 
 # 特性
 - [x] class声明。
