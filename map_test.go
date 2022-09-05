@@ -21,26 +21,26 @@ class Map{
 }
 Map m=Map();
 m.put("1","1");
-print(m.str());
-print(m.getValue());
+println(m.str());
+println(m.getValue());
 
 Map[] list = {};
 list = append(list,m);
 Map m2=Map();
 m2.put("2","2");
 list = append(list,m2);
-print(list);
-print(len(list));
+println(list);
+println(len(list));
 `
 	NewCompiler().CompilerWithoutNative(script)
 }
 func Test_map2(t *testing.T) {
 	script := `
-print(hash("123"));
-print(hash(1));
-print(hash(1.1));
-print(hash(true));
-print(hash(true));
+println(hash("123"));
+println(hash(1));
+println(hash(1.1));
+println(hash(true));
+println(hash(true));
 `
 	NewCompiler().Compiler(script)
 }
@@ -50,12 +50,12 @@ MapString m1 = MapString();
 m1.put("1","10");
 m1.put("2","20");
 m1.put("3","30");
-print("get 1=" + m1.get("1"));
-print("get 2=" + m1.get("2"));
-print("get 3=" + m1.get("3"));
+println("get 1=" + m1.get("1"));
+println("get 2=" + m1.get("2"));
+println("get 3=" + m1.get("3"));
 m1.put("3","300");
-print("get 3=" + m1.get("3"));
-print("size=" + m1.getSize());
+println("get 3=" + m1.get("3"));
+println("size=" + m1.getSize());
 assertEqual(m1.getSize(),3);
 assertEqual(m1.get("1"),"10");
 assertEqual(m1.get("2"),"20");
@@ -69,14 +69,14 @@ class List{
 	List next;
 }
 List list = List();
-print(list.next);
+println(list.next);
 if(list.next == nil){
-	print("nil");
+	println("nil");
 }
 List next = List();
 list.next = next;
 if(list.next != nil){
-	print("!nil");
+	println("!nil");
 }
 `
 	NewCompiler().Compiler(script)
@@ -91,13 +91,13 @@ for (int i=0;i<count;i++){
 	string value = key;
 	m1.put(key,value);
 }
-print(m1.getSize());
+println(m1.getSize());
 assertEqual(m1.getSize(),count);
 
 for (int i=0;i<count;i++){
 	string key = i+"";
 	string value = m1.get(key);
-	print("key="+key+ ":"+ value);
+	println("key="+key+ ":"+ value);
 	assertEqual(key,value);
 }
 `
@@ -108,7 +108,7 @@ func Test_map6(t *testing.T) {
 int count =100;
 MapString m1 = MapString();
 m1.put("","");
-print(m1.getSize());
+println(m1.getSize());
 assertEqual(m1.getSize(),0);
 `
 	NewCompiler().Compiler(script)

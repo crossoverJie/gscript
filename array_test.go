@@ -5,13 +5,13 @@ import "testing"
 func Test_array(t *testing.T) {
 	script := `
 int[] a={1,2,3};
-print(a);
+println(a);
 a[0]=2;
-print(a);
+println(a);
 a[1]=3;
-print(a);
+println(a);
 a[2]=4;
-print(a);
+println(a);
 `
 	NewCompiler().Compiler(script)
 }
@@ -19,10 +19,10 @@ func Test_array2(t *testing.T) {
 	script := `
 int[] a={1,2,3};
 for(int i=0;i<3;i++){
-	print(a[i]);
+	println(a[i]);
 }
 int b=a[2];
-print(b);
+println(b);
 assertEqual(b,3);
 `
 	NewCompiler().Compiler(script)
@@ -31,13 +31,13 @@ func Test_array4(t *testing.T) {
 	script := `
 int[] a={1,2,3};
 for(int i=0;i<3;i++){
-	print(a[i]);
+	println(a[i]);
 	int temp = a[i]
 	a[i]=temp+1;
 }
-print();
+println();
 for(int i=0;i<3;i++){
-	print(a[i]);
+	println(a[i]);
 }
 `
 	NewCompiler().Compiler(script)
@@ -45,12 +45,12 @@ for(int i=0;i<3;i++){
 func Test_array5(t *testing.T) {
 	script := `
 int[] a={1,2,3};
-print(a);
-print();
+println(a);
+println();
 a = append(a,4);
-print(a);
+println(a);
 for(int i=0;i<4;i++){
-	print(a[i]);
+	println(a[i]);
 }
 `
 	NewCompiler().Compiler(script)
@@ -58,13 +58,13 @@ for(int i=0;i<4;i++){
 func Test_array6(t *testing.T) {
 	script := `
 int[] a={1,2,3};
-print(a);
+println(a);
 assertEqual(len(a),3);
-print();
+println();
 a = append(a,4);
-print(a);
+println(a);
 for(int i=0;i<len(a);i++){
-	print(a[i]);
+	println(a[i]);
 }
 assertEqual(len(a),4);
 `
@@ -75,24 +75,24 @@ func Test_array7(t *testing.T) {
 string[] a={"1","2","3"};
 int[] b={1,2,3};
 if (3==len(a)){
-	print("3==len(a)");
+	println("3==len(a)");
 }
 for(int i=0;i<len(a);i++){
-	print(a[i]);
+	println(a[i]);
 }
-print("======");
+println("======");
 for(int i=0;i<len(b);i++){
-	print(b[i]);
+	println(b[i]);
 }
-print("======");
+println("======");
 bool[] c ={true,true,false};
 for(int i=0;i<len(c);i++){
-	print(c[i]);
+	println(c[i]);
 }
-print("======");
+println("======");
 float[] d ={10.1,1.1,2.1};
 for(int i=0;i<len(d);i++){
-	print(d[i]);
+	println(d[i]);
 }
 `
 	NewCompiler().Compiler(script)
@@ -100,9 +100,9 @@ for(int i=0;i<len(d);i++){
 func Test_array8(t *testing.T) {
 	script := `
 int[] a=[10]{};
-print(len(a));
+println(len(a));
 a = append(a,1);
-print(len(a));
+println(len(a));
 `
 	NewCompiler().Compiler(script)
 }

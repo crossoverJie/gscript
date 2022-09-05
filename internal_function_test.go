@@ -9,9 +9,9 @@ func TestFunction(t *testing.T) {
 int a(){
 	return 10;
 }
-print(a());
+println(a());
 if (1<a()){
-	print("1<a()");
+	println("1<a()");
 }
 `
 	NewCompiler().Compiler(script)

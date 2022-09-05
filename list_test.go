@@ -9,7 +9,7 @@ list.add("1");
 list.add("2");
 list.add("3");
 list.dump();
-print("size= "+ list.getSize());
+println("size= "+ list.getSize());
 assertEqual(list.getSize(), 3);
 `
 	NewCompiler().Compiler(script)

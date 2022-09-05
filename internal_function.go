@@ -6,7 +6,7 @@ import (
 	"hash/fnv"
 )
 
-func (v *Visitor) print(ctx *parser.FunctionCallContext) {
+func (v *Visitor) println(ctx *parser.FunctionCallContext) {
 	if ctx.ExpressionList() != nil {
 		ret := v.VisitExpressionList(ctx.ExpressionList().(*parser.ExpressionListContext))
 		switch ret.(type) {
@@ -17,6 +17,7 @@ func (v *Visitor) print(ctx *parser.FunctionCallContext) {
 			ret = arrayObject.GetIndexValue()
 		}
 		fmt.Println(ret)
+		fmt.Print()
 	} else {
 		fmt.Println("")
 	}

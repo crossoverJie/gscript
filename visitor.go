@@ -573,8 +573,8 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 	var ret interface{}
 	name := ctx.IDENTIFIER().GetText()
 	// todo crossoverJie 内置函数校验
-	if name == "print" {
-		v.print(ctx)
+	if name == "println" {
+		v.println(ctx)
 		return ret
 	} else if name == "assertEqual" {
 		v.assertEqual(ctx)

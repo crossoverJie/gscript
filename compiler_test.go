@@ -238,16 +238,16 @@ class Person{
 	}
 }
 Person xx= Person();
-print(xx.age);
-print(xx.getAge());
+println(xx.age);
+println(xx.getAge());
 int r1 = xx.age;
 int r2 = xx.getAge();
 assertEqual(r1,10);
 assertEqual(r2,110);
 xx.age=200;
-print(xx.age);
+println(xx.age);
 assertEqual(xx.age,200);
-print(xx.getName());
+println(xx.getName());
 assertEqual(xx.getName(),"200abc");
 assertEqual(xx.sub(),190);
 assertEqual(xx.div(),20);
@@ -255,25 +255,25 @@ assertEqual(xx.mul(),2000);
 assertEqual(xx.mod(),0);
 
 if(10>2){
-	print("10>2");
+	println("10>2");
 }
 if(2<xx.age){
-	print("2<xx.age");
+	println("2<xx.age");
 }
 if(2<=2){
-	print("2<=2");
+	println("2<=2");
 }
 if(2>=2){
-	print("2>=2");
+	println("2>=2");
 }
 if(200==xx.age){
-	print("200==xx.age");
+	println("200==xx.age");
 }
 if(xx.getName()=="200abc"){
-	print("xx.getName()==200abc");
+	println("xx.getName()==200abc");
 }
 if(xx.getName()!="200abc1"){
-	print("xx.getName()!=200abc1");
+	println("xx.getName()!=200abc1");
 }
 
 `
@@ -289,7 +289,7 @@ class Person{
 	}
 }
 Person xx= Person(10);
-print(xx.age);
+println(xx.age);
 assertEqual(10,xx.age);
 `
 	NewCompiler().Compiler(script)
@@ -305,8 +305,8 @@ class Person{
 	}
 }
 Person xx= Person(10,20);
-print(xx.age);
-print(xx.number);
+println(xx.age);
+println(xx.number);
 assertEqual(10,xx.age);
 assertEqual(20,xx.number);
 int age=0;
@@ -319,7 +319,7 @@ func TestCompiler_For(t *testing.T) {
 	script := `
 int a=0;
 for(a<=10){
-	print(a);
+	println(a);
 	a++;
 }
 `
@@ -329,7 +329,7 @@ func TestCompiler_For2(t *testing.T) {
 	script := `
 int a=0;
 for(a<=10){
-	print(a);
+	println(a);
 	a++;
 	if(a==5){
 		break;
@@ -347,7 +347,7 @@ for(a<3){
 	if(a==2){
 		continue;
 	}
-	print(a);
+	println(a);
 }
 assertEqual(a,3);
 `
@@ -356,7 +356,7 @@ assertEqual(a,3);
 func TestCompiler_For3(t *testing.T) {
 	script := `
 for(int i=0;i<5;i++){
-	print(i);
+	println(i);
 	if (i==3){
 		break;
 	}
@@ -370,7 +370,7 @@ for(int i=0;i<5;i++){
 	if (i==3){
 		continue;
 	}
-	print(i);
+	println(i);
 }
 `
 	NewCompiler().Compiler(script)
@@ -381,7 +381,7 @@ for(int i=0;i<5;i++){
 	if (i==3){
 		return;
 	}
-	print(i);
+	println(i);
 }
 `
 	NewCompiler().Compiler(script)
@@ -390,7 +390,7 @@ func TestCompiler_Return2(t *testing.T) {
 	script := `
 int a=0;
 for(a<=10){
-	print(a);
+	println(a);
 	a++;
 	if(a==5){
 		return;
@@ -410,10 +410,10 @@ for(a<=10){
 		x =true;
 		return;
 	}
-	print("after return");
+	println("after return");
 }
 if(x){
-	print(x);
+	println(x);
 }
 `
 	NewCompiler().Compiler(script)
@@ -423,13 +423,13 @@ func TestCompiler_Nil(t *testing.T) {
 class Test{
 }
 t(Test t){
-	print("t");
+	println("t");
 }
 Test x = Test();
 t(nil);
 
 t2(int x){
-	print("t2");
+	println("t2");
 }
 `
 	NewCompiler().CompilerWithoutNative(script)
@@ -439,23 +439,52 @@ func TestCompiler_Condition(t *testing.T) {
 bool a = true;
 bool b = true;
 if (a&&b){
-	print("a&&b");
+	println("a&&b");
 }
 b = false;
 if (!(a&&b)){
-	print("!a&&b");
+	println("!a&&b");
 }
 int c =100;
 int d =100;
 if(c==100 && d==100){
-	print("a==c");
+	println("a==c");
 }
 
 if(a||b){
-	print("a||b");
+	println("a||b");
 }
 `
 	NewCompiler().CompilerWithoutNative(script)
+}
+func TestCompiler_Main(t *testing.T) {
+	script := `
+main();
+class Test{
+	p(){
+		println("123");
+	}
+}
+main(){
+	MapString m1 = MapString();
+	int count =3;
+	for (int i=0;i<count;i++){
+		string key = i+"";
+		string value = key;
+		m1.put(key,value);
+	}
+	for (int i=0;i<count;i++){
+		string key = i+"";
+		string value = m1.get(key);
+		println("key="+key+ ":"+ value);
+		assertEqual(key,value);
+	}
+	Test t = Test();
+	t.p();
+}
+println("999")
+`
+	NewCompiler().Compiler(script)
 }
 
 func TestNativeReturn(t *testing.T) {

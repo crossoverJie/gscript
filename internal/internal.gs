@@ -15,6 +15,9 @@ int hash(int s){}
 int hash(float s){}
 int hash(bool s){}
 
+println(){}
+assertEqual(){}
+
 
 class EntryString{
     string key,value;
