@@ -18,6 +18,7 @@ int hash(bool s){}
 
 class EntryString{
     string key,value;
+    EntryString next;
     EntryString(string k, string v){
         key=k;
         value=v;
@@ -34,6 +35,17 @@ class MapString{
         int hashcode = hash(key);
         int i = hashcode % len(table) ;
         EntryString e = table[i];
+        // for (e.next != nil){
+        //     int tempHash = hash(e.key);
+        //     if (hashcode == tempHash){
+        //         tempEntry = EntryString(key,value);
+        //         e
+        //     }else {
+        //
+        //     }
+        //
+        //     e = e.next;
+        // }
         e = EntryString(key,value);
         table[i]=e;
         size++;
@@ -53,4 +65,45 @@ string get(string key){
     int getSize(){
         return size;
     }
+}
+
+
+class LinkedNode{
+    String value;
+    LinkedNode next;
+    LinkedNode(string v){
+    value = v;
+    next = n;
+}
+}
+class LinkedList{
+    LinkedNode first, last;
+    int size=0;
+
+    add(string v){
+    if (v == ""){
+    return;
+}
+LinkedNode l = LinkedNode(v);
+if (first == nil){
+    first = l;
+    last = l;
+} else{
+    last.next = l;
+    last = l;
+}
+size ++;
+}
+
+dump(){
+    LinkedNode start = first;
+    for (start != nil){
+        print(start.value);
+        start = start.next;
+    }
+}
+
+int getSize(){
+    return size;
+}
 }

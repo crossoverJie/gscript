@@ -123,6 +123,7 @@ literal
     | STRING_LITERAL
     | BOOL_LITERAL
     | NULL_LITERAL
+    | Nil
     ;
 
 prog
@@ -275,6 +276,7 @@ BOOLEAN:            'bool';
 SUPER:              'super';
 SWITCH:             'switch';
 THIS:               'this';
+Nil:                'nil';
 
 
 // Separators

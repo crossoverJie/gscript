@@ -251,5 +251,8 @@ func (s *RefResolver) ExitLiteral(ctx *parser.LiteralContext) {
 		s.at.PutTypeOfNode(ctx, symbol.String)
 	} else if ctx.BOOL_LITERAL() != nil {
 		s.at.PutTypeOfNode(ctx, symbol.Bool)
+	} else if ctx.Nil() != nil {
+		s.at.PutTypeOfNode(ctx, symbol.Nil)
+
 	}
 }

@@ -398,6 +398,12 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return leftObject.(int) == rightObject.(int)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) == sym.Value2Float(rightObject)
+			} else if deriveType == sym.Nil {
+				if leftObject == nil && rightObject == nil {
+					return true
+				} else {
+					return false
+				}
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -409,6 +415,12 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return leftObject.(int) != rightObject.(int)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) != sym.Value2Float(rightObject)
+			} else if deriveType == sym.Nil {
+				if leftObject != nil || rightObject != nil {
+					return true
+				} else {
+					return false
+				}
 			} else {
 				// todo crossoverJie 运行时错误
 			}
