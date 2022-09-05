@@ -434,6 +434,29 @@ t2(int x){
 `
 	NewCompiler().CompilerWithoutNative(script)
 }
+func TestCompiler_Condition(t *testing.T) {
+	script := `
+bool a = true;
+bool b = true;
+if (a&&b){
+	print("a&&b");
+}
+b = false;
+if (!(a&&b)){
+	print("!a&&b");
+}
+int c =100;
+int d =100;
+if(c==100 && d==100){
+	print("a==c");
+}
+
+if(a||b){
+	print("a||b");
+}
+`
+	NewCompiler().CompilerWithoutNative(script)
+}
 
 func TestNativeReturn(t *testing.T) {
 	s := testReturn()

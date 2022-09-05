@@ -449,6 +449,44 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 		}
 
 	}
+	if ctx.GetBop() != nil && (ctx.GetBop().GetTokenType() == parser.GScriptParserAND || ctx.GetBop().GetTokenType() == parser.GScriptParserOR) {
+		// &&
+		left := v.VisitExpr(ctx.GetLhs().(*parser.ExprContext))
+		right := v.VisitExpr(ctx.GetRhs().(*parser.ExprContext))
+		var (
+			leftCondition  = false
+			rightCondition = false
+		)
+
+		switch left.(type) {
+		case bool:
+			leftCondition = left.(bool)
+		case *LeftValue:
+			b, ok := left.(*LeftValue).GetValue().(bool)
+			if ok {
+				leftCondition = b
+			}
+		}
+
+		switch right.(type) {
+		case bool:
+			rightCondition = right.(bool)
+		case *LeftValue:
+			b, ok := right.(*LeftValue).GetValue().(bool)
+			if ok {
+				rightCondition = b
+			}
+		}
+		if ctx.GetBop().GetTokenType() == parser.GScriptParserAND {
+			return leftCondition && rightCondition
+		} else if ctx.GetBop().GetTokenType() == parser.GScriptParserOR {
+			return leftCondition || rightCondition
+		} else {
+			return false
+		}
+
+	}
+
 	if ctx.GetBop() != nil && ctx.GetBop().GetTokenType() == parser.GScriptParserDOT {
 		l := v.VisitExpr(ctx.Expr(0).(*parser.ExprContext))
 		switch l.(type) {

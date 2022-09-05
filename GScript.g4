@@ -199,6 +199,8 @@ expr
     | lhs=expr bop=( PLUS | SUB ) rhs=expr
     | lhs=expr bop=(LE | GE | GT | LT ) rhs=expr
     | lhs=expr bop=(EQUAL | NOTEQUAL) rhs=expr
+    | lhs=expr bop='&&' rhs=expr
+    | lhs=expr bop='||' rhs=expr
     // 表明结合性是右结合的，内部原理使用循环代替递归。
     | <assoc=right> lhs=expr
       bop=('=' | '+=' | '-=' | '*=')
@@ -294,6 +296,8 @@ GT:                 '>';
 LT:                 '<';
 BANG:               '!';
 TILDE:              '~';
+AND:                '&&';
+OR:                 '||';
 INC:                '++';
 DEC:                '--';
 MULT : '*';
