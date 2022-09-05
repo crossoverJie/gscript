@@ -16,6 +16,7 @@ type AnnotatedTree struct {
 	// ctx 中存放的所有类型
 	typeOfNode map[antlr.ParserRuleContext]symbol.Type
 
+	// 所有的 class，function 的 type
 	types []symbol.Type
 }
 
@@ -77,12 +78,28 @@ func (a *AnnotatedTree) FindEncloseScopeOfNode(ctx antlr.ParserRuleContext) symb
 
 	return ret
 }
+func (a *AnnotatedTree) FindClass(scope symbol.Scope, name string) *symbol.Class {
+	class := scope.GetClass(name)
+	if class == nil && scope.GetEncloseScope() != nil {
+		class = a.FindClass(scope.GetEncloseScope(), name)
+	}
+	return class
+}
 
 // FindVariable 根据变量名称在 scope 中逐级查找变量
 func (a *AnnotatedTree) FindVariable(scope symbol.Scope, name string) *symbol.Variable {
 	var ret = scope.GetVariable(name)
 	if ret == nil && scope.GetEncloseScope() != nil {
 		ret = a.FindVariable(scope.GetEncloseScope(), name)
+	}
+	return ret
+}
+
+// FindFunctionVariable 查找函数类型的变量：变量中存放的值是 functionObject
+func (a *AnnotatedTree) FindFunctionVariable(scope symbol.Scope, name string, paramTypes []symbol.Type) *symbol.Variable {
+	var ret = scope.GetFunctionVariable(name, paramTypes)
+	if ret == nil && scope.GetEncloseScope() != nil {
+		ret = a.FindFunctionVariable(scope.GetEncloseScope(), name, paramTypes)
 	}
 	return ret
 }
@@ -94,4 +111,39 @@ func (a *AnnotatedTree) FindFunction(scope symbol.Scope, name string, paramTypes
 		ret = a.FindFunction(scope.GetEncloseScope(), name, paramTypes)
 	}
 	return ret
+}
+
+// FindFunctionWithName 只通过函数名称查询
+// 先查询 class 的method，再查询 function
+func (a *AnnotatedTree) FindFunctionWithName(scope symbol.Scope, name string) *symbol.Func {
+	var fun *symbol.Func
+	class, ok := scope.(*symbol.Class)
+	if ok {
+		fun = a.findMethodWithName(class, name)
+	} else {
+		fun = a.findFunctionOnlyWithName(scope, name)
+	}
+
+	if fun == nil && scope.GetEncloseScope() != nil {
+		fun = a.FindFunctionWithName(scope.GetEncloseScope(), name)
+	}
+
+	return fun
+}
+
+// 查找 class 的 method
+func (a *AnnotatedTree) findMethodWithName(class *symbol.Class, name string) *symbol.Func {
+	// todo crossoverJie 父类查询
+	return a.findFunctionOnlyWithName(class, name)
+}
+
+func (a *AnnotatedTree) findFunctionOnlyWithName(scope symbol.Scope, name string) *symbol.Func {
+	// todo crossoverJie 函数名重复的情况，应该在写入 symbol 时就行编译报错
+	for _, s := range scope.GetSymbols() {
+		function, ok := s.(*symbol.Func)
+		if ok && function.GetName() == name {
+			return function
+		}
+	}
+	return nil
 }

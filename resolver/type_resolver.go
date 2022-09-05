@@ -26,8 +26,9 @@ func NewTypeResolverWithLocalVariable(at *AnnotatedTree) *TypeResolver {
 // ExitVariableDeclarators 设置变量类型
 func (t *TypeResolver) ExitVariableDeclarators(ctx *parser.VariableDeclaratorsContext) {
 	// todo crossoverJie scope 是 class
-	_ = t.at.FindEncloseScopeOfNode(ctx)
-	if t.isLocalVariable {
+	scope := t.at.FindEncloseScopeOfNode(ctx)
+	_, ok := scope.(*symbol.Class)
+	if t.isLocalVariable || ok {
 		// 在 ExitTypeType 设置的类型
 		symbolType := t.at.GetTypeOfNode()[ctx.TypeType()]
 		for _, context := range ctx.AllVariableDeclarator() {
@@ -44,10 +45,11 @@ func (t *TypeResolver) ExitVariableDeclarators(ctx *parser.VariableDeclaratorsCo
 func (t *TypeResolver) EnterVariableDeclaratorId(ctx *parser.VariableDeclaratorIdContext) {
 	id := ctx.IDENTIFIER().GetText()
 	scope := t.at.FindEncloseScopeOfNode(ctx)
+	_, isClass := scope.(*symbol.Class)
 
 	// todo crossoverJie scope is class
 	_, ok := ctx.GetParent().(*parser.FormalParameterContext)
-	if t.isLocalVariable || ok {
+	if t.isLocalVariable || ok || isClass {
 		// 本地变量/ class/ parent.FormalParameterContext(.g4 105)函数中的参数才写入
 		variable := symbol.NewVariable(ctx, id, scope)
 
@@ -97,7 +99,10 @@ func (t *TypeResolver) ExitFormalParameter(ctx *parser.FormalParameterContext) {
 			scope.(*symbol.Func).AppendParameter(v)
 		}
 	}
+}
 
+func (t *TypeResolver) EnterClassDeclaration(ctx *parser.ClassDeclarationContext) {
+	// todo crossoverJie 设置父类
 }
 
 func (t *TypeResolver) ExitTypeTypeOrVoid(ctx *parser.TypeTypeOrVoidContext) {
@@ -113,11 +118,23 @@ func (t *TypeResolver) ExitTypeTypeOrVoid(ctx *parser.TypeTypeOrVoidContext) {
 
 // ExitTypeType 在 ExitPrimitiveType 之后记录当前 ctx 的基本类型
 func (t *TypeResolver) ExitTypeType(ctx *parser.TypeTypeContext) {
-	// todo crossoverJie func class 的 type 还未处理
+	// todo crossoverJie class 的 type 还未处理
 	if ctx.PrimitiveType() != nil {
 		symbolType := t.at.GetTypeOfNode()[ctx.PrimitiveType()]
 		t.at.PutTypeOfNode(ctx, symbolType)
+	} else if ctx.ClassOrInterfaceType() != nil {
+		symbolType := t.at.GetTypeOfNode()[ctx.ClassOrInterfaceType()]
+		t.at.PutTypeOfNode(ctx, symbolType)
+	} else if ctx.FunctionType() != nil {
+		symbolType := t.at.GetTypeOfNode()[ctx.FunctionType()]
+		t.at.PutTypeOfNode(ctx, symbolType)
 	}
+}
+
+func (t *TypeResolver) EnterClassOrInterfaceType(ctx *parser.ClassOrInterfaceTypeContext) {
+	scope := t.at.FindEncloseScopeOfNode(ctx)
+	class := t.at.FindClass(scope, ctx.GetText())
+	t.at.PutTypeOfNode(ctx, class)
 }
 
 // ExitPrimitiveType 记录当前 ctx 的基本类型
@@ -136,4 +153,19 @@ func (t *TypeResolver) ExitPrimitiveType(ctx *parser.PrimitiveTypeContext) {
 		symbolType = symbol.Bool
 	}
 	t.at.PutTypeOfNode(ctx, symbolType)
+}
+
+// ExitFunctionType 函数类型
+func (t *TypeResolver) ExitFunctionType(ctx *parser.FunctionTypeContext) {
+	returnType := t.at.GetTypeOfNode()[ctx.TypeTypeOrVoid()]
+	declareFunctionType := symbol.NewDeclareFunctionType(returnType)
+	t.at.AppendType(declareFunctionType)
+	t.at.PutTypeOfNode(ctx, declareFunctionType)
+
+	if ctx.TypeList() != nil {
+		for _, context := range ctx.TypeList().(*parser.TypeListContext).AllTypeType() {
+			t := t.at.GetTypeOfNode()[context]
+			declareFunctionType.AppendParameterType(t)
+		}
+	}
 }

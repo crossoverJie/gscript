@@ -1,10 +1,11 @@
 package gscript
 
 import (
+	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/resolver"
-	"log"
+	"os"
 )
 
 type Compiler struct {
@@ -14,12 +15,12 @@ func NewCompiler() *Compiler {
 	return &Compiler{}
 }
 
-func (c *Compiler) Compiler(script string) interface{} {
-	defer func() {
-		if r := recover(); r != nil {
-			log.Println(r)
-		}
-	}()
+// CompilerWithoutNative 不包含标准库运行
+func (c *Compiler) CompilerWithoutNative(script string) interface{} {
+	return c.compile(script)
+}
+
+func (c *Compiler) compile(script string) interface{} {
 	input := antlr.NewInputStream(script)
 	lexer := parser.NewGScriptLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
@@ -36,6 +37,29 @@ func (c *Compiler) Compiler(script string) interface{} {
 	// 消解变量、函数的引用
 	walker.Walk(resolver.NewRefResolver(at), tree)
 
+	// 闭包分析
+	resolver.NewClosureResolver(at).Analyze()
+
 	visitor := NewVisitor(at)
 	return visitor.Visit(tree)
+}
+
+func (c *Compiler) Compiler(script string) interface{} {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println(r)
+		}
+	}()
+	internal := c.loadInternal()
+	script = internal + script
+	return c.compile(script)
+}
+
+func (c *Compiler) loadInternal() string {
+	file, err := os.ReadFile("internal/internal.gs")
+	if err != nil {
+		panic(err)
+	}
+	return string(file)
+
 }

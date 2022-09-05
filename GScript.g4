@@ -3,7 +3,7 @@ grammar GScript;
 
 classDeclaration
     : CLASS IDENTIFIER
-
+      (EXTENDS typeType)?
       (IMPLEMENTS typeList)?
       classBody
     ;
@@ -30,7 +30,7 @@ memberDeclaration
     // | genericConstructorDeclaration
 //     | interfaceDeclaration
     // | annotationTypeDeclaration
-     | classDeclaration
+     //| classDeclaration
     // | enumDeclaration
     ;
 functionDeclaration
@@ -104,7 +104,7 @@ variableInitializer
     ;
 
 arrayInitializer
-    : '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
+    : ('[' DECIMAL_LITERAL ']')? '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
     ;
 
 
@@ -123,6 +123,7 @@ literal
     | STRING_LITERAL
     | BOOL_LITERAL
     | NULL_LITERAL
+    | Nil
     ;
 
 prog
@@ -142,14 +143,17 @@ blockStatement
     | statement # BlockStm
    // | localTypeDeclaration
     | functionDeclaration #BlockFunc
-    //| classDeclaration
+    | classDeclaration #BlockClassDeclar
     ;
 
 statement
     : blockLabel=block #StmBlockLabel
     | IF parExpression statement (ELSE statement)? #StmIfElse
     | FOR '(' forControl ')' statement #StmFor
+    | FOR parExpression statement #StmWhile
     | RETURN expr?  ';'#StmReturn
+    | BREAK IDENTIFIER? ';' #StmBreak
+    | CONTINUE IDENTIFIER? ';' # StmContinue
     | statementExpression=expr ';'#StmExpr
     ;
 
@@ -186,6 +190,7 @@ expr
       ( IDENTIFIER
       | functionCall
       )
+    | array=expr '[' index=expr ']'
     | functionCall
     | lhs=expr postfix=('++' | '--')
     | prefix=('~'|'!') rhs=expr
@@ -194,6 +199,8 @@ expr
     | lhs=expr bop=( PLUS | SUB ) rhs=expr
     | lhs=expr bop=(LE | GE | GT | LT ) rhs=expr
     | lhs=expr bop=(EQUAL | NOTEQUAL) rhs=expr
+    | lhs=expr bop='&&' rhs=expr
+    | lhs=expr bop='||' rhs=expr
     // 表明结合性是右结合的，内部原理使用循环代替递归。
     | <assoc=right> lhs=expr
       bop=('=' | '+=' | '-=' | '*=')
@@ -270,8 +277,8 @@ FLOAT:              'float';
 BOOLEAN:            'bool';
 SUPER:              'super';
 SWITCH:             'switch';
-SYNCHRONIZED:       'synchronized';
 THIS:               'this';
+Nil:                'nil';
 
 
 // Separators
@@ -282,12 +289,15 @@ LBRACE:             '{';
 RBRACE:             '}';
 LBRACK:             '[';
 RBRACK:             ']';
+DOT:                '.';
 
 ASSIGN:             '=';
 GT:                 '>';
 LT:                 '<';
 BANG:               '!';
 TILDE:              '~';
+AND:                '&&';
+OR:                 '||';
 INC:                '++';
 DEC:                '--';
 MULT : '*';
@@ -311,6 +321,8 @@ FOR:                'for';
 IF:                 'if';
 ELSE:               'else';
 RETURN:             'return';
+BREAK:              'break';
+CONTINUE:           'continue';
 
 BOOL_LITERAL:       'true'
             |       'false'
@@ -328,6 +340,12 @@ DECIMAL_LITERAL:    ('0' | [1-9] (Digits? | '_'+ Digits)) [lL]?;
 FLOAT_LITERAL:      (Digits '.' Digits? | '.' Digits) ExponentPart? [fFdD]?
              |       Digits (ExponentPart [fFdD]? | [fFdD])
              ;
+
+// Whitespace and comments
+
+WS:                 [ \t\r\n\u000C]+ -> channel(HIDDEN);
+COMMENT:            '/*' .*? '*/'    -> channel(HIDDEN);
+LINE_COMMENT:       '//' ~[\r\n]*    -> channel(HIDDEN);
 IDENTIFIER:         Letter LetterOrDigit*;
 fragment Digits
     : [0-9] ([0-9_]* [0-9])?

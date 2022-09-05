@@ -92,6 +92,9 @@ type GScriptListener interface {
 	// EnterBlockFunc is called when entering the BlockFunc production.
 	EnterBlockFunc(c *BlockFuncContext)
 
+	// EnterBlockClassDeclar is called when entering the BlockClassDeclar production.
+	EnterBlockClassDeclar(c *BlockClassDeclarContext)
+
 	// EnterStmBlockLabel is called when entering the StmBlockLabel production.
 	EnterStmBlockLabel(c *StmBlockLabelContext)
 
@@ -101,8 +104,17 @@ type GScriptListener interface {
 	// EnterStmFor is called when entering the StmFor production.
 	EnterStmFor(c *StmForContext)
 
+	// EnterStmWhile is called when entering the StmWhile production.
+	EnterStmWhile(c *StmWhileContext)
+
 	// EnterStmReturn is called when entering the StmReturn production.
 	EnterStmReturn(c *StmReturnContext)
+
+	// EnterStmBreak is called when entering the StmBreak production.
+	EnterStmBreak(c *StmBreakContext)
+
+	// EnterStmContinue is called when entering the StmContinue production.
+	EnterStmContinue(c *StmContinueContext)
 
 	// EnterStmExpr is called when entering the StmExpr production.
 	EnterStmExpr(c *StmExprContext)
@@ -233,6 +245,9 @@ type GScriptListener interface {
 	// ExitBlockFunc is called when exiting the BlockFunc production.
 	ExitBlockFunc(c *BlockFuncContext)
 
+	// ExitBlockClassDeclar is called when exiting the BlockClassDeclar production.
+	ExitBlockClassDeclar(c *BlockClassDeclarContext)
+
 	// ExitStmBlockLabel is called when exiting the StmBlockLabel production.
 	ExitStmBlockLabel(c *StmBlockLabelContext)
 
@@ -242,8 +257,17 @@ type GScriptListener interface {
 	// ExitStmFor is called when exiting the StmFor production.
 	ExitStmFor(c *StmForContext)
 
+	// ExitStmWhile is called when exiting the StmWhile production.
+	ExitStmWhile(c *StmWhileContext)
+
 	// ExitStmReturn is called when exiting the StmReturn production.
 	ExitStmReturn(c *StmReturnContext)
+
+	// ExitStmBreak is called when exiting the StmBreak production.
+	ExitStmBreak(c *StmBreakContext)
+
+	// ExitStmContinue is called when exiting the StmContinue production.
+	ExitStmContinue(c *StmContinueContext)
 
 	// ExitStmExpr is called when exiting the StmExpr production.
 	ExitStmExpr(c *StmExprContext)

@@ -47,16 +47,22 @@ func (t *TypeScopeResolver) ExitProg(ctx *parser.ProgContext) {
 // EnterBlock is called when production block is entered.
 func (t *TypeScopeResolver) EnterBlock(ctx *parser.BlockContext) {
 
-	// todo crossoverJie 函数类型则不需要创建额外的 scope
-	scope := symbol.NewBlockScope(ctx, "block", t.currentScope())
-	t.currentScope().AddSymbol(scope)
-	t.pushScope(ctx, scope)
+	// 函数类型则不需要创建额外的 scope
+	_, ok := ctx.GetParent().(*parser.FunctionBodyContext)
+	if !ok {
+		scope := symbol.NewBlockScope(ctx, "block", t.currentScope())
+		t.currentScope().AddSymbol(scope)
+		t.pushScope(ctx, scope)
+	}
 }
 
 // ExitBlock is called when production block is exited.
 func (t *TypeScopeResolver) ExitBlock(ctx *parser.BlockContext) {
-	// todo crossoverJie 函数类型则不需要创建额外的 scope
-	t.popScope()
+	// 函数类型则不需要创建额外的 scope
+	_, ok := ctx.GetParent().(*parser.FunctionBodyContext)
+	if !ok {
+		t.popScope()
+	}
 }
 
 // EnterStmFor is called when production StmFor is entered.
@@ -68,6 +74,18 @@ func (t *TypeScopeResolver) EnterStmFor(ctx *parser.StmForContext) {
 
 // ExitStmFor is called when production StmFor is exited.
 func (t *TypeScopeResolver) ExitStmFor(ctx *parser.StmForContext) {
+	t.popScope()
+}
+
+// EnterStmWhile is called when production StmWhile is entered.
+func (t *TypeScopeResolver) EnterStmWhile(ctx *parser.StmWhileContext) {
+	scope := symbol.NewBlockScope(ctx, "while", t.currentScope())
+	t.currentScope().AddSymbol(scope)
+	t.pushScope(ctx, scope)
+}
+
+// ExitStmWhile is called when production StmWhile is exited.
+func (t *TypeScopeResolver) ExitStmWhile(ctx *parser.StmWhileContext) {
 	t.popScope()
 }
 
@@ -88,5 +106,19 @@ func (t *TypeScopeResolver) EnterFunctionDeclaration(ctx *parser.FunctionDeclara
 
 // ExitFunctionDeclaration is called when production functionDeclaration is exited.
 func (t *TypeScopeResolver) ExitFunctionDeclaration(ctx *parser.FunctionDeclarationContext) {
+	t.popScope()
+}
+
+func (t *TypeScopeResolver) EnterClassDeclaration(ctx *parser.ClassDeclarationContext) {
+	className := ctx.IDENTIFIER().GetText()
+	class := symbol.NewClass(ctx, className)
+	t.currentScope().AddSymbol(class)
+	t.at.AppendType(class)
+
+	// todo crossoverJie 重复校验
+	t.pushScope(ctx, class)
+}
+
+func (t *TypeScopeResolver) ExitClassDeclaration(ctx *parser.ClassDeclarationContext) {
 	t.popScope()
 }
