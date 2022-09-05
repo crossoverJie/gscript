@@ -42,12 +42,10 @@ class MapString{
             EntryString tempEntry = e;
             for (tempEntry != nil) {
                 int currentHash = hash(tempEntry.key);
-                if (currentHash == hashcode){
-                    if (key == tempEntry.key){
-                        tempEntry.value= value;
-                        write =false;
-                        return;
-                    }
+                if (currentHash == hashcode && key == tempEntry.key){
+                    tempEntry.value= value;
+                    write =false;
+                    return;
                 }
                 tempEntry = tempEntry.next;
             }
@@ -72,11 +70,9 @@ class MapString{
         int i = hashcode % len(table) ;
         EntryString e = table[i];
         for (e.next != nil){
-            if (key == e.key){
-                int currentHash = hash(e.key);
-                if (currentHash == hashcode){
-                    return e.value;
-                }
+            int currentHash = hash(e.key);
+            if (key == e.key && currentHash == hashcode){
+                return e.value;
             }
             e = e.next;
         }
