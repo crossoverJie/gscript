@@ -1,9 +1,9 @@
 # Binary name
 BINARY=gscript
-GOBUILD=go build -ldflags "-s -w" cmd/gscript.go -o ${BINARY}
+GOBUILD=go build -ldflags "-s -w" cmd/gscript.go
 GOCLEAN=go clean
 RMTARGZ=rm -rf *.gz && rm -rf main
-VERSION=v0.0.5
+VERSION=v0.0.6
 
 # Build
 build:
