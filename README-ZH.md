@@ -121,6 +121,7 @@ assertEqual(xx.getAge(), 110);
 ## 函数
 
 ```js
+// 判断链表是否有环
 bool hasCycle(ListNode head){
     if (head == nil){
         return false;
@@ -152,6 +153,23 @@ bool hasCycle(ListNode head){
     }
     return ret;
 }
+
+ListNode l1 = ListNode(1, nil);
+bool b1 =hasCycle(l1);
+println(b1);
+assertEqual(b1, false);
+
+ListNode l4 = ListNode(4, nil);
+ListNode l3 = ListNode(3, l4);
+ListNode l2 = ListNode(2, l3);
+bool b2 = hasCycle(l2);
+println(b2);
+assertEqual(b2, false);
+
+l4.next = l2;
+bool b3 = hasCycle(l2);
+println(b3);
+assertEqual(b3, true);
 ```
 
 函数声明语法：`typeTypeOrVoid? IDENTIFIER formalParameters ('[' ']')*`
