@@ -46,6 +46,16 @@ type Type interface {
 	IsType(t Type) bool
 }
 
+// MatchNil nil 可以满足所有类型，除了基本类型
+func MatchNil(t Type) bool {
+	primitiveType, ok := t.(*PrimitiveType)
+	// nil 匹配所有类型
+	if ok && primitiveType.GetName() == "nil" {
+		return true
+	}
+	return false
+}
+
 type Scope interface {
 	Symbol
 	AddSymbol(symbol Symbol)
@@ -264,6 +274,9 @@ func (f *Func) GetEncloseScope() Scope {
 }
 
 func (f *Func) IsType(t Type) bool {
+	if MatchNil(t) {
+		return true
+	}
 	funcType, ok := t.(FuncType)
 	if ok {
 		return isFuncType(f, funcType)
@@ -363,6 +376,9 @@ func (d *DeclareFunctionType) GetEncloseScope() Scope {
 }
 
 func (d *DeclareFunctionType) IsType(t Type) bool {
+	if MatchNil(t) {
+		return true
+	}
 	funcType, ok := t.(FuncType)
 	if ok {
 		return isFuncType(d, funcType)

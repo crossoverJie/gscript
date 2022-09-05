@@ -19,48 +19,69 @@ int hash(bool s){}
 class EntryString{
     string key,value;
     EntryString next;
-    EntryString(string k, string v){
+    EntryString(string k, string v, EntryString n){
         key=k;
         value=v;
+        next=n;
     }
 }
 class MapString{
     EntryString[] table = [16]{};
     int size=0;
 
-    put(string key,string value){
+    put(string key, string value){
+        // todo crossoverJie 扩容
         if(key==""){
             return;
         }
         int hashcode = hash(key);
         int i = hashcode % len(table) ;
         EntryString e = table[i];
-        // for (e.next != nil){
-        //     int tempHash = hash(e.key);
-        //     if (hashcode == tempHash){
-        //         tempEntry = EntryString(key,value);
-        //         e
-        //     }else {
-        //
-        //     }
-        //
-        //     e = e.next;
-        // }
-        e = EntryString(key,value);
-        table[i]=e;
-        size++;
+        bool write = true;
+        if (e != nil){
+            EntryString tempEntry = e;
+            for (tempEntry != nil) {
+                int currentHash = hash(tempEntry.key);
+                if (currentHash == hashcode){
+                    if (key == tempEntry.key){
+                        tempEntry.value= value;
+                        write =false;
+                        return;
+                    }
+                }
+                tempEntry = tempEntry.next;
+            }
+            table[i] = EntryString(key, value, e);
+            if (write){
+                size++;
+            }
+
+        } else {
+            // 参看 jdk1.7 链表头插法
+            table[i] = EntryString(key,value,nil);
+            size++;
+        }
+
     }
 
-string get(string key){
-    if(key==""){
-        return;
+    string get(string key){
+        if(key==""){
+            return;
+        }
+        int hashcode = hash(key);
+        int i = hashcode % len(table) ;
+        EntryString e = table[i];
+        for (e.next != nil){
+            if (key == e.key){
+                int currentHash = hash(e.key);
+                if (currentHash == hashcode){
+                    return e.value;
+                }
+            }
+            e = e.next;
+        }
+        return e.value;
     }
-    int hashcode = hash(key);
-    int i = hashcode % len(table) ;
-    EntryString e = table[i];
-    //print("get e=" + e);
-    return e.value;
-}
 
     int getSize(){
         return size;
@@ -68,6 +89,7 @@ string get(string key){
 }
 
 
+// LinkedList
 class LinkedNode{
     String value;
     LinkedNode next;

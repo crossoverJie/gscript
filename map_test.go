@@ -49,9 +49,17 @@ func Test_map3(t *testing.T) {
 MapString m1 = MapString();
 m1.put("1","10");
 m1.put("2","20");
+m1.put("3","30");
 print("get 1=" + m1.get("1"));
 print("get 2=" + m1.get("2"));
+print("get 3=" + m1.get("3"));
+m1.put("3","300");
+print("get 3=" + m1.get("3"));
 print("size=" + m1.getSize());
+assertEqual(m1.getSize(),3);
+assertEqual(m1.get("1"),"10");
+assertEqual(m1.get("2"),"20");
+assertEqual(m1.get("3"),"300");
 `
 	NewCompiler().Compiler(script)
 }
@@ -69,6 +77,28 @@ List next = List();
 list.next = next;
 if(list.next != nil){
 	print("!nil");
+}
+`
+	NewCompiler().Compiler(script)
+}
+
+func Test_map5(t *testing.T) {
+	script := `
+int count =100;
+MapString m1 = MapString();
+for (int i=0;i<count;i++){
+	string key = i+"";
+	string value = key;
+	m1.put(key,value);
+}
+print(m1.getSize());
+assertEqual(m1.getSize(),count);
+
+for (int i=0;i<count;i++){
+	string key = i+"";
+	string value = m1.get(key);
+	print("key="+key+ ":"+ value);
+	assertEqual(key,value);
 }
 `
 	NewCompiler().Compiler(script)

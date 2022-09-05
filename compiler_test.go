@@ -400,3 +400,55 @@ assertEqual(a,5);
 `
 	NewCompiler().Compiler(script)
 }
+func TestCompiler_Return3(t *testing.T) {
+	script := `
+int a=0;
+bool x = false;
+for(a<=10){
+	a++;
+	if(a==5){
+		x =true;
+		return;
+	}
+	print("after return");
+}
+if(x){
+	print(x);
+}
+`
+	NewCompiler().Compiler(script)
+}
+func TestCompiler_Nil(t *testing.T) {
+	script := `
+class Test{
+}
+t(Test t){
+	print("t");
+}
+Test x = Test();
+t(nil);
+
+t2(int x){
+	print("t2");
+}
+`
+	NewCompiler().CompilerWithoutNative(script)
+}
+
+func TestNativeReturn(t *testing.T) {
+	s := testReturn()
+	println(s)
+}
+
+func testReturn() string {
+	a := 0
+	for a <= 10 {
+		a++
+		if a == 5 {
+			return "1"
+			fmt.Println("return")
+		}
+		fmt.Println("after return")
+	}
+	return "0"
+}

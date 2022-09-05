@@ -21,6 +21,9 @@ func NewClass(ctx antlr.ParserRuleContext, name string) *Class {
 
 func (c *Class) IsType(t Type) bool {
 	// todo crossoverJie 父类判断
+	if MatchNil(t) {
+		return true
+	}
 	return c == t
 }
 

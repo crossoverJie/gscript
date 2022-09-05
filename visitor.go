@@ -807,7 +807,14 @@ func (v *Visitor) VisitPrimary(ctx *parser.PrimaryContext) interface{} {
 }
 
 func (v *Visitor) VisitStmIfElse(ctx *parser.StmIfElseContext) interface{} {
-	condition := v.VisitParExpression(ctx.ParExpression().(*parser.ParExpressionContext)).(bool)
+	ret := v.VisitParExpression(ctx.ParExpression().(*parser.ParExpressionContext))
+	var condition bool
+	switch ret.(type) {
+	case bool:
+		condition = ret.(bool)
+	case *LeftValue:
+		condition = ret.(*LeftValue).GetValue().(bool)
+	}
 	if condition {
 		return v.Visit(ctx.Statement(0))
 	} else if ctx.ELSE() != nil {

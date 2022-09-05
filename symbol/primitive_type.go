@@ -47,6 +47,9 @@ func (v *VoidType) GetEncloseScope() Scope {
 }
 
 func (v *VoidType) IsType(t Type) bool {
+	if MatchNil(t) {
+		return true
+	}
 	return v == t
 }
 

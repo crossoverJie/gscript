@@ -79,7 +79,7 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 	scope := s.at.FindEncloseScopeOfNode(ctx)
 	found := false
 
-	// todo crossoverJie . 符号级联调用
+	// . 符号级联调用
 	context, ok := ctx.GetParent().(*parser.ExprContext)
 	if ok {
 		if context.GetBop() != nil && context.GetBop().GetTokenType() == parser.GScriptParserDOT {
