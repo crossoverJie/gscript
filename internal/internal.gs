@@ -72,38 +72,38 @@ class LinkedNode{
     String value;
     LinkedNode next;
     LinkedNode(string v){
-    value = v;
-    next = n;
-}
+        value = v;
+        next = n;
+    }
 }
 class LinkedList{
     LinkedNode first, last;
     int size=0;
 
     add(string v){
-    if (v == ""){
-    return;
-}
-LinkedNode l = LinkedNode(v);
-if (first == nil){
-    first = l;
-    last = l;
-} else{
-    last.next = l;
-    last = l;
-}
-size ++;
-}
+        if (v == ""){
+            return;
+        }
+        LinkedNode l = LinkedNode(v);
+        if (first == nil){
+            first = l;
+            last = l;
+        } else{
+            last.next = l;
+            last = l;
+        }
+            size ++;
+        }
 
-dump(){
-    LinkedNode start = first;
-    for (start != nil){
-        print(start.value);
-        start = start.next;
+    dump(){
+        LinkedNode start = first;
+        for (start != nil){
+            print(start.value);
+            start = start.next;
+        }
     }
-}
 
-int getSize(){
-    return size;
-}
+    int getSize(){
+        return size;
+    }
 }
