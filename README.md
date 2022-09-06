@@ -11,7 +11,7 @@
 <div align="center">  
 
 
-📘[Features](#features) 🌰[Demo](#demo)🔧[安装](https://github.com/crossoverJie/gscript/releases)💡 [Contact Author](#contact-author)|🇨🇳[中文文档](https://github.com/crossoverjie/gscript/blob/master/README-ZH.md)
+📘[Features](#features) 🌰[Demo](#demo) 🎉[Syntax](#syntax) 🎁[Standard library](#标准库) 🔧[Install](https://github.com/crossoverJie/gscript/releases)💡 [Contact Author](#contact-author)|🇨🇳[中文文档](https://github.com/crossoverjie/gscript/blob/master/README-ZH.md)
 
 
 
@@ -21,8 +21,28 @@
 
 This is an experimental script language. and helps beginners to learn compilation principles.
 
-> It is called GScript because it is written with Go.
+This is a **statically and strongly** typed language written in Go, the syntax of Java and Go is referenced.
 
+> The current version is for study and experimentation only.
+
+```shell
+❯ gscript example/hello_world.gs
+hello world
+```
+
+# Features
+
+- [x] Class declaration.
+- [x] Function declaration and call.
+- [x] Primitive type: `int/string/float/bool`.
+- [x] Array type.
+- [x] `nil` type.
+- [x] Function type.
+- [x] Closure：Functions as First-Class Objects.
+- [x] Native function: `len()/hash()/assertEqual()`.
+- [x] Standard library：`Map/LinkedList/Array`.
+- [ ] Native support `json`.
+- [ ] Native support `http`.
 
 
 
@@ -44,6 +64,10 @@ int add(int a,int b) {
 add(2,20);
 // Output:65
 ```
+
+# Syntax
+
+# Standard lib
 
 # Installation
 

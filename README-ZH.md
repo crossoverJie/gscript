@@ -18,14 +18,15 @@
 
 # 介绍
 
-这是一门用 Go 编写的一款**静态、强类型**的脚本语言，大部分语法参考了 Java 以及少量的 Go。
+这是一门用 Go 编写的一款**静态、强类型**的脚本语言，大部分语法参考了 `Java` 以及少量的 `Go`。
 
 > 当前版本仅供学习与实验。
 
 运行：
 
 ```shell
-gscript example/hello_world.gs
+❯ gscript example/hello_world.gs
+hello world
 ```
 
 # 特性
@@ -33,7 +34,7 @@ gscript example/hello_world.gs
 - [x] 函数声明与调用。
 - [x] 基本类型: `int/string/float/bool`
 - [x] array数组类型。
-- [x] 特殊类型 `nil`
+- [x] 特殊类型 `nil`。
 - [x] 函数类型。
 - [x] 闭包：函数一等公民。
 - [x] 内置函数: `len()/hash()/assertEqual()`
