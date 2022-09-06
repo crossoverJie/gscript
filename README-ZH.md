@@ -82,6 +82,8 @@ for (int i = 0; i < 10; i++){
 ```js
 int a=10;
 string b,c;
+float e = 10.1;
+bool f = false;
 ```
 
 ## 数组
