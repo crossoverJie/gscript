@@ -12,7 +12,7 @@
 
 ```
 
-📘[Features](#features) 🌰[Demo](#demo) 🎉[Syntax](#syntax) 🎁[Standard library](#standard-library) 🔧[Install](https://github.com/crossoverJie/gscript/releases) 💡[Contact Author](#contact-author)|🇨🇳[中文文档](https://github.com/crossoverjie/gscript/blob/master/README-ZH.md)
+📘[Features](#features) 🌰[Demo](#demo) 🎉[Syntax](#syntax) 🎁[Standard library](#standard-library) 🔧[Install](https://github.com/crossoverJie/gscript/releases) 💡[Contact Author](#contact-author)| 🇨🇳[中文文档](https://github.com/crossoverjie/gscript/blob/master/README-ZH.md)
 
 
 
