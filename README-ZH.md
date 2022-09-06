@@ -87,9 +87,15 @@ bool f = false;
 ```
 
 ## 数组
+数组声明语法：`('[' DECIMAL_LITERAL ']')? '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'`
 ```js
+// 声明并初始化
 int[] a={1,2,3};
 println(a);
+
+// 声明一个空数组并指定大小
+int[] table = [4]{};
+
 println();
 // 向数组 append 数据
 a = append(a,4);

@@ -90,9 +90,16 @@ bool f = false;
 ```
 
 ## Array
+Array declaration syntax: `('[' DECIMAL_LITERAL ']')? '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'`
+
 ```js
+// Declare and initialize
 int[] a={1,2,3};
 println(a);
+
+// Declare an empty array and specify the length
+int[] table = [4]{};
+
 println();
 // Append data to array.
 a = append(a,4);
