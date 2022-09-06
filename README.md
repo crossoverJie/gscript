@@ -1,4 +1,8 @@
 
+
+
+<div align="center">  
+
 ```
  _     _   
  ___ ___ ___ ___|_|___| |_ 
@@ -8,9 +12,6 @@
 
 ```
 
-<div align="center">  
-
-
 📘[Features](#features) 🌰[Demo](#demo) 🎉[Syntax](#syntax) 🎁[Standard library](#标准库) 🔧[Install](https://github.com/crossoverJie/gscript/releases)💡 [Contact Author](#contact-author)|🇨🇳[中文文档](https://github.com/crossoverjie/gscript/blob/master/README-ZH.md)
 
 
@@ -18,8 +19,6 @@
 </div><br>
 
 # Introduction
-
-This is an experimental script language. and helps beginners to learn compilation principles.
 
 This is a **statically and strongly** typed language written in Go, the syntax of Java and Go is referenced.
 
