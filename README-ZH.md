@@ -10,7 +10,7 @@
 
 <div align="center">  
 
-📘[特性](#特性) 🌰[例子](#例子) 🎉[语法](#语法) 🔧[安装](https://github.com/crossoverJie/gscript/releases)💡[联系作者](#联系作者)| 🇦🇺[英文文档](https://github.com/crossoverjie/gscript/blob/master/README.md)
+📘[特性](#特性) 🌰[例子](#例子) 🎉[语法](#语法) 🔧[安装](https://github.com/crossoverJie/gscript/releases)🎁[标准库](#标准库)💡[联系作者](#联系作者)| 🇦🇺[英文文档](https://github.com/crossoverjie/gscript/blob/master/README.md)
 
 
 </div><br>
@@ -32,6 +32,7 @@ gscript example/hello_world.gs
 - [x] class声明。
 - [x] 函数声明与调用。
 - [x] 基本类型: `int/string/float/bool`
+- [x] array数组类型。
 - [x] 特殊类型 `nil`
 - [x] 函数类型。
 - [x] 闭包：函数一等公民。
@@ -80,6 +81,23 @@ for (int i = 0; i < 10; i++){
 ```js
 int a=10;
 string b,c;
+```
+
+## 数组
+```js
+int[] a={1,2,3};
+println(a);
+println();
+// 向数组 append 数据
+a = append(a,4);
+println(a);
+for(int i=0;i<len(a);i++){
+	println(a[i]);
+}
+
+// 通过下标获取数组数据
+int b=a[2];
+println(b);
 ```
 
 ## Class
@@ -236,6 +254,53 @@ varInner=22, varExternal=14
 ```
 
 更多样例请参考：[https://github.com/crossoverJie/gscript/tree/main/example](https://github.com/crossoverJie/gscript/tree/main/example)
+
+# 标准库
+
+标准库源码：[https://github.com/crossoverJie/gscript/tree/main/internal](https://github.com/crossoverJie/gscript/tree/main/internal)
+
+## 内置函数
+
+```js
+int[] a={1,2,3};
+// len 返回数组大小
+println(len(a));
+
+// 向数组追加数据
+a = append(a,4);
+println(a);
+// output: [1,2,3,4]
+
+// 断言函数，不相等时会抛出运行时异常，并中断程序。
+assertEqual(len(a),4);
+
+// 返回 hashcode
+int hashcode = hash(key);
+```
+
+## MapString
+
+键值对都为 `string` 的 `HashMap`。
+
+```js
+int count =100;
+MapString m1 = MapString();
+for (int i=0;i<count;i++){
+	string key = i+"";
+	string value = key;
+	m1.put(key,value);
+}
+println(m1.getSize());
+assertEqual(m1.getSize(),count);
+
+for (int i=0;i<count;i++){
+	string key = i+"";
+	string value = m1.get(key);
+	println("key="+key+ ":"+ value);
+	assertEqual(key,value);
+}
+```
+
 
 ## 联系作者
 

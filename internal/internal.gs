@@ -17,6 +17,7 @@ int hash(bool s){}
 
 println(){}
 assertEqual(){}
+append(){}
 
 
 class EntryString{
