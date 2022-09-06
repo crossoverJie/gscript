@@ -12,7 +12,7 @@
 
 ```
 
-📘[Features](#features) 🌰[Demo](#demo) 🎉[Syntax](#syntax) 🎁[Standard library](#standard-library) 🔧[Install](https://github.com/crossoverJie/gscript/releases) 💡[Contact Author](#contact-author)| 🇨🇳[中文文档](https://github.com/crossoverjie/gscript/blob/master/README-ZH.md)
+📘[Features](#features) | 🌰[Demo](#demo) | 🎉[Syntax](#syntax) | 🎁[Standard library](#standard-library) | 🔧[Install](https://github.com/crossoverJie/gscript/releases) | 💡[Contact Author](#contact-author) | 🇨🇳[中文文档](https://github.com/crossoverjie/gscript/blob/master/README-ZH.md)
 
 
 
@@ -24,8 +24,14 @@ This is a **statically and strongly** typed language written in Go, the syntax o
 
 > The current version is for study and experimentation only.
 
+hello_world.gs:
+
+```js
+println("hello world");
+```
+
 ```shell
-❯ gscript example/hello_world.gs
+❯ gscript hello_world.gs
 hello world
 ```
 
