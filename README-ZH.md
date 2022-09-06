@@ -10,7 +10,7 @@
 
 <div align="center">  
 
-📘[特性](#特性) 🌰[例子](#例子) 🎉[语法](#语法) 🔧[安装](https://github.com/crossoverJie/gscript/releases)🎁[标准库](#标准库)💡[联系作者](#联系作者)| 🇦🇺[英文文档](https://github.com/crossoverjie/gscript/blob/master/README.md)
+📘[特性](#特性) 🌰[例子](#例子) 🎉[语法](#语法) 🔧[安装](https://github.com/crossoverJie/gscript/releases) 🎁[标准库](#标准库)💡[联系作者](#联系作者)| 🇦🇺[英文文档](https://github.com/crossoverjie/gscript/blob/master/README.md)
 
 
 </div><br>
