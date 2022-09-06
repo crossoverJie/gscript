@@ -44,3 +44,6 @@ release:
 # ANTLR Parser Generator  Version 4.9.2
 antlr:
 	antlr -Dlanguage=Go -o parser -visitor -listener  GScript.g4
+
+bindata:
+	go-bindata -pkg internal -o internal/internal.go internal/

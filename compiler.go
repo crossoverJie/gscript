@@ -3,9 +3,9 @@ package gscript
 import (
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/crossoverJie/gscript/internal"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/resolver"
-	"os"
 )
 
 type Compiler struct {
@@ -56,10 +56,11 @@ func (c *Compiler) Compiler(script string) interface{} {
 }
 
 func (c *Compiler) loadInternal() string {
-	file, err := os.ReadFile("internal/internal.gs")
+	bytes, err := internal.Asset("internal/internal.gs")
+	//file, err := os.ReadFile("internal/internal.gs")
 	if err != nil {
 		panic(err)
 	}
-	return string(file)
+	return string(bytes)
 
 }
