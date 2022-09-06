@@ -24,6 +24,11 @@
 
 运行：
 
+hello_world.gs:
+```js
+println("hello world");
+```
+
 ```shell
 ❯ gscript example/hello_world.gs
 hello world
