@@ -151,7 +151,7 @@ assertEqual(t.map(a2),102);
 
 func TestClosure4(t *testing.T) {
 	script := `
-void fun(){
+func int() fun(){
     int a = 0;
     int b = 1;
     int fibonacci(){

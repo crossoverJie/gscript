@@ -106,3 +106,15 @@ println(len(a));
 `
 	NewCompiler().Compiler(script)
 }
+func Test_array9(t *testing.T) {
+	script := `
+int[] a=[2]{};
+println("数组大小:"+len(a));
+a = append(a,1);
+println("数组大小:"+len(a));
+println(a);
+a[0]=100;
+println(a);
+`
+	NewCompiler().Compiler(script)
+}

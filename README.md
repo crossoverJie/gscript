@@ -12,7 +12,7 @@
 
 ```
 
-📘[Features](#features) | 🌰[Demo](#demo) | 🎉[Syntax](#syntax) | 🎁[Standard library](#standard-library) | 🔧[Install](https://github.com/crossoverJie/gscript/releases) | 💡[Contact Author](#contact-author) | 🇨🇳[中文文档](https://github.com/crossoverjie/gscript/blob/master/README-ZH.md)
+📘[Features](#features) | 🌰[Demo](#demo) | 🎉[Syntax](#syntax) | 🎁[Standard library](#standard-library) | 🔧[Install](https://github.com/crossoverJie/gscript/releases) | 💡[Contact Author](#contact-author) | 🇨🇳[中文文档](https://github.com/crossoverJie/gscript/blob/main/README-ZH.md)
 
 
 
@@ -58,10 +58,10 @@ hello world
 println("hello world");
 ```
 
-## print fibonacci
+## Print fibonacci
 
 ```js
-void fib(){
+func int() fun(){
     int a = 0;
     int b = 1;
     int fibonacci(){
