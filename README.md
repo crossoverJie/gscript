@@ -12,7 +12,7 @@
 
 ```
 
-📘[Features](#features) | 🌰[Demo](#demo) | 🎉[Syntax](#syntax) | 🎁[Standard library](#standard-library) | 🔧[Install](https://github.com/crossoverJie/gscript/releases) | 💡[Contact Author](#contact-author) | 🇨🇳[中文文档](https://github.com/crossoverJie/gscript/blob/main/README-ZH.md)
+📘[Features](#features) | 🌰[Demo](#demo) | 👾[REPL](#repl) | 🎉[Syntax](#syntax) | 🎁[Standard library](#standard-library) | 🔧[Install](https://github.com/crossoverJie/gscript/releases) | 💡[Contact Author](#contact-author) | 🇨🇳[中文文档](https://github.com/crossoverJie/gscript/blob/main/README-ZH.md)
 
 
 
@@ -80,6 +80,13 @@ for (int i = 0; i < 10; i++){
     println(f());
 }
 ```
+
+# REPL
+```shell
+> ./gscript 
+```
+
+![](doc/repl.gif)
 
 # Syntax
 

@@ -10,7 +10,7 @@
 
 ```
 
-📘[特性](#特性) | 🌰[例子](#例子) | 🎉[语法](#语法) | 🎁[标准库](#标准库) | 🔧[安装](https://github.com/crossoverJie/gscript/releases) | 💡[联系作者](#联系作者) | 🇦🇺[英文文档](https://github.com/crossoverjie/gscript/blob/master/README.md)
+📘[特性](#特性) | 🌰[例子](#例子) | 👾[REPL](#repl) | 🎉[语法](#语法) | 🎁[标准库](#标准库) | 🔧[安装](https://github.com/crossoverJie/gscript/releases) | 💡[联系作者](#联系作者) | 🇦🇺[英文文档](https://github.com/crossoverjie/gscript/blob/master/README.md)
 
 
 </div><br>
@@ -76,6 +76,13 @@ for (int i = 0; i < 10; i++){
     println(f());
 }
 ```
+
+# REPL
+```shell
+> ./gscript 
+```
+
+![](doc/repl.gif)
 
 # 语法
 
