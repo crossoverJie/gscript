@@ -582,13 +582,31 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 	if ctx.GetPrefix() != nil {
 		rhs := ctx.GetRhs()
 		value := v.Visit(rhs)
-		switch value.(type) {
-		case bool:
-			return !value.(bool)
+		if ctx.GetPrefix().GetTokenType() == parser.GScriptParserBANG {
+			switch value.(type) {
+			case bool:
+				return !value.(bool)
+			}
+			line := ctx.GetStart().GetLine()
+			column := ctx.GetStart().GetColumn()
+			panic(fmt.Sprintf("invalid ! symbol in line:%d and column:%d", line, column))
+		} else if ctx.GetPrefix().GetTokenType() == parser.GScriptParserSUB {
+			switch value.(type) {
+			case *LeftValue:
+				getValue := value.(*LeftValue).GetValue()
+				switch getValue.(type) {
+				case int:
+					return -getValue.(int)
+				case float64:
+					return -getValue.(float64)
+				}
+			case int:
+				return -value.(int)
+			case float64:
+				return -value.(float64)
+			}
 		}
-		line := ctx.GetStart().GetLine()
-		column := ctx.GetStart().GetColumn()
-		panic(fmt.Sprintf("invalid ! symbol in line:%d and column:%d", line, column))
+
 	}
 
 	if ctx.FunctionCall() != nil {
