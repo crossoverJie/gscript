@@ -126,26 +126,30 @@ func (t *TypeScopeResolver) ExitClassDeclaration(ctx *parser.ClassDeclarationCon
 // EnterOperatorOverloading is called when production operatorOverloading is entered.
 func (t *TypeScopeResolver) EnterOperatorOverloading(ctx *parser.OperatorOverloadingContext) {
 	var opOverload *symbol.OpOverload
+	function, ok := t.currentScope().(*symbol.Func)
+	if !ok || function.GetName() != symbol.OperName {
+		return
+	}
 	if ctx.PLUS() != nil {
-		opOverload = symbol.NewOpOverload(t.currentScope().(*symbol.Func), ctx.PLUS().GetSymbol().GetTokenType())
+		opOverload = symbol.NewOpOverload(function, ctx.PLUS().GetSymbol().GetTokenType())
 	} else if ctx.SUB() != nil {
-		opOverload = symbol.NewOpOverload(t.currentScope().(*symbol.Func), ctx.SUB().GetSymbol().GetTokenType())
+		opOverload = symbol.NewOpOverload(function, ctx.SUB().GetSymbol().GetTokenType())
 	} else if ctx.MULT() != nil {
-		opOverload = symbol.NewOpOverload(t.currentScope().(*symbol.Func), ctx.MULT().GetSymbol().GetTokenType())
+		opOverload = symbol.NewOpOverload(function, ctx.MULT().GetSymbol().GetTokenType())
 	} else if ctx.DIV() != nil {
-		opOverload = symbol.NewOpOverload(t.currentScope().(*symbol.Func), ctx.DIV().GetSymbol().GetTokenType())
+		opOverload = symbol.NewOpOverload(function, ctx.DIV().GetSymbol().GetTokenType())
 	} else if ctx.EQUAL() != nil {
-		opOverload = symbol.NewOpOverload(t.currentScope().(*symbol.Func), ctx.EQUAL().GetSymbol().GetTokenType())
+		opOverload = symbol.NewOpOverload(function, ctx.EQUAL().GetSymbol().GetTokenType())
 	} else if ctx.NOTEQUAL() != nil {
-		opOverload = symbol.NewOpOverload(t.currentScope().(*symbol.Func), ctx.NOTEQUAL().GetSymbol().GetTokenType())
+		opOverload = symbol.NewOpOverload(function, ctx.NOTEQUAL().GetSymbol().GetTokenType())
 	} else if ctx.GT() != nil {
-		opOverload = symbol.NewOpOverload(t.currentScope().(*symbol.Func), ctx.GT().GetSymbol().GetTokenType())
+		opOverload = symbol.NewOpOverload(function, ctx.GT().GetSymbol().GetTokenType())
 	} else if ctx.LT() != nil {
-		opOverload = symbol.NewOpOverload(t.currentScope().(*symbol.Func), ctx.LT().GetSymbol().GetTokenType())
+		opOverload = symbol.NewOpOverload(function, ctx.LT().GetSymbol().GetTokenType())
 	} else if ctx.GE() != nil {
-		opOverload = symbol.NewOpOverload(t.currentScope().(*symbol.Func), ctx.GE().GetSymbol().GetTokenType())
+		opOverload = symbol.NewOpOverload(function, ctx.GE().GetSymbol().GetTokenType())
 	} else if ctx.LE() != nil {
-		opOverload = symbol.NewOpOverload(t.currentScope().(*symbol.Func), ctx.LE().GetSymbol().GetTokenType())
+		opOverload = symbol.NewOpOverload(function, ctx.LE().GetSymbol().GetTokenType())
 	}
 	if opOverload != nil {
 		t.at.AppendOpOverload(opOverload)
