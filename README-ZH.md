@@ -269,13 +269,13 @@ varInner=22, varExternal=14
 ```
 
 ## 运算符重载
-`GScript` 支持以下这些运算符重载：
+`GScript` 支持以下运算符重载：
 - `+-*/`
 - `== != < <= > >=`
 
 > 重载函数名称必须是 `operator`，名称后跟上运算符即可重载。
 
-```js
+```c#
 class Person{
 	int age;
 	Person(int a){
