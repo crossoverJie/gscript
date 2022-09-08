@@ -122,3 +122,19 @@ func (t *TypeScopeResolver) EnterClassDeclaration(ctx *parser.ClassDeclarationCo
 func (t *TypeScopeResolver) ExitClassDeclaration(ctx *parser.ClassDeclarationContext) {
 	t.popScope()
 }
+
+// EnterOperatorOverloading is called when production operatorOverloading is entered.
+func (t *TypeScopeResolver) EnterOperatorOverloading(ctx *parser.OperatorOverloadingContext) {
+	if ctx.PLUS() != nil {
+		opOverload := symbol.NewOpOverload(t.currentScope().(*symbol.Func), ctx.PLUS().GetSymbol().GetTokenType())
+		t.at.AppendOpOverload(opOverload)
+	} else if ctx.SUB() != nil {
+		opOverload := symbol.NewOpOverload(t.currentScope().(*symbol.Func), ctx.SUB().GetSymbol().GetTokenType())
+		t.at.AppendOpOverload(opOverload)
+	}
+}
+
+// ExitOperatorOverloading is called when production operatorOverloading is exited.
+func (t *TypeScopeResolver) ExitOperatorOverloading(ctx *parser.OperatorOverloadingContext) {
+	//t.popScope()
+}

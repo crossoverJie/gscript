@@ -332,6 +332,15 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return leftObject.(int) + rightObject.(int)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) + sym.Value2Float(rightObject)
+			} else if type1.IsType(type2) {
+				function := v.at.GetOpOverloadWithReturnType(type1, ctx.GetBop().GetTokenType())
+				if function != nil {
+					funcObject := stack.NewFuncObject(function)
+					param := []interface{}{leftObject, rightObject}
+					return v.executeFunctionCall(funcObject, param)
+				} else {
+					// todo crossoverJie 运行时错误 没有实现运算符重载
+				}
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -340,6 +349,15 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return leftObject.(int) - rightObject.(int)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) - sym.Value2Float(rightObject)
+			} else if type1.IsType(type2) {
+				function := v.at.GetOpOverloadWithReturnType(type1, ctx.GetBop().GetTokenType())
+				if function != nil {
+					funcObject := stack.NewFuncObject(function)
+					param := []interface{}{leftObject, rightObject}
+					return v.executeFunctionCall(funcObject, param)
+				} else {
+					// todo crossoverJie 运行时错误 没有实现运算符重载
+				}
 			} else {
 				// todo crossoverJie 运行时错误
 			}
