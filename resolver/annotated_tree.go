@@ -18,6 +18,9 @@ type AnnotatedTree struct {
 
 	// 所有的 class，function 的 type
 	types []symbol.Type
+
+	// 运算符重载自定义函数
+	opOverloads []*symbol.OpOverload
 }
 
 func NewAnnotatedTree(ast antlr.ParseTree) *AnnotatedTree {
@@ -27,6 +30,7 @@ func NewAnnotatedTree(ast antlr.ParseTree) *AnnotatedTree {
 		typeOfNode:   make(map[antlr.ParserRuleContext]symbol.Type),
 		node2Scope:   make(map[antlr.ParserRuleContext]symbol.Scope),
 		types:        make([]symbol.Type, 0),
+		opOverloads:  make([]*symbol.OpOverload, 0),
 	}
 }
 
@@ -60,6 +64,21 @@ func (a *AnnotatedTree) AppendType(t symbol.Type) {
 
 func (a *AnnotatedTree) GetTypes() []symbol.Type {
 	return a.types
+}
+func (a *AnnotatedTree) AppendOpOverload(op *symbol.OpOverload) {
+	a.opOverloads = append(a.opOverloads, op)
+}
+
+// GetOpFunction 获取运算符重载函数
+// 通过返回值以及运算符号(+-*/) 匹配重载函数
+func (a *AnnotatedTree) GetOpFunction(returnType symbol.Type, tokenType int) *symbol.Func {
+	for _, overload := range a.opOverloads {
+		isType := overload.GetFunc().GetReturnType().IsType(returnType)
+		if isType && overload.GetTokenType() == tokenType {
+			return overload.GetFunc()
+		}
+	}
+	return nil
 }
 
 // FindEncloseScopeOfNode 查找某个 ctx 所在的 scope，逐级递归 ctx 查找

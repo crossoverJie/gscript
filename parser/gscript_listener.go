@@ -23,6 +23,9 @@ type GScriptListener interface {
 	// EnterFunctionDeclaration is called when entering the functionDeclaration production.
 	EnterFunctionDeclaration(c *FunctionDeclarationContext)
 
+	// EnterOperatorOverloading is called when entering the operatorOverloading production.
+	EnterOperatorOverloading(c *OperatorOverloadingContext)
+
 	// EnterFunctionBody is called when entering the functionBody production.
 	EnterFunctionBody(c *FunctionBodyContext)
 
@@ -175,6 +178,9 @@ type GScriptListener interface {
 
 	// ExitFunctionDeclaration is called when exiting the functionDeclaration production.
 	ExitFunctionDeclaration(c *FunctionDeclarationContext)
+
+	// ExitOperatorOverloading is called when exiting the operatorOverloading production.
+	ExitOperatorOverloading(c *OperatorOverloadingContext)
 
 	// ExitFunctionBody is called when exiting the functionBody production.
 	ExitFunctionBody(c *FunctionBodyContext)

@@ -51,6 +51,12 @@ func (s *BaseGScriptListener) EnterFunctionDeclaration(ctx *FunctionDeclarationC
 // ExitFunctionDeclaration is called when production functionDeclaration is exited.
 func (s *BaseGScriptListener) ExitFunctionDeclaration(ctx *FunctionDeclarationContext) {}
 
+// EnterOperatorOverloading is called when production operatorOverloading is entered.
+func (s *BaseGScriptListener) EnterOperatorOverloading(ctx *OperatorOverloadingContext) {}
+
+// ExitOperatorOverloading is called when production operatorOverloading is exited.
+func (s *BaseGScriptListener) ExitOperatorOverloading(ctx *OperatorOverloadingContext) {}
+
 // EnterFunctionBody is called when production functionBody is entered.
 func (s *BaseGScriptListener) EnterFunctionBody(ctx *FunctionBodyContext) {}
 

@@ -28,6 +28,10 @@ func (v *BaseGScriptVisitor) VisitFunctionDeclaration(ctx *FunctionDeclarationCo
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseGScriptVisitor) VisitOperatorOverloading(ctx *OperatorOverloadingContext) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseGScriptVisitor) VisitFunctionBody(ctx *FunctionBodyContext) interface{} {
 	return v.VisitChildren(ctx)
 }

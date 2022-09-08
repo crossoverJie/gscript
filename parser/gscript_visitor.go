@@ -23,6 +23,9 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#functionDeclaration.
 	VisitFunctionDeclaration(ctx *FunctionDeclarationContext) interface{}
 
+	// Visit a parse tree produced by GScriptParser#operatorOverloading.
+	VisitOperatorOverloading(ctx *OperatorOverloadingContext) interface{}
+
 	// Visit a parse tree produced by GScriptParser#functionBody.
 	VisitFunctionBody(ctx *FunctionBodyContext) interface{}
 

@@ -34,9 +34,22 @@ memberDeclaration
     // | enumDeclaration
     ;
 functionDeclaration
-    : typeTypeOrVoid? IDENTIFIER formalParameters ('[' ']')*
+    : typeTypeOrVoid? IDENTIFIER operatorOverloading? formalParameters ('[' ']')*
       (THROWS qualifiedNameList)?
       functionBody
+    ;
+
+operatorOverloading
+    : PLUS
+    | SUB
+    | MULT
+    | DIV
+    | EQUAL
+    | NOTEQUAL
+    | LE
+    | GE
+    | GT
+    | LT
     ;
 
 functionBody

@@ -313,6 +313,9 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return leftObject.(int) * rightObject.(int)
 			} else if deriveType == sym.Float {
 				return leftObject.(float64) * rightObject.(float64)
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				return v.callOpFunction(type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -321,6 +324,9 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return leftObject.(int) / rightObject.(int)
 			} else if deriveType == sym.Float {
 				return leftObject.(float64) / rightObject.(float64)
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				return v.callOpFunction(type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -332,6 +338,9 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return leftObject.(int) + rightObject.(int)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) + sym.Value2Float(rightObject)
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				return v.callOpFunction(type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -340,6 +349,9 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return leftObject.(int) - rightObject.(int)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) - sym.Value2Float(rightObject)
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				return v.callOpFunction(type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -354,6 +366,9 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return leftObject.(int) > rightObject.(int)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) > sym.Value2Float(rightObject)
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				return v.callOpFunction(sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -365,6 +380,9 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return leftObject.(int) < rightObject.(int)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) < sym.Value2Float(rightObject)
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				return v.callOpFunction(sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -376,6 +394,9 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return leftObject.(int) >= rightObject.(int)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) >= sym.Value2Float(rightObject)
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				return v.callOpFunction(sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -387,6 +408,9 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return leftObject.(int) <= rightObject.(int)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) <= sym.Value2Float(rightObject)
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				return v.callOpFunction(sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -404,6 +428,9 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				} else {
 					return false
 				}
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				return v.callOpFunction(sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
 				return leftObject == rightObject
 			}
@@ -421,6 +448,9 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				} else {
 					return false
 				}
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				return v.callOpFunction(sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
@@ -566,6 +596,19 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 	}
 
 	return ret
+}
+
+// 执行自定义的运算符重载函数
+func (v *Visitor) callOpFunction(returnType sym.Type, tokenType int, leftObject, rightObject interface{}) interface{} {
+	function := v.at.GetOpFunction(returnType, tokenType)
+	if function != nil {
+		funcObject := stack.NewFuncObject(function)
+		param := []interface{}{leftObject, rightObject}
+		return v.executeFunctionCall(funcObject, param)
+	} else {
+		// todo crossoverJie 运行时错误 没有实现运算符重载
+	}
+	return nil
 }
 
 // VisitFunctionCall 函数调用
