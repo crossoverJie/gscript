@@ -46,6 +46,7 @@ hello world
 - [x] Closure：Functions as First-Class Objects.
 - [x] Native function: `len()/hash()/assertEqual()`.
 - [x] Standard library：`Map/LinkedList/Array`.
+- [x] Operator overloading.
 - [ ] Native support `json`.
 - [ ] Native support `http`.
 

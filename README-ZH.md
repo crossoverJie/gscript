@@ -44,6 +44,7 @@ hello world
 - [x] 闭包：函数一等公民。
 - [x] 内置函数: `len()/hash()/assertEqual()`
 - [x] 标准库：`Map/LinkedList/Array`
+- [x] 运算符重载
 - [ ] 原生支持 `json` 支持。
 - [ ] 原生 `http` 包支持。
 
@@ -266,6 +267,99 @@ varInner=21, varExternal=13
 varInner=22, varExternal=14
 
 ```
+
+## 运算符重载
+`GScript` 支持以下这些运算符重载：
+- `+-*/`
+- `== != < <= > >=`
+
+> 重载函数名称必须是 `operator`，名称后跟上运算符即可重载。
+
+```js
+class Person{
+	int age;
+	Person(int a){
+		age = a;
+	}
+}
+Person operator + (Person p1, Person p2){
+	Person pp = Person(p1.age+p2.age);
+	return pp;
+}
+Person operator - (Person p1, Person p2){
+	Person pp = Person(p1.age-p2.age);
+	return pp;
+}
+Person operator * (Person p1, Person p2){
+	Person pp = Person(p1.age * p2.age);
+	return pp;
+}
+Person operator / (Person p1, Person p2){
+	Person pp = Person(p1.age / p2.age);
+	return pp;
+}
+bool operator == (Person p1, Person p2){
+	return p1.age==p2.age;
+}
+bool operator != (Person p1, Person p2){
+	return p1.age!=p2.age;
+}
+bool operator > (Person p1, Person p2){
+	return p1.age>p2.age;
+}
+bool operator >= (Person p1, Person p2){
+	return p1.age>=p2.age;
+}
+bool operator < (Person p1, Person p2){
+	return p1.age<p2.age;
+}
+bool operator <= (Person p1, Person p2){
+	return p1.age<=p2.age;
+}
+Person p1 = Person(10);
+Person p2 = Person(20);
+//Person p3 =  operator(p1,p2);
+Person p3 = p1+p2;
+println("p3.age="+p3.age);
+assertEqual(p3.age, 30);
+
+Person p4 = p1-p2;
+println("p4.age="+p4.age);
+println(100-10);
+
+Person p5 = p1*p2;
+println("p5.age="+p5.age);
+assertEqual(p5.age, 200);
+
+Person p6 = p2/p1;
+println("p6.age="+p6.age);
+assertEqual(p6.age, 2);
+
+bool b1 = p1 == p2;
+println("b1=="+b1);
+assertEqual(b1,false);
+
+bool b2 = p1 != p2;
+println("b2=="+b2);
+assertEqual(b2,true);
+
+bool b3 = p1 > p2;
+println("b3=="+b3);
+assertEqual(b3,false);
+
+bool b4 = p1 >= p2;
+println("b4=="+b4);
+assertEqual(b4,false);
+
+bool b5 = p1 < p2;
+println("b5=="+b5);
+assertEqual(b5,true);
+
+bool b6 = p1 <= p2;
+println("b6=="+b6);
+assertEqual(b6,true);
+```
+
 
 更多样例请参考：[https://github.com/crossoverJie/gscript/tree/main/example](https://github.com/crossoverJie/gscript/tree/main/example)
 
