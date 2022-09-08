@@ -19,6 +19,7 @@ type AnnotatedTree struct {
 	// 所有的 class，function 的 type
 	types []symbol.Type
 
+	// 运算符重载自定义函数
 	opOverloads []*symbol.OpOverload
 }
 
@@ -68,8 +69,9 @@ func (a *AnnotatedTree) AppendOpOverload(op *symbol.OpOverload) {
 	a.opOverloads = append(a.opOverloads, op)
 }
 
-//
-func (a *AnnotatedTree) GetOpOverloadWithReturnType(returnType symbol.Type, tokenType int) *symbol.Func {
+// GetOpFunction 获取运算符重载函数
+// 通过返回值以及运算符号(+-*/) 匹配重载函数
+func (a *AnnotatedTree) GetOpFunction(returnType symbol.Type, tokenType int) *symbol.Func {
 	for _, overload := range a.opOverloads {
 		isType := overload.GetFunc().GetReturnType().IsType(returnType)
 		if isType && overload.GetTokenType() == tokenType {
