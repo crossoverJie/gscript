@@ -133,10 +133,15 @@ literal
 //    | floatLiteral #Float
     | FLOAT_LITERAL
 //    | CHAR_LITERAL
-    | STRING_LITERAL
+    | string_
     | BOOL_LITERAL
     | NULL_LITERAL
     | Nil
+    ;
+
+string_
+    :RAW_STRING_LIT
+    |STRING_LITERAL
     ;
 
 prog
@@ -349,6 +354,8 @@ BOOL_LITERAL:       'true'
 //CHAR_LITERAL:       '\'' (~['\\\r\n] | EscapeSequence) '\'';
 
 STRING_LITERAL:     '"' (~["\\\r\n] | EscapeSequence)* '"';
+RAW_STRING_LIT         : '^' ~'^'*                      '^';
+
 
 NULL_LITERAL:       'null';
 

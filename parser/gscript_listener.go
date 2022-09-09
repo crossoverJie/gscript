@@ -77,6 +77,9 @@ type GScriptListener interface {
 	// EnterLiteral is called when entering the literal production.
 	EnterLiteral(c *LiteralContext)
 
+	// EnterString_ is called when entering the string_ production.
+	EnterString_(c *String_Context)
+
 	// EnterProg is called when entering the prog production.
 	EnterProg(c *ProgContext)
 
@@ -232,6 +235,9 @@ type GScriptListener interface {
 
 	// ExitLiteral is called when exiting the literal production.
 	ExitLiteral(c *LiteralContext)
+
+	// ExitString_ is called when exiting the string_ production.
+	ExitString_(c *String_Context)
 
 	// ExitProg is called when exiting the prog production.
 	ExitProg(c *ProgContext)

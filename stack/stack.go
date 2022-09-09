@@ -163,3 +163,6 @@ func NewClassObject(class *symbol.Class) *ClassObject {
 func (c *ClassObject) AllField() map[*symbol.Variable]interface{} {
 	return c.fields
 }
+func (c *ClassObject) GetObject() Object {
+	return c.object
+}

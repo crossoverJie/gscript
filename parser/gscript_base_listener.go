@@ -159,6 +159,12 @@ func (s *BaseGScriptListener) EnterLiteral(ctx *LiteralContext) {}
 // ExitLiteral is called when production literal is exited.
 func (s *BaseGScriptListener) ExitLiteral(ctx *LiteralContext) {}
 
+// EnterString_ is called when production string_ is entered.
+func (s *BaseGScriptListener) EnterString_(ctx *String_Context) {}
+
+// ExitString_ is called when production string_ is exited.
+func (s *BaseGScriptListener) ExitString_(ctx *String_Context) {}
+
 // EnterProg is called when production prog is entered.
 func (s *BaseGScriptListener) EnterProg(ctx *ProgContext) {}
 

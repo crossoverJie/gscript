@@ -100,6 +100,10 @@ func (v *BaseGScriptVisitor) VisitLiteral(ctx *LiteralContext) interface{} {
 	return v.VisitChildren(ctx)
 }
 
+func (v *BaseGScriptVisitor) VisitString_(ctx *String_Context) interface{} {
+	return v.VisitChildren(ctx)
+}
+
 func (v *BaseGScriptVisitor) VisitProg(ctx *ProgContext) interface{} {
 	return v.VisitChildren(ctx)
 }

@@ -8,6 +8,10 @@ println(){}
 assertEqual(){}
 append(){}
 
+// return JSON string
+string JSON(any a){}
+// JSON query with path
+any JSONGet(string json, string path){}
 
 class Entry{
     any key,value;
