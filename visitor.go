@@ -611,6 +611,7 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 			column := ctx.GetStart().GetColumn()
 			panic(fmt.Sprintf("invalid ! symbol in line:%d and column:%d", line, column))
 		} else if ctx.GetPrefix().GetTokenType() == parser.GScriptParserSUB {
+			// int a = -10; int b=-10.1;
 			switch value.(type) {
 			case *LeftValue:
 				getValue := value.(*LeftValue).GetValue()
