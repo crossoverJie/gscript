@@ -38,8 +38,8 @@ hello world
 # Features
 
 - [x] [Class declaration](#class).
-- [x] Function declaration and call.
-- [x] Primitive type: `int/string/float/bool`.
+- [x] [Function declaration and call](#function).
+- [x] [Primitive type: `int/string/float/bool`](primitive).
 - [x] Array type.
 - [x] `nil` type.
 - [x] `any` type.
