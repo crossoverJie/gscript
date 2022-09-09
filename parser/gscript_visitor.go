@@ -77,6 +77,9 @@ type GScriptVisitor interface {
 	// Visit a parse tree produced by GScriptParser#literal.
 	VisitLiteral(ctx *LiteralContext) interface{}
 
+	// Visit a parse tree produced by GScriptParser#string_.
+	VisitString_(ctx *String_Context) interface{}
+
 	// Visit a parse tree produced by GScriptParser#prog.
 	VisitProg(ctx *ProgContext) interface{}
 

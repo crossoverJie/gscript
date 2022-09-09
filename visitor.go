@@ -674,6 +674,8 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return v.hash(ctx)
 	} else if name == "JSON" {
 		return v.JSON(ctx)
+	} else if name == "JSONGet" {
+		return v.JSONGet(ctx)
 	}
 
 	// 默认构造函数
@@ -893,7 +895,7 @@ func (v *Visitor) VisitLiteral(ctx *parser.LiteralContext) interface{} {
 		val, _ := strconv.ParseFloat(ctx.GetText(), 0)
 		return val
 	}
-	if ctx.STRING_LITERAL() != nil {
+	if ctx.String_() != nil {
 		return ctx.GetText()[1 : len(ctx.GetText())-1]
 	}
 	if ctx.BOOL_LITERAL() != nil {

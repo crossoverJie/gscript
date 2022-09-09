@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/stack"
+	"github.com/crossoverJie/xjson"
 	"hash/fnv"
 )
 
@@ -186,7 +187,57 @@ func (v *Visitor) JSON(ctx *parser.FunctionCallContext) string {
 func (v *Visitor) classObject2Map(classObject *stack.ClassObject) map[string]interface{} {
 	data := make(map[string]interface{})
 	for variable, val := range classObject.AllField() {
-		data[variable.GetName()] = val
+		switch val.(type) {
+		case *stack.ClassObject:
+			// class 包含 class 的情况
+			classObject := val.(*stack.ClassObject)
+			classObject2Map := v.classObject2Map(classObject)
+			data[variable.GetName()] = classObject2Map
+		default:
+			data[variable.GetName()] = val
+		}
+
 	}
 	return data
+}
+
+func (v *Visitor) JSONGet(ctx *parser.FunctionCallContext) interface{} {
+	paramValues := v.buildParamValues(ctx)
+	if len(paramValues) != 2 {
+		// todo crossoverJie 编译器报错
+		panic("")
+	}
+	p0 := paramValues[0]
+	p1 := paramValues[1]
+	var (
+		v1, v2 string
+	)
+	switch p0.(type) {
+	case *LeftValue:
+		value := p0.(*LeftValue).GetValue()
+		switch value.(type) {
+		case string:
+			v1 = fmt.Sprintf("%s", value)
+		default:
+			// todo crossoverJie 编译器报错
+			panic("")
+		}
+	case string:
+		v1 = fmt.Sprintf("%s", p0)
+	}
+	switch p1.(type) {
+	case *LeftValue:
+		value := p1.(*LeftValue).GetValue()
+		switch value.(type) {
+		case string:
+			v2 = fmt.Sprintf("%s", value)
+		default:
+			// todo crossoverJie 编译器报错
+			panic("")
+		}
+	case string:
+		v2 = fmt.Sprintf("%s", p1)
+	}
+	return xjson.Get(v1, v2).Raw()
+
 }

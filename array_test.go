@@ -43,7 +43,7 @@ println();
 for(int i=0;i<3;i++){
 	println(a[i]);
 	int ret = a[i];
-	assertEqual(a[i], i+2);
+	assertEqual(ret, i+2);
 }
 `
 	NewCompiler().Compiler(script)
@@ -73,6 +73,7 @@ a = append(a,4);
 println(a);
 for(int i=0;i<len(a);i++){
 	println(a[i]);
+	int temp = a[i];
 	assertEqual(temp, i+1);
 }
 assertEqual(len(a),4);
@@ -128,7 +129,7 @@ assertEqual(len(a), 3);
 println(a);
 a[0]=100;
 println(a);
-int temp = a[0]
+int temp = a[0];
 assertEqual(temp, 100);
 `
 	NewCompiler().Compiler(script)

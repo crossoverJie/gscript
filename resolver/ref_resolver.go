@@ -249,7 +249,7 @@ func (s *RefResolver) ExitLiteral(ctx *parser.LiteralContext) {
 		s.at.PutTypeOfNode(ctx, symbol.Int)
 	} else if ctx.FLOAT_LITERAL() != nil {
 		s.at.PutTypeOfNode(ctx, symbol.Float)
-	} else if ctx.STRING_LITERAL() != nil {
+	} else if ctx.String_() != nil {
 		s.at.PutTypeOfNode(ctx, symbol.String)
 	} else if ctx.BOOL_LITERAL() != nil {
 		s.at.PutTypeOfNode(ctx, symbol.Bool)
