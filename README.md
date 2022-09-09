@@ -37,7 +37,7 @@ hello world
 
 # Features
 
-- [x] Class declaration.
+- [x] [Class declaration](#class).
 - [x] Function declaration and call.
 - [x] Primitive type: `int/string/float/bool`.
 - [x] Array type.
