@@ -48,7 +48,7 @@ hello world
 - [x] [Native function](#native-function): `len()/hash()/assertEqual()/JSON()/JSONGet()`.
 - [x] [Standard library](#standard-library)：`Map/LinkedList/Array`.
 - [x] [Operator overloading](#operator-overloading).
-- [x] [Native support](#operator-overloading) `json`.
+- [x] [Native support](#native-function) `json`.
 - [ ] Native support `http`.
 
 
