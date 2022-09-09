@@ -113,6 +113,7 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 		}
 	}
 
+	// 查找全局函数
 	if !found {
 		function := s.at.FindFunction(scope, name, paramTypes)
 		if function != nil {
