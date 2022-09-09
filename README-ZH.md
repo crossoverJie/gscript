@@ -483,13 +483,20 @@ println(name);
 assertEqual(name,"abc");
 ```
 
-## MapString
+> 更多 JSON 查询语法请参考：[xjson](https://github.com/crossoverJie/xjson#arithmetic-syntax)
 
-键值对都为 `string` 的 `HashMap`。
+## Map
+函数定义：
+```js
+class Map{
+	put(any key, any value){}
+	any get(any key){}
+}
+```
 
 ```js
 int count =100;
-MapString m1 = MapString();
+Map m1 = Map();
 for (int i=0;i<count;i++){
 	string key = i+"";
 	string value = key;

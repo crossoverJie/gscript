@@ -451,16 +451,52 @@ assertEqual(len(a),4);
 
 // Return hashcode
 int hashcode = hash(key);
+
+
+// Serialize to JSON string.
+class P{
+	string name;
+	P(string n){
+		name = n;
+	}
+}
+class Object{
+	P p;
+	int x;
+	Object(P pp, int xx){
+		p = pp;
+		x = xx;
+	}
+}
+P p1 = P("abc");
+Object o1 = Object(p1, 100);
+string json = JSON(o1);
+println(json); //{"p":{"name":"abc"},"x":100}
+
+// Query json with path
+int x = JSONGet(json,"x");
+println(x);
+assertEqual(x,100);
+
+string name = JSONGet(json,"p.name");
+println(name);
+assertEqual(name,"abc");
 ```
 
+> Reference JSON query syntax: [xjson](https://github.com/crossoverJie/xjson#arithmetic-syntax)
+## Map
 
-## MapString
-
-`HashMap` where both key and value are string.
+Function Definition:
+```js
+class Map{
+	put(any key, any value){}
+	any get(any key){}
+}
+```
 
 ```js
 int count =100;
-MapString m1 = MapString();
+Map m1 = Map();
 for (int i=0;i<count;i++){
 	string key = i+"";
 	string value = key;
