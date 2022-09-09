@@ -45,10 +45,10 @@ hello world
 - [x] `any` type.
 - [x] Function type.
 - [x] Closure：Functions as First-Class Objects.
-- [x] Native function: `len()/hash()/assertEqual()`.
+- [x] Native function: `len()/hash()/assertEqual()/JSON()/JSONGet()`.
 - [x] Standard library：`Map/LinkedList/Array`.
 - [x] Operator overloading.
-- [ ] Native support `json`.
+- [x] Native support `json`.
 - [ ] Native support `http`.
 
 
@@ -102,6 +102,23 @@ int a=10;
 string b,c;
 float e = 10.1;
 bool f = false;
+string x = `
+{
+    "name": "bob",
+    "age": 20,
+    "skill": {
+        "lang": [
+            {
+                "go": {
+                    "feature": [
+                        "goroutine",
+                        true
+                    ]
+                }
+            }
+        ]
+    }
+}
 ```
 
 ## Array

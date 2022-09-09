@@ -39,14 +39,14 @@ hello world
 - [x] 函数声明与调用。
 - [x] 基本类型: `int/string/float/bool`
 - [x] array数组类型。
--   [x] `any` 通用类型。
+- [x] `any` 通用类型。
 - [x] 特殊类型 `nil`。
 - [x] 函数类型。
 - [x] 闭包：函数一等公民。
-- [x] 内置函数: `len()/hash()/assertEqual()`
+- [x] 内置函数: `len()/hash()/assertEqual()/JSON()/JSONGet()`
 - [x] 标准库：`Map/LinkedList/Array`
 - [x] 运算符重载
-- [ ] 原生支持 `json` 支持。
+- [x] 原生 `json` 支持。
 - [ ] 原生 `http` 包支持。
 
 # 例子
@@ -98,6 +98,24 @@ int a=10;
 string b,c;
 float e = 10.1;
 bool f = false;
+string x = `
+{
+    "name": "bob",
+    "age": 20,
+    "skill": {
+        "lang": [
+            {
+                "go": {
+                    "feature": [
+                        "goroutine",
+                        true
+                    ]
+                }
+            }
+        ]
+    }
+}
+`;
 ```
 
 ## 数组
@@ -434,6 +452,35 @@ assertEqual(len(a),4);
 
 // 返回 hashcode
 int hashcode = hash(key);
+
+// 序列化 JSON 字符串
+class P{
+	string name;
+	P(string n){
+		name = n;
+	}
+}
+class Object{
+	P p;
+	int x;
+	Object(P pp, int xx){
+		p = pp;
+		x = xx;
+	}
+}
+P p1 = P("abc");
+Object o1 = Object(p1, 100);
+string json = JSON(o1);
+println(json); //{"p":{"name":"abc"},"x":100}
+
+// 查询 JSON
+int x = JSONGet(json,"x");
+println(x);
+assertEqual(x,100);
+
+string name = JSONGet(json,"p.name");
+println(name);
+assertEqual(name,"abc");
 ```
 
 ## MapString
