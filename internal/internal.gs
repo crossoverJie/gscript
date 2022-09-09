@@ -1,19 +1,8 @@
-// return string[] length
-int len(string[] a){}
+// return array length
+int len(any[] a){}
 
-// return int[] length
-int len(int[] a){}
-
-// return float[] length
-int len(float[] a){}
-
-// return bool[] length
-int len(bool[] a){}
-
-int hash(string s){}
-int hash(int s){}
-int hash(float s){}
-int hash(bool s){}
+// return hashcode
+int hash(any s){}
 
 println(){}
 assertEqual(){}

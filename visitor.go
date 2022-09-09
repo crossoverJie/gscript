@@ -201,6 +201,12 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 		}
 		// 为变量赋值
 		// int e=10   int e = foo()
+		switch ret.(type) {
+		case int:
+			if leftValue.GetVariable().GetType() != sym.Int {
+				// todo crossoverJie 运行时错误，还有其他类型的校验，any 类型不需要校验
+			}
+		}
 		leftValue.SetValue(ret)
 	}
 	return ret
@@ -306,6 +312,10 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 		deriveType := v.at.GetTypeOfNode()[ctx]
 		type1 := v.at.GetTypeOfNode()[ctx.Expr(0)]
 		type2 := v.at.GetTypeOfNode()[ctx.Expr(1)]
+		if deriveType == sym.Any {
+			// 两个值都是any类型，需要运行时通过值判断
+			deriveType = sym.GetUpperTypeWithValue(leftObject, rightObject)
+		}
 
 		switch ctx.GetBop().GetTokenType() {
 		case parser.GScriptParserMULT:
@@ -552,6 +562,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 
 		}
 	}
+
+	// 后缀计算
 	if ctx.GetPostfix() != nil {
 		lhs := ctx.GetLhs()
 		value := v.Visit(lhs)
@@ -579,6 +591,7 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 		}
 	}
 
+	// 前缀计算
 	if ctx.GetPrefix() != nil {
 		rhs := ctx.GetRhs()
 		value := v.Visit(rhs)

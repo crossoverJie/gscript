@@ -90,6 +90,7 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 				switch variable.GetType().(type) {
 				case *symbol.Class:
 					class := variable.GetType().(*symbol.Class)
+					// 查找类中的函数
 					function := class.GetFunction(name, paramTypes)
 					if function != nil {
 						found = true

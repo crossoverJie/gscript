@@ -152,6 +152,9 @@ func (t *TypeResolver) ExitPrimitiveType(ctx *parser.PrimitiveTypeContext) {
 	if ctx.BOOLEAN() != nil {
 		symbolType = symbol.Bool
 	}
+	if ctx.ANY() != nil {
+		symbolType = symbol.Any
+	}
 	t.at.PutTypeOfNode(ctx, symbolType)
 }
 

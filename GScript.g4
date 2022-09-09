@@ -255,6 +255,7 @@ primitiveType
     | STRING
     | FLOAT
     | BOOLEAN
+    | ANY
     ;
 
 
@@ -293,6 +294,7 @@ SUPER:              'super';
 SWITCH:             'switch';
 THIS:               'this';
 Nil:                'nil';
+ANY:                'any';
 
 
 // Separators
