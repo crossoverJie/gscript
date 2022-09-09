@@ -8,6 +8,9 @@ println(){}
 assertEqual(){}
 append(){}
 
+// return JSON string
+string JSON(any a){}
+
 
 class Entry{
     any key,value;

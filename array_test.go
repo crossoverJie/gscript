@@ -5,12 +5,16 @@ import "testing"
 func Test_array(t *testing.T) {
 	script := `
 int[] a={1,2,3};
+// [1 2 3]
 println(a);
 a[0]=2;
+// [2 2 3]
 println(a);
 a[1]=3;
+// [2 3 3]
 println(a);
 a[2]=4;
+// [2 3 4]
 println(a);
 `
 	NewCompiler().Compiler(script)
@@ -32,12 +36,14 @@ func Test_array4(t *testing.T) {
 int[] a={1,2,3};
 for(int i=0;i<3;i++){
 	println(a[i]);
-	int temp = a[i]
+	int temp = a[i];
 	a[i]=temp+1;
 }
 println();
 for(int i=0;i<3;i++){
 	println(a[i]);
+	int ret = a[i];
+	assertEqual(a[i], i+2);
 }
 `
 	NewCompiler().Compiler(script)
@@ -49,8 +55,10 @@ println(a);
 println();
 a = append(a,4);
 println(a);
-for(int i=0;i<4;i++){
+for(int i=0;i<len(a);i++){
 	println(a[i]);
+	int temp = a[i];
+	assertEqual(temp, i+1);
 }
 `
 	NewCompiler().Compiler(script)
@@ -65,6 +73,7 @@ a = append(a,4);
 println(a);
 for(int i=0;i<len(a);i++){
 	println(a[i]);
+	assertEqual(temp, i+1);
 }
 assertEqual(len(a),4);
 `
@@ -101,8 +110,10 @@ func Test_array8(t *testing.T) {
 	script := `
 int[] a=[10]{};
 println(len(a));
+assertEqual(len(a), 10);
 a = append(a,1);
 println(len(a));
+assertEqual(len(a), 11);
 `
 	NewCompiler().Compiler(script)
 }
@@ -110,11 +121,40 @@ func Test_array9(t *testing.T) {
 	script := `
 int[] a=[2]{};
 println("数组大小:"+len(a));
+assertEqual(len(a), 2);
 a = append(a,1);
 println("数组大小:"+len(a));
+assertEqual(len(a), 3);
 println(a);
 a[0]=100;
 println(a);
+int temp = a[0]
+assertEqual(temp, 100);
+`
+	NewCompiler().Compiler(script)
+}
+func Test_array10(t *testing.T) {
+	script := `
+class Person{
+	int age;
+	string name;
+	Person(int a, string n){
+		age = a;
+		name =n;
+	}
+}
+Person p1 = Person(1,"a");
+println(p1);
+Person p2 = Person(1,"b");
+Person[] list = {p1,p2};
+//[{a 100} {a 10}]
+// [[1 a] [1 b]]
+println(list);
+//println(list[0]);
+Person temp = list[0];
+println(temp.name);
+assertEqual(temp.name,"a");
+assertEqual(temp.age,1);
 `
 	NewCompiler().Compiler(script)
 }

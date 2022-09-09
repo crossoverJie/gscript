@@ -565,6 +565,11 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 						return NewLeftValue(v1, classObject)
 					}
 				}
+			case stack.Object:
+				object := left.GetValue().(stack.Object)
+				v1 := v.at.GetSymbolOfNode()[ctx].(*sym.Variable)
+				value := object.GetValue(v1)
+				return value
 			}
 
 		}
@@ -667,6 +672,8 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return v.len(ctx)
 	} else if name == "hash" {
 		return v.hash(ctx)
+	} else if name == "JSON" {
+		return v.JSON(ctx)
 	}
 
 	// 默认构造函数

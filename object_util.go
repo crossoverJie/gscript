@@ -1,6 +1,9 @@
 package gscript
 
-import "fmt"
+import (
+	"fmt"
+	"github.com/crossoverJie/gscript/stack"
+)
 
 type ArrayObject struct {
 	left  *LeftValue
@@ -24,7 +27,16 @@ func (a *ArrayObject) GetIndex() int {
 // GetIndexValue 根据下标获取数组值
 func (a *ArrayObject) GetIndexValue() interface{} {
 	array := a.left.GetValue().([]interface{})
-	return array[a.index]
+	i := array[a.index]
+	switch i.(type) {
+	case *LeftValue:
+		value := i.(*LeftValue)
+		classObject, ok := value.GetValue().(*stack.ClassObject)
+		if ok {
+			return classObject.GetObject()
+		}
+	}
+	return i
 }
 
 // SetIndexValue 根据下标为数组赋值
