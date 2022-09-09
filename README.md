@@ -42,6 +42,7 @@ hello world
 - [x] Primitive type: `int/string/float/bool`.
 - [x] Array type.
 - [x] `nil` type.
+- [x] `any` type.
 - [x] Function type.
 - [x] Closure：Functions as First-Class Objects.
 - [x] Native function: `len()/hash()/assertEqual()`.
@@ -126,6 +127,47 @@ for(int i=0;i<len(a);i++){
 int b=a[2];
 println(b);
 ```
+
+## any type
+An `any` type may hold values of all type.
+```js
+any a =10;
+println(a);
+
+int fun1(any a,int b){
+	return a+b;
+}
+int v =fun1(1,2);
+println(v);
+assertEqual(v,3);
+
+any v2 = fun1(1,2);
+println(v2);
+assertEqual(v2,3);
+
+int fun2(int a, any b){
+	return a+b;
+}
+int v3 =fun2(1,2);
+println(v3);
+assertEqual(v3,3);
+
+int fun3(any a, any b){
+	return a+b;
+}
+int v4 =fun3(1,2);
+println(v4);
+assertEqual(v4,3);
+
+int fun4(any a, any b){
+	return a+b;
+}
+string v5 =fun4("10", "20");
+println(v5);
+assertEqual(v5,"1020");
+```
+
+Example: [Standard library](https://github.com/crossoverJie/gscript/blob/main/internal/internal.gs#L25)
 
 ## Class
 ```js

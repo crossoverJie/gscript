@@ -39,6 +39,7 @@ hello world
 - [x] 函数声明与调用。
 - [x] 基本类型: `int/string/float/bool`
 - [x] array数组类型。
+-   [x] `any` 通用类型。
 - [x] 特殊类型 `nil`。
 - [x] 函数类型。
 - [x] 闭包：函数一等公民。
@@ -122,6 +123,48 @@ int b=a[2];
 println(b);
 ```
 
+## any
+
+`any` 是通用类型，类似于 Java 中的 Object 和 Go 中的 `interface{}`。
+
+```js
+any a =10;
+println(a);
+
+int fun1(any a,int b){
+	return a+b;
+}
+int v =fun1(1,2);
+println(v);
+assertEqual(v,3);
+
+any v2 = fun1(1,2);
+println(v2);
+assertEqual(v2,3);
+
+int fun2(int a, any b){
+	return a+b;
+}
+int v3 =fun2(1,2);
+println(v3);
+assertEqual(v3,3);
+
+int fun3(any a, any b){
+	return a+b;
+}
+int v4 =fun3(1,2);
+println(v4);
+assertEqual(v4,3);
+
+int fun4(any a, any b){
+	return a+b;
+}
+string v5 =fun4("10", "20");
+println(v5);
+assertEqual(v5,"1020");
+```
+
+[标准库](https://github.com/crossoverJie/gscript/blob/main/internal/internal.gs#L25)中有相关应用。
 ## Class
 
 自定义 Class 与 Java 类似：
