@@ -9,17 +9,17 @@ assertEqual(){}
 append(){}
 
 
-class EntryString{
+class Entry{
     any key,value;
-    EntryString next;
-    EntryString(any k, any v, EntryString n){
+    Entry next;
+    Entry(any k, any v, Entry n){
         key=k;
         value=v;
         next=n;
     }
 }
-class MapString{
-    EntryString[] table = [16]{};
+class Map{
+    Entry[] table = [16]{};
     int size=0;
 
     put(any key, any value){
@@ -29,10 +29,10 @@ class MapString{
         }
         int hashcode = hash(key);
         int i = hashcode % len(table) ;
-        EntryString e = table[i];
+        Entry e = table[i];
         bool write = true;
         if (e != nil){
-            EntryString tempEntry = e;
+            Entry tempEntry = e;
             for (tempEntry != nil) {
                 int currentHash = hash(tempEntry.key);
                 if (currentHash == hashcode && key == tempEntry.key){
@@ -42,14 +42,14 @@ class MapString{
                 }
                 tempEntry = tempEntry.next;
             }
-            table[i] = EntryString(key, value, e);
+            table[i] = Entry(key, value, e);
             if (write){
                 size++;
             }
 
         } else {
             // 参考 jdk1.7 链表头插法
-            table[i] = EntryString(key,value,nil);
+            table[i] = Entry(key,value,nil);
             size++;
         }
 
@@ -61,7 +61,7 @@ class MapString{
         }
         int hashcode = hash(key);
         int i = hashcode % len(table) ;
-        EntryString e = table[i];
+        Entry e = table[i];
         for (e.next != nil){
             int currentHash = hash(e.key);
             if (key == e.key && currentHash == hashcode){
