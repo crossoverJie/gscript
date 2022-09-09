@@ -33,6 +33,10 @@ func (l *LeftValue) SetValue(value interface{}) {
 	}
 }
 
+func (l *LeftValue) GetVariable() *symbol.Variable {
+	return l.variable
+}
+
 func (l *LeftValue) String() string {
 	return l.object.String()
 }

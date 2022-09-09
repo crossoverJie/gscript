@@ -206,6 +206,7 @@ expr
     | array=expr '[' index=expr ']'
     | functionCall
     | lhs=expr postfix=('++' | '--')
+    | prefix=('-'|'+') rhs=expr
     | prefix=('~'|'!') rhs=expr
     | lhs=expr bop=( MULT | DIV ) rhs=expr
     | lhs=expr bop=MOD rhs=expr
@@ -254,6 +255,7 @@ primitiveType
     | STRING
     | FLOAT
     | BOOLEAN
+    | ANY
     ;
 
 
@@ -292,6 +294,7 @@ SUPER:              'super';
 SWITCH:             'switch';
 THIS:               'this';
 Nil:                'nil';
+ANY:                'any';
 
 
 // Separators

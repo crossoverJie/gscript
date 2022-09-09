@@ -1,12 +1,22 @@
 package symbol
 
+const (
+	PrimitiveInt    = "int"
+	PrimitiveString = "string"
+	PrimitiveFloat  = "float"
+	PrimitiveBool   = "bool"
+	PrimitiveNil    = "nil"
+	PrimitiveAny    = "any"
+)
+
 var (
-	Int    = &PrimitiveType{name: "int"}
-	String = &PrimitiveType{name: "string"}
-	Float  = &PrimitiveType{name: "float"}
-	Bool   = &PrimitiveType{name: "bool"}
+	Int    = &PrimitiveType{name: PrimitiveInt}
+	String = &PrimitiveType{name: PrimitiveString}
+	Float  = &PrimitiveType{name: PrimitiveFloat}
+	Bool   = &PrimitiveType{name: PrimitiveBool}
 	Void   = &VoidType{}
-	Nil    = &PrimitiveType{name: "nil"}
+	Nil    = &PrimitiveType{name: PrimitiveNil}
+	Any    = &PrimitiveType{name: PrimitiveAny}
 )
 
 type PrimitiveType struct {
@@ -23,6 +33,9 @@ func (b *PrimitiveType) GetEncloseScope() Scope {
 }
 
 func (b *PrimitiveType) IsType(t Type) bool {
+	if b.name == PrimitiveAny {
+		return true
+	}
 	return b == t
 }
 
@@ -53,11 +66,21 @@ func (v *VoidType) IsType(t Type) bool {
 	return v == t
 }
 
+// GetUpperType 根据两个参数类型，推导返回的类型
 func GetUpperType(t1, t2 Type) Type {
 	if t1 == String || t2 == String {
 		return String
 	} else if t1 == Nil || t2 == Nil {
 		return Nil
+	} else if t1 == Any || t2 == Any {
+		if t1 != Any {
+			return t1
+		}
+		if t2 != Any {
+			return t2
+		}
+		// 都是 any，则需要在运行时判断
+		return Any
 	} else if t1 == String && t2 == String {
 		return String
 	} else if t1 == Int && t2 == Int {
@@ -72,6 +95,34 @@ func GetUpperType(t1, t2 Type) Type {
 		// todo crossoverJie 记录异常
 		return nil
 	}
+}
+
+// GetUpperTypeWithValue 根据两个参数值，返回推到类型
+func GetUpperTypeWithValue(v1, v2 interface{}) Type {
+	var (
+		v1Type, v2Type Type
+	)
+	v1Type = getTypeWithValue(v1)
+	v2Type = getTypeWithValue(v2)
+	return GetUpperType(v1Type, v2Type)
+}
+
+// 根据值返回类型
+func getTypeWithValue(v interface{}) Type {
+	var t Type
+	switch v.(type) {
+	case int:
+		t = Int
+	case string:
+		t = String
+	case float64:
+		t = Float
+	case bool:
+		t = Bool
+	default:
+		t = Nil
+	}
+	return t
 }
 
 func Value2Float(v interface{}) float64 {

@@ -495,9 +495,24 @@ class Test{
 		value =v;
 	}
 }
+bool operator ==(Test t1, Test t2){
+	return true;
+}
 Test t1 = Test(1);
 Test t2 = t1;
 println(t1==t2);
+assertEqual(t1==t2, true);
+`
+	NewCompiler().Compiler(script)
+}
+func TestCompiler_InitSub(t *testing.T) {
+	script := `
+int a = -1;
+println(a);
+println(-100);
+int b=-1.1;
+println(b+1.1);
+println(-100.1);
 `
 	NewCompiler().Compiler(script)
 }

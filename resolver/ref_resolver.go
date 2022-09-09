@@ -90,6 +90,7 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 				switch variable.GetType().(type) {
 				case *symbol.Class:
 					class := variable.GetType().(*symbol.Class)
+					// 查找类中的函数
 					function := class.GetFunction(name, paramTypes)
 					if function != nil {
 						found = true
@@ -113,6 +114,7 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 		}
 	}
 
+	// 查找全局函数
 	if !found {
 		function := s.at.FindFunction(scope, name, paramTypes)
 		if function != nil {

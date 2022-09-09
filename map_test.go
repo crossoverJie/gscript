@@ -46,7 +46,7 @@ println(hash(true));
 }
 func Test_map3(t *testing.T) {
 	script := `
-MapString m1 = MapString();
+Map m1 = Map();
 m1.put("1","10");
 m1.put("2","20");
 m1.put("3","30");
@@ -85,7 +85,7 @@ if(list.next != nil){
 func Test_map5(t *testing.T) {
 	script := `
 int count =100;
-MapString m1 = MapString();
+Map m1 = Map();
 for (int i=0;i<count;i++){
 	string key = i+"";
 	string value = key;
@@ -106,10 +106,33 @@ for (int i=0;i<count;i++){
 func Test_map6(t *testing.T) {
 	script := `
 int count =100;
-MapString m1 = MapString();
+Map m1 = Map();
 m1.put("","");
 println(m1.getSize());
 assertEqual(m1.getSize(),0);
+`
+	NewCompiler().Compiler(script)
+}
+
+func Test_map7(t *testing.T) {
+	script := `
+int count =100;
+Map m1 = Map();
+for (int i=0;i<count;i++){
+	m1.put(i,i);
+}
+println(m1.getSize());
+assertEqual(m1.getSize(),count);
+
+for (int i=0;i<count;i++){
+	int key = i;
+	int value = m1.get(i);
+	println("key="+key+ ":"+ value);
+	assertEqual(key,value);
+}
+int v = m1.get(80);
+println(v);
+assertEqual(v,80);
 `
 	NewCompiler().Compiler(script)
 }
