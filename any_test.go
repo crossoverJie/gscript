@@ -57,3 +57,23 @@ func TestAny2(t *testing.T) {
 `
 	NewCompiler().compile(script)
 }
+func TestAny4(t *testing.T) {
+	script := `
+any a = "1";
+any b = "1";
+println(a==b);
+assertEqual(a==b,true);
+
+int x1 = 1;
+int x2 =x1;
+println(x1==x2);
+assertEqual(x1==x2,true);
+
+any c = a;
+println(a==c);
+assertEqual(a==c,true);
+println(a!=c);
+assertEqual(a!=c,false);
+`
+	NewCompiler().compile(script)
+}

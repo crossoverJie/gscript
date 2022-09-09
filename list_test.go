@@ -27,3 +27,15 @@ assertEqual(list.getSize(), 100);
 `
 	NewCompiler().Compiler(script)
 }
+func TestLinkedLis3Any(t *testing.T) {
+	script := `
+int count =100;
+LinkedList list = LinkedList();
+for (int i=0;i<count;i++){
+	list.add(i);
+}
+list.dump();
+assertEqual(list.getSize(), 100);
+`
+	NewCompiler().Compiler(script)
+}

@@ -10,9 +10,9 @@ append(){}
 
 
 class EntryString{
-    string key,value;
+    any key,value;
     EntryString next;
-    EntryString(string k, string v, EntryString n){
+    EntryString(any k, any v, EntryString n){
         key=k;
         value=v;
         next=n;
@@ -22,7 +22,7 @@ class MapString{
     EntryString[] table = [16]{};
     int size=0;
 
-    put(string key, string value){
+    put(any key, any value){
         // todo crossoverJie 扩容
         if(key==""){
             return;
@@ -55,7 +55,7 @@ class MapString{
 
     }
 
-    string get(string key){
+    any get(any key){
         if(key==""){
             return;
         }
@@ -80,9 +80,9 @@ class MapString{
 
 // LinkedList
 class LinkedNode{
-    String value;
+    any value;
     LinkedNode next;
-    LinkedNode(string v){
+    LinkedNode(any v){
         value = v;
         next = n;
     }
@@ -91,7 +91,7 @@ class LinkedList{
     LinkedNode first, last;
     int size=0;
 
-    add(string v){
+    add(any v){
         if (v == ""){
             return;
         }

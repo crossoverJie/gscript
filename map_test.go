@@ -113,3 +113,26 @@ assertEqual(m1.getSize(),0);
 `
 	NewCompiler().Compiler(script)
 }
+
+func Test_map7(t *testing.T) {
+	script := `
+int count =100;
+MapString m1 = MapString();
+for (int i=0;i<count;i++){
+	m1.put(i,i);
+}
+println(m1.getSize());
+assertEqual(m1.getSize(),count);
+
+for (int i=0;i<count;i++){
+	int key = i;
+	int value = m1.get(i);
+	println("key="+key+ ":"+ value);
+	assertEqual(key,value);
+}
+int v = m1.get(80);
+println(v);
+assertEqual(v,80);
+`
+	NewCompiler().Compiler(script)
+}

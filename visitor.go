@@ -204,6 +204,7 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 		switch ret.(type) {
 		case int:
 			if leftValue.GetVariable().GetType() != sym.Int {
+				// string a=10; 校验这类错误
 				// todo crossoverJie 运行时错误，还有其他类型的校验，any 类型不需要校验
 			}
 		}
@@ -438,6 +439,9 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				} else {
 					return false
 				}
+			} else if deriveType == sym.Any {
+				// 两个 any 值进行比较
+				return leftObject == rightObject
 			} else if type1.IsType(type2) {
 				// 两个参数类型相同，执行运算符重载
 				return v.callOpFunction(sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
@@ -458,6 +462,9 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				} else {
 					return false
 				}
+			} else if deriveType == sym.Any {
+				// 两个 any 值进行比较
+				return leftObject != rightObject
 			} else if type1.IsType(type2) {
 				// 两个参数类型相同，执行运算符重载
 				return v.callOpFunction(sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
