@@ -35,18 +35,18 @@ hello world
 ```
 
 # 特性
-- [x] class声明。
-- [x] 函数声明与调用。
-- [x] 基本类型: `int/string/float/bool`
-- [x] array数组类型。
-- [x] `any` 通用类型。
+- [x] [class声明](#class)。
+- [x] [函数声明与调用](#函数)。
+- [x] [基本类型](#基本类型): `int/string/float/bool`
+- [x] [array数组类型](#数组)。
+- [x] `any` [通用类型](#any)。
 - [x] 特殊类型 `nil`。
 - [x] 函数类型。
-- [x] 闭包：函数一等公民。
-- [x] 内置函数: `len()/hash()/assertEqual()/JSON()/JSONGet()`
-- [x] 标准库：`Map/LinkedList/Array`
-- [x] 运算符重载
-- [x] 原生 `json` 支持。
+- [x] [闭包：函数一等公民](#闭包)。
+- [x] [内置函数](#内置函数): `len()/hash()/assertEqual()/JSON()/JSONGet()`
+- [x] [标准库](#标准库)：`Map/LinkedList/Array`
+- [x] [运算符重载](#运算符重载)
+- [x] [原生 `json` 支持](#内置函数)。
 - [ ] 原生 `http` 包支持。
 
 # 例子

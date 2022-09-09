@@ -39,16 +39,16 @@ hello world
 
 - [x] [Class declaration](#class).
 - [x] [Function declaration and call](#function).
-- [x] [Primitive type: `int/string/float/bool`](primitive).
-- [x] Array type.
+- [x] [Primitive type](#primitive): `int/string/float/bool`.
+- [x] [Array type](#array).
 - [x] `nil` type.
-- [x] `any` type.
-- [x] Function type.
-- [x] Closure：Functions as First-Class Objects.
-- [x] Native function: `len()/hash()/assertEqual()/JSON()/JSONGet()`.
-- [x] Standard library：`Map/LinkedList/Array`.
-- [x] Operator overloading.
-- [x] Native support `json`.
+- [x] [`any` type](#any-type).
+- [x] [Function type](#closure).
+- [x] [Closure：Functions as First-Class Objects](#closure).
+- [x] [Native function](#native-function): `len()/hash()/assertEqual()/JSON()/JSONGet()`.
+- [x] [Standard library](#standard-library)：`Map/LinkedList/Array`.
+- [x] [Operator overloading](#operator-overloading).
+- [x] [Native support](#operator-overloading) `json`.
 - [ ] Native support `http`.
 
 
