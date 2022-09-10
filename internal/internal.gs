@@ -8,10 +8,53 @@ println(){}
 assertEqual(){}
 append(){}
 
+// Date
+string getCurrentTime(string tz, string layout){}
+
 // return JSON string
 string JSON(any a){}
 // JSON query with path
 any JSONGet(string json, string path){}
+
+
+// http lib
+// Response json
+FprintfJSON(int code, string path, string json){}
+// Resonse html
+FprintfHTML(int code, string path, string html){}
+
+// path (relative paths may omit leading slash)
+string QueryPath(string path){}
+
+string FormValue(string path, string key){}
+class HttpContext{
+    string path;
+    JSON(int code, any v){
+        string json = JSON(v);
+        FprintfJSON(code, path, json);
+    }
+    HTML(int code, any v) {
+        string html = v;
+        FprintfHTML(code, path, html);
+    }
+    string queryPath() {
+        string p = QueryPath(path);
+        return p;
+    }
+
+    string formValue(string key){
+        string v = FormValue(path, key);
+        return v;
+    }
+}
+// Bind route
+httpHandle(string method, string path, func (HttpContext) handle){
+    // println("path="+path);
+    HttpContext ctx = HttpContext();
+    handle(ctx);
+}
+// Run http server.
+httpRun(string addr){}
 
 class Entry{
     any key,value;

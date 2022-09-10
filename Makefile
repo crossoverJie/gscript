@@ -7,6 +7,7 @@ VERSION=v0.0.7
 
 # Build
 build:
+	make bindata
 	$(GOCLEAN)
 	$(GOBUILD)
 

@@ -415,8 +415,25 @@ func isFuncType(t1, t2 FuncType) bool {
 	if t2 == t1 {
 		return true
 	}
-	if !t1.GetReturnType().IsType(t2.GetReturnType()) {
-		return false
+
+	// 兼容直接传递函数变量的情况
+	// 传递的是 func void(int, int) x = handle1，不需要 x
+	// handleFunc("/abc", handle1);
+	df, ok := t2.GetReturnType().(*DeclareFunctionType)
+	if ok {
+		returnType := isFuncType(t1, df)
+		if !returnType {
+			return false
+		}
+	} else {
+		// 传递的是 func void(int, int) x = handle1
+		// handleFunc("/abc", x);
+		if t1.GetReturnType() != nil && t2.GetReturnType() != nil {
+			// 函数变量的返回值不写时，也没写 void
+			if !t1.GetReturnType().IsType(t2.GetReturnType()) {
+				return false
+			}
+		}
 	}
 
 	if len(t1.GetParameterType()) != len(t2.GetParameterType()) {
