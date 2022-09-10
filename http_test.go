@@ -32,11 +32,11 @@ func createHandle() []h {
 
 func TestHttp(t *testing.T) {
 	http.HandleFunc("/", handler)
-	err := http.ListenAndServe(":8000", nil)
-	if err != nil {
-		fmt.Printf("http server failed, err:%v\n", err)
-		return
-	}
+	//err := http.ListenAndServe(":8000", nil)
+	//if err != nil {
+	//	fmt.Printf("http server failed, err:%v\n", err)
+	//	return
+	//}
 }
 
 func TestHttp1(t *testing.T) {
@@ -79,7 +79,7 @@ func (HttpContext) handle2 (HttpContext ctx){
 httpHandle("get", "/p", handle);
 httpHandle("get", "/p/1", handle1);
 httpHandle("get", "/p/2", handle2);
-httpRun(":8000");
+//httpRun(":8000");
 `
 	NewCompiler().Compiler(script)
 }
