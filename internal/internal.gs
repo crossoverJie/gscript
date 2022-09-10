@@ -15,6 +15,7 @@ any JSONGet(string json, string path){}
 
 
 // http lib
+// Response json
 FprintfJSON(int code, string path, string json){}
 class HttpContext{
     string path;
@@ -24,11 +25,13 @@ class HttpContext{
         FprintfJSON(code, path, json);
     }
 }
+// Bind route
 httpHandle(string path, func void(HttpContext) handle){
     // println("path="+path);
     HttpContext ctx = HttpContext();
     handle(ctx);
 }
+// Run http server.
 httpRun(string addr){}
 
 class Entry{
