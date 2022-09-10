@@ -7,6 +7,7 @@ import (
 	"github.com/crossoverJie/gscript/stack"
 	"github.com/crossoverJie/xjson"
 	"hash/fnv"
+	"time"
 )
 
 func (v *Visitor) println(ctx *parser.FunctionCallContext) {
@@ -239,5 +240,35 @@ func (v *Visitor) JSONGet(ctx *parser.FunctionCallContext) interface{} {
 		v2 = fmt.Sprintf("%s", p1)
 	}
 	return xjson.Get(v1, v2).Raw()
+
+}
+
+func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
+	paramValues := v.buildParamValues(ctx)
+	if len(paramValues) != 2 {
+		// todo crossoverJie 运行时报错
+		panic("")
+	}
+	p0 := paramValues[0]
+	p1 := paramValues[1]
+	var (
+		tz, layout string
+	)
+	switch p0.(type) {
+	case string:
+		tz = fmt.Sprintf("%s", p0)
+	}
+	switch p1.(type) {
+	case string:
+		layout = fmt.Sprintf("%s", p1)
+	}
+
+	location, err := time.LoadLocation(tz)
+	if err != nil {
+		// todo crossoverJie 运行时报错
+		panic(err)
+	}
+	local := time.Now().In(location)
+	return local.Format(layout)
 
 }

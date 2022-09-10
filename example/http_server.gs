@@ -27,6 +27,11 @@ func (HttpContext) handle2 (HttpContext ctx){
     <p>hahaha</p>
     </html>
     ^;
+    string queryPath = ctx.queryPath();
+    println("queryPath = " + queryPath);
+
+    string id = ctx.formValue("id");
+    println("id="+id);
     ctx.HTML(200, html);
 }
 httpHandle("get", "/p", handle);

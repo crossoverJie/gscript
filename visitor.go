@@ -686,6 +686,10 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		v.fprintfHTML(ctx)
 	} else if name == "getCurrentTime" {
 		return v.getCurrentTime(ctx)
+	} else if name == "QueryPath" {
+		return v.queryPath(ctx)
+	} else if name == "FormValue" {
+		return v.formValue(ctx)
 	}
 
 	// 默认构造函数

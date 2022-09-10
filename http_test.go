@@ -15,6 +15,9 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	marshal, _ := json.Marshal(s)
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+	fmt.Println(r.URL.Path)
+	value := r.FormValue("id")
+	fmt.Println(value)
 	//fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
 	fmt.Fprintf(w, string(marshal))
 }
@@ -29,11 +32,11 @@ func createHandle() []h {
 
 func TestHttp(t *testing.T) {
 	http.HandleFunc("/", handler)
-	//err := http.ListenAndServe(":8000", nil)
-	//if err != nil {
-	//	fmt.Printf("http server failed, err:%v\n", err)
-	//	return
-	//}
+	err := http.ListenAndServe(":8000", nil)
+	if err != nil {
+		fmt.Printf("http server failed, err:%v\n", err)
+		return
+	}
 }
 
 func TestHttp1(t *testing.T) {
@@ -66,6 +69,11 @@ func (HttpContext) handle2 (HttpContext ctx){
     <p>hahaha</p>
 </html>
 ^;
+	string queryPath = ctx.queryPath();
+	println("queryPath = " + queryPath);
+	
+	string id = ctx.formValue("id");
+	println("id="+id);
     ctx.HTML(200, html);
 }
 httpHandle("get", "/p", handle);

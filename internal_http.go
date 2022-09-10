@@ -8,7 +8,6 @@ import (
 	"net"
 	"net/http"
 	"strings"
-	"time"
 )
 
 type httpTool struct {
@@ -158,7 +157,29 @@ func (v *Visitor) getCodePathValue(paramValues []interface{}) (int, string, stri
 	return code, path, value
 }
 
-func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
+func (v *Visitor) queryPath(ctx *parser.FunctionCallContext) string {
+	paramValues := v.buildParamValues(ctx)
+	if len(paramValues) != 1 {
+		// todo crossoverJie 运行时报错
+		panic("")
+	}
+	p0 := paramValues[0]
+	var path string
+	switch p0.(type) {
+	case string:
+		path = fmt.Sprintf("%s", p0)
+	}
+
+	tool, ok := path2HttpTool[path]
+	if !ok {
+		// todo crossoverJie 运行时报错
+		panic("")
+	}
+	return tool.r.URL.Path
+
+}
+
+func (v *Visitor) formValue(ctx *parser.FunctionCallContext) string {
 	paramValues := v.buildParamValues(ctx)
 	if len(paramValues) != 2 {
 		// todo crossoverJie 运行时报错
@@ -167,24 +188,26 @@ func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
 	p0 := paramValues[0]
 	p1 := paramValues[1]
 	var (
-		tz, layout string
+		path, key string
 	)
+
 	switch p0.(type) {
 	case string:
-		tz = fmt.Sprintf("%s", p0)
-	}
-	switch p1.(type) {
-	case string:
-		layout = fmt.Sprintf("%s", p1)
+		path = fmt.Sprintf("%s", p0)
 	}
 
-	location, err := time.LoadLocation(tz)
-	if err != nil {
-		// todo crossoverJie 运行时报错
-		panic(err)
+	switch p1.(type) {
+	case string:
+		key = fmt.Sprintf("%s", p1)
 	}
-	local := time.Now().In(location)
-	return local.Format(layout)
+
+	tool, ok := path2HttpTool[path]
+	if !ok {
+		// todo crossoverJie 运行时报错
+		panic("")
+	}
+
+	return tool.r.FormValue(key)
 
 }
 

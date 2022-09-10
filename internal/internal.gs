@@ -22,15 +22,29 @@ any JSONGet(string json, string path){}
 FprintfJSON(int code, string path, string json){}
 // Resonse html
 FprintfHTML(int code, string path, string html){}
+
+// path (relative paths may omit leading slash)
+string QueryPath(string path){}
+
+string FormValue(string path, string key){}
 class HttpContext{
     string path;
     JSON(int code, any v){
         string json = JSON(v);
         FprintfJSON(code, path, json);
     }
-    HTML(int code, any v){
+    HTML(int code, any v) {
         string html = v;
         FprintfHTML(code, path, html);
+    }
+    string queryPath() {
+        string p = QueryPath(path);
+        return p;
+    }
+
+    string formValue(string key){
+        string v = FormValue(path, key);
+        return v;
     }
 }
 // Bind route
