@@ -47,7 +47,7 @@ hello world
 - [x] [标准库](#标准库)：`Map/LinkedList/Array`
 - [x] [运算符重载](#运算符重载)
 - [x] [原生 `json` 支持](#内置函数)。
-- [ ] 原生 `http` 包支持。
+- [x] 原生 `http` 包支持。
 
 # 例子
 
@@ -512,6 +512,97 @@ for (int i=0;i<count;i++){
 	assertEqual(key,value);
 }
 ```
+
+# http
+标准库定义：
+
+```js
+// http lib
+// Response json
+FprintfJSON(int code, string path, string json){}
+// Resonse html
+FprintfHTML(int code, string path, string html){}
+
+// path (relative paths may omit leading slash)
+string QueryPath(string path){}
+
+string FormValue(string path, string key){}
+class HttpContext{
+    string path;
+    JSON(int code, any v){
+        string json = JSON(v);
+        FprintfJSON(code, path, json);
+    }
+    HTML(int code, any v) {
+        string html = v;
+        FprintfHTML(code, path, html);
+    }
+    string queryPath() {
+        string p = QueryPath(path);
+        return p;
+    }
+
+    string formValue(string key){
+        string v = FormValue(path, key);
+        return v;
+    }
+}
+// Bind route
+httpHandle(string method, string path, func (HttpContext) handle){
+    // println("path="+path);
+    HttpContext ctx = HttpContext();
+    handle(ctx);
+}
+// Run http server.
+httpRun(string addr){}
+```
+
+启动一个 `HTTP` 服务：
+
+```js
+class Person{
+    string name;
+}
+func (HttpContext) handle (HttpContext ctx){
+    Person p = Person();
+    p.name = "abc";
+    println("p.name=" + p.name);
+    println("ctx=" + ctx);
+    ctx.JSON(200, p);
+}
+
+func (HttpContext) handle1 (HttpContext ctx){
+    Person p = Person();
+    p.name = "def";
+    println("p.name=" + p.name);
+    println("ctx=" + ctx);
+    ctx.JSON(200, p);
+}
+func (HttpContext) handle2 (HttpContext ctx){
+    string local = getCurrentTime("Asia/Shanghai","2006-01-02 15:04:05");
+    println(local);
+    string html =^
+    <html>
+    <title>hello</title>
+    <h1>current ^+ local +^</h1>
+    <p>hahaha</p>
+    </html>
+    ^;
+    string queryPath = ctx.queryPath();
+    println("queryPath = " + queryPath);
+
+    // http://127.0.0.1:8000/p/2?id=100
+    string id = ctx.formValue("id");
+    println("id="+id);
+    ctx.HTML(200, html);
+}
+httpHandle("get", "/p", handle);
+httpHandle("get", "/p/1", handle1);
+httpHandle("get", "/p/2", handle2);
+httpRun(":8000");
+
+```
+
 
 
 ## 联系作者
