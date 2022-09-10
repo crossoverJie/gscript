@@ -49,7 +49,8 @@ hello world
 - [x] [Standard library](#standard-library)：`Map/LinkedList/Array`.
 - [x] [Operator overloading](#operator-overloading).
 - [x] [Native support](#native-function) `json`.
-- [ ] Native support `http`.
+- [x] [Native support `http`](#http).
+- [ ] Unit Test commond line.
 
 
 
@@ -511,6 +512,97 @@ for (int i=0;i<count;i++){
 	println("key="+key+ ":"+ value);
 	assertEqual(key,value);
 }
+```
+
+
+# http
+Standard library:
+
+```js
+// http lib
+// Response json
+FprintfJSON(int code, string path, string json){}
+// Resonse html
+FprintfHTML(int code, string path, string html){}
+
+// path (relative paths may omit leading slash)
+string QueryPath(string path){}
+
+string FormValue(string path, string key){}
+class HttpContext{
+    string path;
+    JSON(int code, any v){
+        string json = JSON(v);
+        FprintfJSON(code, path, json);
+    }
+    HTML(int code, any v) {
+        string html = v;
+        FprintfHTML(code, path, html);
+    }
+    string queryPath() {
+        string p = QueryPath(path);
+        return p;
+    }
+
+    string formValue(string key){
+        string v = FormValue(path, key);
+        return v;
+    }
+}
+// Bind route
+httpHandle(string method, string path, func (HttpContext) handle){
+    // println("path="+path);
+    HttpContext ctx = HttpContext();
+    handle(ctx);
+}
+// Run http server.
+httpRun(string addr){}
+```
+
+Start http service:
+
+```js
+class Person{
+    string name;
+}
+func (HttpContext) handle (HttpContext ctx){
+    Person p = Person();
+    p.name = "abc";
+    println("p.name=" + p.name);
+    println("ctx=" + ctx);
+    ctx.JSON(200, p);
+}
+
+func (HttpContext) handle1 (HttpContext ctx){
+    Person p = Person();
+    p.name = "def";
+    println("p.name=" + p.name);
+    println("ctx=" + ctx);
+    ctx.JSON(200, p);
+}
+func (HttpContext) handle2 (HttpContext ctx){
+    string local = getCurrentTime("Asia/Shanghai","2006-01-02 15:04:05");
+    println(local);
+    string html =^
+    <html>
+    <title>hello</title>
+    <h1>current ^+ local +^</h1>
+    <p>hahaha</p>
+    </html>
+    ^;
+    string queryPath = ctx.queryPath();
+    println("queryPath = " + queryPath);
+
+    // http://127.0.0.1:8000/p/2?id=100
+    string id = ctx.formValue("id");
+    println("id="+id);
+    ctx.HTML(200, html);
+}
+httpHandle("get", "/p", handle);
+httpHandle("get", "/p/1", handle1);
+httpHandle("get", "/p/2", handle2);
+httpRun(":8000");
+
 ```
 
 
