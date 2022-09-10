@@ -8,6 +8,9 @@ println(){}
 assertEqual(){}
 append(){}
 
+// Date
+string getCurrentTime(string tz, string layout){}
+
 // return JSON string
 string JSON(any a){}
 // JSON query with path
@@ -17,12 +20,17 @@ any JSONGet(string json, string path){}
 // http lib
 // Response json
 FprintfJSON(int code, string path, string json){}
+// Resonse html
+FprintfHTML(int code, string path, string html){}
 class HttpContext{
     string path;
     JSON(int code, any v){
         string json = JSON(v);
-        //println("code=" + code + " json=" + json + " path=" + path);
         FprintfJSON(code, path, json);
+    }
+    HTML(int code, any v){
+        string html = v;
+        FprintfHTML(code, path, html);
     }
 }
 // Bind route

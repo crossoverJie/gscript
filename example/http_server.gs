@@ -1,3 +1,4 @@
+
 class Person{
     string name;
 }
@@ -16,6 +17,19 @@ func (HttpContext) handle1 (HttpContext ctx){
     println("ctx=" + ctx);
     ctx.JSON(200, p);
 }
+func (HttpContext) handle2 (HttpContext ctx){
+    string local = getCurrentTime("Asia/Shanghai","2006-01-02 15:04:05");
+    println(local);
+    string html =^
+    <html>
+    <title>hello</title>
+    <h1>current ^+ local +^</h1>
+    <p>hahaha</p>
+    </html>
+    ^;
+    ctx.HTML(200, html);
+}
 httpHandle("/p", handle);
 httpHandle("/p/1", handle1);
+httpHandle("/p/2", handle2);
 httpRun(":8000");

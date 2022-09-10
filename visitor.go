@@ -682,6 +682,10 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return v.httpRun(ctx)
 	} else if name == "FprintfJSON" {
 		v.fprintfJSON(ctx)
+	} else if name == "FprintfHTML" {
+		v.fprintfHTML(ctx)
+	} else if name == "getCurrentTime" {
+		return v.getCurrentTime(ctx)
 	}
 
 	// 默认构造函数

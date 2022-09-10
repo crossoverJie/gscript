@@ -8,6 +8,7 @@ import (
 	"github.com/crossoverJie/gscript/symbol"
 	"net"
 	"net/http"
+	"time"
 )
 
 type httpTool struct {
@@ -93,6 +94,32 @@ func (v *Visitor) httpRun(ctx *parser.FunctionCallContext) interface{} {
 
 func (v *Visitor) fprintfJSON(ctx *parser.FunctionCallContext) {
 	paramValues := v.buildParamValues(ctx)
+	code, path, json := v.getCodePathValue(paramValues)
+	tool, ok := path2HttpTool[path]
+	if !ok {
+		// todo crossoverJie 运行时报错
+		panic("")
+	}
+	tool.w.Header().Set("Content-Type", "application/json")
+	tool.w.WriteHeader(code)
+	fmt.Fprintf(tool.w, json)
+
+}
+
+func (v *Visitor) fprintfHTML(ctx *parser.FunctionCallContext) {
+	paramValues := v.buildParamValues(ctx)
+	code, path, html := v.getCodePathValue(paramValues)
+	tool, ok := path2HttpTool[path]
+	if !ok {
+		// todo crossoverJie 运行时报错
+		panic("")
+	}
+	tool.w.Header().Set("Content-Type", "text/html")
+	tool.w.WriteHeader(code)
+	fmt.Fprintf(tool.w, html)
+}
+
+func (v *Visitor) getCodePathValue(paramValues []interface{}) (int, string, string) {
 	if len(paramValues) != 3 {
 		// todo crossoverJie 运行时报错
 		panic("")
@@ -101,8 +128,8 @@ func (v *Visitor) fprintfJSON(ctx *parser.FunctionCallContext) {
 	p1 := paramValues[1]
 	p2 := paramValues[2]
 	var (
-		path, json string
-		code       int
+		path, value string
+		code        int
 	)
 
 	switch p0.(type) {
@@ -117,17 +144,39 @@ func (v *Visitor) fprintfJSON(ctx *parser.FunctionCallContext) {
 	}
 	switch p2.(type) {
 	case string:
-		json = fmt.Sprintf("%s", p2)
+		value = fmt.Sprintf("%s", p2)
 	}
 
-	tool, ok := path2HttpTool[path]
-	if !ok {
+	return code, path, value
+}
+
+func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
+	paramValues := v.buildParamValues(ctx)
+	if len(paramValues) != 2 {
 		// todo crossoverJie 运行时报错
 		panic("")
 	}
-	tool.w.Header().Set("Content-Type", "application/json")
-	tool.w.WriteHeader(code)
-	fmt.Fprintf(tool.w, json)
+	p0 := paramValues[0]
+	p1 := paramValues[1]
+	var (
+		tz, layout string
+	)
+	switch p0.(type) {
+	case string:
+		tz = fmt.Sprintf("%s", p0)
+	}
+	switch p1.(type) {
+	case string:
+		layout = fmt.Sprintf("%s", p1)
+	}
+
+	location, err := time.LoadLocation(tz)
+	if err != nil {
+		// todo crossoverJie 运行时报错
+		panic(err)
+	}
+	local := time.Now().In(location)
+	return local.Format(layout)
 
 }
 
