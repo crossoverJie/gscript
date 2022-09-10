@@ -428,8 +428,11 @@ func isFuncType(t1, t2 FuncType) bool {
 	} else {
 		// 传递的是 func void(int, int) x = handle1
 		// handleFunc("/abc", x);
-		if !t1.GetReturnType().IsType(t2.GetReturnType()) {
-			return false
+		if t1.GetReturnType() != nil && t2.GetReturnType() != nil {
+			// 函数变量的返回值不写时，也没写 void
+			if !t1.GetReturnType().IsType(t2.GetReturnType()) {
+				return false
+			}
 		}
 	}
 

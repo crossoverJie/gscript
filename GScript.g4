@@ -252,7 +252,7 @@ typeType
 
 
 functionType
-    : FUNCTION typeTypeOrVoid '(' typeList? ')'
+    : FUNCTION typeTypeOrVoid? '(' typeList? ')'
     ;
 
 primitiveType

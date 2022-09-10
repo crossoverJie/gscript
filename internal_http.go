@@ -1,14 +1,14 @@
 package gscript
 
 import (
+	"errors"
 	"fmt"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/stack"
 	"github.com/crossoverJie/gscript/symbol"
+	"net"
 	"net/http"
 )
-
-type httpH func(http.ResponseWriter, *http.Request)
 
 type httpTool struct {
 	w http.ResponseWriter
@@ -73,8 +73,13 @@ func (v *Visitor) httpRun(ctx *parser.FunctionCallContext) interface{} {
 	}
 
 	if addr != "" {
-		fmt.Println(fmt.Sprintf("http host on port%s", addr))
-		err := http.ListenAndServe(addr, nil)
+		ip, err := externalIP()
+		if err != nil {
+			// todo crossoverJie 运行时报错
+			panic(err)
+		}
+		fmt.Println(fmt.Sprintf("http host %s on port%s", ip, addr))
+		err = http.ListenAndServe(addr, nil)
 		if err != nil {
 			// todo crossoverJie 运行时报错
 			panic(err)
@@ -124,4 +129,41 @@ func (v *Visitor) fprintfJSON(ctx *parser.FunctionCallContext) {
 	tool.w.WriteHeader(code)
 	fmt.Fprintf(tool.w, json)
 
+}
+
+func externalIP() (string, error) {
+	ifaces, err := net.Interfaces()
+	if err != nil {
+		return "", err
+	}
+	for _, iface := range ifaces {
+		if iface.Flags&net.FlagUp == 0 {
+			continue // interface down
+		}
+		if iface.Flags&net.FlagLoopback != 0 {
+			continue // loopback interface
+		}
+		addrs, err := iface.Addrs()
+		if err != nil {
+			return "", err
+		}
+		for _, addr := range addrs {
+			var ip net.IP
+			switch v := addr.(type) {
+			case *net.IPNet:
+				ip = v.IP
+			case *net.IPAddr:
+				ip = v.IP
+			}
+			if ip == nil || ip.IsLoopback() {
+				continue
+			}
+			ip = ip.To4()
+			if ip == nil {
+				continue // not an ipv4 address
+			}
+			return ip.String(), nil
+		}
+	}
+	return "", errors.New("are you connected to the network?")
 }

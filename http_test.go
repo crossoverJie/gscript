@@ -28,11 +28,11 @@ func createHandle() []h {
 
 func TestHttp(t *testing.T) {
 	http.HandleFunc("/", handler)
-	err := http.ListenAndServe(":8000", nil)
-	if err != nil {
-		fmt.Printf("http server failed, err:%v\n", err)
-		return
-	}
+	//err := http.ListenAndServe(":8000", nil)
+	//if err != nil {
+	//	fmt.Printf("http server failed, err:%v\n", err)
+	//	return
+	//}
 }
 
 func TestHttp1(t *testing.T) {
@@ -42,7 +42,7 @@ func TestHttp1(t *testing.T) {
 class Person{
 	string name;
 }
-func void(HttpContext) handle (HttpContext ctx){
+func (HttpContext) handle (HttpContext ctx){
 	Person p = Person();
 	p.name = "abc";
 	println("p.name=" + p.name);
@@ -50,7 +50,7 @@ func void(HttpContext) handle (HttpContext ctx){
 	ctx.JSON(200, p);
 }
 
-func void(HttpContext) handle1 (HttpContext ctx){
+func (HttpContext) handle1 (HttpContext ctx){
 	Person p = Person();
 	p.name = "def";
 	println("p.name=" + p.name);
@@ -59,7 +59,7 @@ func void(HttpContext) handle1 (HttpContext ctx){
 }
 httpHandle("/p", handle);
 httpHandle("/p/1", handle1);
-httpRun(":8000");
+//httpRun(":8000");
 `
 	NewCompiler().Compiler(script)
 }

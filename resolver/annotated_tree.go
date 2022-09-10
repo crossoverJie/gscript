@@ -22,6 +22,7 @@ type AnnotatedTree struct {
 	// 运算符重载自定义函数
 	opOverloads []*symbol.OpOverload
 
+	// http 运行时 path 变量，用于运行时获取。
 	httpPathVariable *symbol.Variable
 }
 

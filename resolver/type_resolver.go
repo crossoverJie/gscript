@@ -61,6 +61,7 @@ func (t *TypeResolver) EnterVariableDeclaratorId(ctx *parser.VariableDeclaratorI
 		t.at.PutSymbolOfNode(ctx, variable)
 
 		if class != nil && class.GetName() == "HttpContext" {
+			// 如果有使用 http，需要将当前的 path 变量单独存放起来，用于运行时动态获取 path。
 			t.at.SetHttpPathVariable(variable)
 		}
 	}
