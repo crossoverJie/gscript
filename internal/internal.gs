@@ -13,6 +13,24 @@ string JSON(any a){}
 // JSON query with path
 any JSONGet(string json, string path){}
 
+
+// http lib
+FprintfJSON(int code, string path, string json){}
+class HttpContext{
+    string path;
+    JSON(int code, any v){
+        string json = JSON(v);
+        //println("code=" + code + " json=" + json + " path=" + path);
+        FprintfJSON(code, path, json);
+    }
+}
+httpHandle(string path, func void(HttpContext) handle){
+    // println("path="+path);
+    HttpContext ctx = HttpContext();
+    handle(ctx);
+}
+httpRun(string addr){}
+
 class Entry{
     any key,value;
     Entry next;

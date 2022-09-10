@@ -505,6 +505,31 @@ assertEqual(t1==t2, true);
 `
 	NewCompiler().Compiler(script)
 }
+func TestCompiler_Class_Any(t *testing.T) {
+	script := `
+class Person{
+	string name;
+	
+	p(){
+		println("pppp " + name);
+	}
+} 
+class Test{
+	int value;
+	Test(int v){
+		value =v;
+	}
+	HJSON(Person p, int a){
+		p.p();
+	}
+}
+Test t1 = Test(1);
+Person p = Person();
+p.name = "abc";
+t1.HJSON(p,10);
+`
+	NewCompiler().CompilerWithoutNative(script)
+}
 func TestCompiler_InitSub(t *testing.T) {
 	script := `
 int a = -1;

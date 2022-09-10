@@ -45,7 +45,7 @@ func (t *TypeResolver) ExitVariableDeclarators(ctx *parser.VariableDeclaratorsCo
 func (t *TypeResolver) EnterVariableDeclaratorId(ctx *parser.VariableDeclaratorIdContext) {
 	id := ctx.IDENTIFIER().GetText()
 	scope := t.at.FindEncloseScopeOfNode(ctx)
-	_, isClass := scope.(*symbol.Class)
+	class, isClass := scope.(*symbol.Class)
 
 	// todo crossoverJie scope is class
 	_, ok := ctx.GetParent().(*parser.FormalParameterContext)
@@ -59,6 +59,10 @@ func (t *TypeResolver) EnterVariableDeclaratorId(ctx *parser.VariableDeclaratorI
 
 		scope.AddSymbol(variable)
 		t.at.PutSymbolOfNode(ctx, variable)
+
+		if class != nil && class.GetName() == "HttpContext" {
+			t.at.SetHttpPathVariable(variable)
+		}
 	}
 }
 

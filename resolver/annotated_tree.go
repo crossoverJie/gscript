@@ -21,6 +21,8 @@ type AnnotatedTree struct {
 
 	// 运算符重载自定义函数
 	opOverloads []*symbol.OpOverload
+
+	httpPathVariable *symbol.Variable
 }
 
 func NewAnnotatedTree(ast antlr.ParseTree) *AnnotatedTree {
@@ -165,4 +167,11 @@ func (a *AnnotatedTree) findFunctionOnlyWithName(scope symbol.Scope, name string
 		}
 	}
 	return nil
+}
+
+func (a *AnnotatedTree) SetHttpPathVariable(path *symbol.Variable) {
+	a.httpPathVariable = path
+}
+func (a *AnnotatedTree) GetHttpPathVariable() *symbol.Variable {
+	return a.httpPathVariable
 }

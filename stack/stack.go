@@ -166,3 +166,7 @@ func (c *ClassObject) AllField() map[*symbol.Variable]interface{} {
 func (c *ClassObject) GetObject() Object {
 	return c.object
 }
+
+func (c *ClassObject) SetValue(variable *symbol.Variable, value interface{}) {
+	c.fields[variable] = value
+}

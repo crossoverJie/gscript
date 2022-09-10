@@ -647,8 +647,8 @@ func (v *Visitor) callOpFunction(returnType sym.Type, tokenType int, leftObject,
 	function := v.at.GetOpFunction(returnType, tokenType)
 	if function != nil {
 		funcObject := stack.NewFuncObject(function)
-		param := []interface{}{leftObject, rightObject}
-		return v.executeFunctionCall(funcObject, param)
+		opParams := []interface{}{leftObject, rightObject}
+		return v.executeFunctionCall(funcObject, opParams)
 	} else {
 		// todo crossoverJie 运行时错误 没有实现运算符重载
 	}
@@ -676,6 +676,12 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return v.JSON(ctx)
 	} else if name == "JSONGet" {
 		return v.JSONGet(ctx)
+	} else if name == "httpHandle" {
+		return v.httpHandle(ctx)
+	} else if name == "httpRun" {
+		return v.httpRun(ctx)
+	} else if name == "FprintfJSON" {
+		v.fprintfJSON(ctx)
 	}
 
 	// 默认构造函数
