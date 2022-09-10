@@ -30,6 +30,7 @@ func (HttpContext) handle2 (HttpContext ctx){
     string queryPath = ctx.queryPath();
     println("queryPath = " + queryPath);
 
+    // http://127.0.0.1:8000/p/2?id=100
     string id = ctx.formValue("id");
     println("id="+id);
     ctx.HTML(200, html);
