@@ -34,7 +34,7 @@ class HttpContext{
     }
 }
 // Bind route
-httpHandle(string path, func void(HttpContext) handle){
+httpHandle(string method, string path, func (HttpContext) handle){
     // println("path="+path);
     HttpContext ctx = HttpContext();
     handle(ctx);

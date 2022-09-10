@@ -68,9 +68,9 @@ func (HttpContext) handle2 (HttpContext ctx){
 ^;
     ctx.HTML(200, html);
 }
-httpHandle("/p", handle);
-httpHandle("/p/1", handle1);
-httpHandle("/p/2", handle2);
+httpHandle("get", "/p", handle);
+httpHandle("get", "/p/1", handle1);
+httpHandle("get", "/p/2", handle2);
 httpRun(":8000");
 `
 	NewCompiler().Compiler(script)

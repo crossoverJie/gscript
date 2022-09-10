@@ -1,13 +1,13 @@
 package gscript
 
 import (
-	"errors"
 	"fmt"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/stack"
 	"github.com/crossoverJie/gscript/symbol"
 	"net"
 	"net/http"
+	"strings"
 	"time"
 )
 
@@ -20,13 +20,21 @@ var path2HttpTool map[string]*httpTool
 
 func (v *Visitor) httpHandle(ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 2 {
+	if len(paramValues) != 3 {
 		// todo crossoverJie 运行时报错
 		panic("")
 	}
-	p0 := paramValues[0]
-	p1 := paramValues[1]
-	var path string
+	p := paramValues[0]
+	p0 := paramValues[1]
+	p1 := paramValues[2]
+	var (
+		method, path string
+	)
+	switch p.(type) {
+	case string:
+		method = fmt.Sprintf("%s", p)
+	}
+
 	switch p0.(type) {
 	case string:
 		path = fmt.Sprintf("%s", p0)
@@ -39,6 +47,10 @@ func (v *Visitor) httpHandle(ctx *parser.FunctionCallContext) interface{} {
 		funcObject := p1.(*stack.FuncObject)
 		function := funcObject.GetFunction()
 		var h = func(w http.ResponseWriter, r *http.Request) {
+			if r.Method != strings.ToUpper(method) {
+				// todo crossoverJie 运行时报错
+				panic("method not correct")
+			}
 			// 保存 path 与 HTTPTool 映射关系
 			if path2HttpTool == nil {
 				path2HttpTool = make(map[string]*httpTool)
@@ -74,13 +86,9 @@ func (v *Visitor) httpRun(ctx *parser.FunctionCallContext) interface{} {
 	}
 
 	if addr != "" {
-		ip, err := externalIP()
-		if err != nil {
-			// todo crossoverJie 运行时报错
-			panic(err)
-		}
+		ip := externalIP()
 		fmt.Println(fmt.Sprintf("http host %s on port%s", ip, addr))
-		err = http.ListenAndServe(addr, nil)
+		err := http.ListenAndServe(addr, nil)
 		if err != nil {
 			// todo crossoverJie 运行时报错
 			panic(err)
@@ -180,10 +188,10 @@ func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
 
 }
 
-func externalIP() (string, error) {
+func externalIP() string {
 	ifaces, err := net.Interfaces()
 	if err != nil {
-		return "", err
+		return ""
 	}
 	for _, iface := range ifaces {
 		if iface.Flags&net.FlagUp == 0 {
@@ -194,7 +202,7 @@ func externalIP() (string, error) {
 		}
 		addrs, err := iface.Addrs()
 		if err != nil {
-			return "", err
+			return ""
 		}
 		for _, addr := range addrs {
 			var ip net.IP
@@ -211,8 +219,8 @@ func externalIP() (string, error) {
 			if ip == nil {
 				continue // not an ipv4 address
 			}
-			return ip.String(), nil
+			return ip.String()
 		}
 	}
-	return "", errors.New("are you connected to the network?")
+	return ""
 }
