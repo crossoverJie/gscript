@@ -172,3 +172,21 @@ for (int i = 0; i < 10; i++){
 `
 	NewCompiler().Compiler(script)
 }
+func TestClosure8(t *testing.T) {
+	script := `
+// 函数类型的变量
+func void(int, int) handle1 (int a, int b){
+	println("a="+a + " b="+b);
+}
+handle1(10,20);
+println("====");
+
+handleFunc(string path, func void(int, int) handle){
+	println("path="+path);
+	handle(100,200);
+}
+func void(int, int) x = handle1;
+handleFunc("/abc", handle1);
+`
+	NewCompiler().CompilerWithoutNative(script)
+}
