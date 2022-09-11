@@ -17,6 +17,7 @@ func main() {
 		if err != nil {
 			panic(fmt.Sprintf("read script fail, err:%+v", err))
 		}
+		gscript.Args = os.Args
 		gscript.NewCompiler().Compiler(string(file))
 
 	} else {

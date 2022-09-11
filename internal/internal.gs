@@ -11,6 +11,9 @@ append(){}
 // Date
 string getCurrentTime(string tz, string layout){}
 
+// Get os args.
+string[] getOSArgs(){}
+
 // return JSON string
 string JSON(any a){}
 // JSON query with path
