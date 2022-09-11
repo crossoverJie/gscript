@@ -10,7 +10,7 @@ type ArrayObject struct {
 	index int
 }
 
-// NewArrayObject 数据对象
+// NewArrayObject 数组对象
 func NewArrayObject(left *LeftValue, index int) *ArrayObject {
 	return &ArrayObject{
 		left:  left,
@@ -26,17 +26,26 @@ func (a *ArrayObject) GetIndex() int {
 
 // GetIndexValue 根据下标获取数组值
 func (a *ArrayObject) GetIndexValue() interface{} {
-	array := a.left.GetValue().([]interface{})
-	i := array[a.index]
-	switch i.(type) {
-	case *LeftValue:
-		value := i.(*LeftValue)
-		classObject, ok := value.GetValue().(*stack.ClassObject)
-		if ok {
-			return classObject.GetObject()
+	value := a.left.GetValue()
+	switch value.(type) {
+	case []string:
+		strings := value.([]string)
+		return strings[a.index]
+	case []interface{}:
+		array := value.([]interface{})
+		i := array[a.index]
+		switch i.(type) {
+		case *LeftValue:
+			value := i.(*LeftValue)
+			classObject, ok := value.GetValue().(*stack.ClassObject)
+			if ok {
+				return classObject.GetObject()
+			}
 		}
+		return i
 	}
-	return i
+	return nil
+
 }
 
 // SetIndexValue 根据下标为数组赋值

@@ -8,6 +8,8 @@ import (
 	"github.com/crossoverJie/gscript/resolver"
 )
 
+var Args []string
+
 type Compiler struct {
 }
 

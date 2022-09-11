@@ -467,7 +467,7 @@ class Test{
 	}
 }
 main(){
-	MapString m1 = MapString();
+	Map m1 = Map();
 	int count =3;
 	for (int i=0;i<count;i++){
 		string key = i+"";
@@ -483,7 +483,7 @@ main(){
 	Test t = Test();
 	t.p();
 }
-println("999")
+println("999");
 `
 	NewCompiler().Compiler(script)
 }

@@ -38,4 +38,10 @@ func (HttpContext) handle2 (HttpContext ctx){
 httpHandle("get", "/p", handle);
 httpHandle("get", "/p/1", handle1);
 httpHandle("get", "/p/2", handle2);
-httpRun(":8000");
+string[] args = getOSArgs();
+println(args);
+if (args[2] != nil){
+    httpRun(":" + args[2]);
+}else {
+    httpRun(":8000");
+}

@@ -272,3 +272,7 @@ func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
 	return local.Format(layout)
 
 }
+
+func (v *Visitor) getOSArgs(ctx *parser.FunctionCallContext) []string {
+	return Args
+}

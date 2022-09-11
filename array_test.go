@@ -159,3 +159,11 @@ assertEqual(temp.age,1);
 `
 	NewCompiler().Compiler(script)
 }
+func Test_array11(t *testing.T) {
+	script := `
+	string[] args = {"1","2","3"};
+    string port = args[2];
+    println(":" +args[2]);
+`
+	NewCompiler().Compiler(script)
+}

@@ -303,10 +303,15 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 		switch val1.(type) {
 		case *LeftValue:
 			leftObject = val1.(*LeftValue).GetValue()
+		case *ArrayObject:
+			leftObject = val1.(*ArrayObject).GetIndexValue()
 		}
 		switch val2.(type) {
 		case *LeftValue:
 			rightObject = val2.(*LeftValue).GetValue()
+		case *ArrayObject:
+			rightObject = val2.(*ArrayObject).GetIndexValue()
+
 		}
 
 		//推导出来的该节点类型
@@ -690,6 +695,8 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return v.queryPath(ctx)
 	} else if name == "FormValue" {
 		return v.formValue(ctx)
+	} else if name == "getOSArgs" {
+		return v.getOSArgs(ctx)
 	}
 
 	// 默认构造函数
