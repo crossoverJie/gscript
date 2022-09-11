@@ -482,6 +482,9 @@ assertEqual(x,100);
 string name = JSONGet(json,"p.name");
 println(name);
 assertEqual(name,"abc");
+
+// Get command-line arguments.
+string[] args = getOSArgs();
 ```
 
 > Reference JSON query syntax: [xjson](https://github.com/crossoverJie/xjson#arithmetic-syntax)

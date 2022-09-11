@@ -482,6 +482,9 @@ assertEqual(x,100);
 string name = JSONGet(json,"p.name");
 println(name);
 assertEqual(name,"abc");
+
+// 获取启动参数
+string[] args = getOSArgs();
 ```
 
 > 更多 JSON 查询语法请参考：[xjson](https://github.com/crossoverJie/xjson#arithmetic-syntax)
