@@ -321,6 +321,12 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 		if deriveType == sym.Any {
 			// 两个值都是any类型，需要运行时通过值判断
 			deriveType = sym.GetUpperTypeWithValue(leftObject, rightObject)
+		} else if deriveType == nil {
+			// 处理：int x = n[0] + n[1];  这种情况deriveType为空，需要运行时重新推导
+			deriveType = sym.GetUpperTypeWithValue(leftObject, rightObject)
+
+			// 运行时计算 type
+			type1, type2 = sym.GetType(type1, type2, leftObject, rightObject)
 		}
 
 		switch ctx.GetBop().GetTokenType() {
@@ -491,11 +497,14 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 			case *ArrayObject:
 				// 数组赋值 a[1]=3;
 				arrayObject := val1.(*ArrayObject)
-				arrayObject.SetIndexValue(val2)
-				//array,ok := arrayObject.GetLeftValue().GetValue().([]interface{})
-				//if ok {
-				//	array[arrayObject.GetIndex()] = val2
-				//}
+				switch val2.(type) {
+				case *LeftValue:
+					r := val2.(*LeftValue).GetValue()
+					arrayObject.SetIndexValue(r)
+				default:
+					arrayObject.SetIndexValue(val2)
+				}
+
 			}
 
 		}

@@ -167,3 +167,34 @@ func Test_array11(t *testing.T) {
 `
 	NewCompiler().Compiler(script)
 }
+func Test_array12(t *testing.T) {
+	script := `
+	int a=10;
+	int[] x =[2]{};
+	x[0]=a;
+	println(x);
+`
+	NewCompiler().Compiler(script)
+}
+func Test_array13(t *testing.T) {
+	script := `
+int[] n ={1,2,3};
+int l = n[0];
+int r = n[1];
+if(l+r == 3){
+	println(3);
+}
+assertEqual(l+r == 3, true);
+
+if( n[0] + n[1] == 3){
+	println(3);
+}
+assertEqual(n[0] + n[1] == 3, true);
+
+int x = n[0] + n[1];
+println(x);
+assertEqual(x,3);
+
+`
+	NewCompiler().Compiler(script)
+}
