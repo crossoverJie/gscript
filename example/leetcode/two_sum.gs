@@ -8,7 +8,7 @@ int[] twoSum(int[] nums, int target){
             if (nums[i] + nums[j] == target){
                 ret[0]=i;
                 ret[1]=j;
-                return;
+                break;
             }
         }
     }
