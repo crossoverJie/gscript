@@ -12,9 +12,9 @@ import (
 
 type Visitor struct {
 	parser.BaseGScriptVisitor
-	at       *resolver.AnnotatedTree
-	stack    stack.Stack
-	ctx2Mark map[*parser.BlockStmsContext]interface{}
+	at           *resolver.AnnotatedTree
+	stack        stack.Stack
+	stmsCtx2Mark map[*parser.BlockStmsContext]interface{}
 }
 
 func NewVisitor(at *resolver.AnnotatedTree) *Visitor {
@@ -163,9 +163,9 @@ func (v *Visitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{} {
 	for _, context := range ctx.AllBlockStatement() {
 		_, ok := context.(*parser.BlockStmContext)
 		if ok {
-			ret, ok := v.ctx2Mark[ctx]
+			ret, ok := v.stmsCtx2Mark[ctx]
 			if ok {
-				v.ctx2Mark = nil
+				v.stmsCtx2Mark = nil
 				return ret
 			}
 		}
@@ -177,7 +177,7 @@ func (v *Visitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{} {
 		case *BreakObject:
 			return ret
 		case *ReturnObject:
-			v.markReturnCtx(context, ret)
+			v.markReturnStatementCtx(context, ret)
 			return ret
 		}
 		//ret = retTemp
@@ -185,21 +185,21 @@ func (v *Visitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{} {
 	return ret
 }
 
-func (v *Visitor) markReturnCtx(tree antlr.ParseTree, value interface{}) {
-	ctx := v.getReturnCtx(tree.GetParent().(antlr.ParseTree))
-	if v.ctx2Mark == nil {
-		v.ctx2Mark = make(map[*parser.BlockStmsContext]interface{})
+func (v *Visitor) markReturnStatementCtx(tree antlr.ParseTree, value interface{}) {
+	ctx := v.getReturnStatementCtx(tree.GetParent().(antlr.ParseTree))
+	if v.stmsCtx2Mark == nil {
+		v.stmsCtx2Mark = make(map[*parser.BlockStmsContext]interface{})
 	}
 	if ctx != nil {
-		v.ctx2Mark[ctx.GetParent().(*parser.BlockStmsContext)] = value
+		v.stmsCtx2Mark[ctx.GetParent().(*parser.BlockStmsContext)] = value
 	}
 }
 
-func (v *Visitor) getReturnCtx(tree antlr.ParseTree) *parser.BlockStmContext {
+func (v *Visitor) getReturnStatementCtx(tree antlr.ParseTree) *parser.BlockStmContext {
 	context, ok := tree.(*parser.BlockStmContext)
 	if !ok {
 		if tree.GetParent() != nil {
-			return v.getReturnCtx(tree.GetParent().(antlr.ParseTree))
+			return v.getReturnStatementCtx(tree.GetParent().(antlr.ParseTree))
 		}
 	}
 
