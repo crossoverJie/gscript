@@ -158,6 +158,21 @@ func (v *Visitor) VisitProg(ctx *parser.ProgContext) interface{} {
 	return ret
 }
 
+func (v *Visitor) VisitBlock(ctx *parser.BlockContext) interface{} {
+	// 将 scope 写入栈帧
+	scope := v.at.GetNode2Scope()[ctx]
+	if scope != nil {
+		v.pushStack(stack.NewBlockScopeFrame(scope))
+	}
+
+	ret := v.VisitBlockStms(ctx.BlockStatements().(*parser.BlockStmsContext))
+
+	if scope != nil {
+		v.popStack()
+	}
+	return ret
+}
+
 func (v *Visitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{} {
 	var ret interface{}
 	for _, context := range ctx.AllBlockStatement() {
@@ -280,21 +295,6 @@ func (v *Visitor) VisitArrayInitializer(ctx *parser.ArrayInitializerContext) int
 
 func (v *Visitor) VisitBlockStm(ctx *parser.BlockStmContext) interface{} {
 	return v.Visit(ctx.Statement())
-}
-
-func (v *Visitor) VisitBlock(ctx *parser.BlockContext) interface{} {
-	// 将 scope 写入栈帧
-	scope := v.at.GetNode2Scope()[ctx]
-	if scope != nil {
-		v.pushStack(stack.NewBlockScopeFrame(scope))
-	}
-
-	ret := v.VisitBlockStms(ctx.BlockStatements().(*parser.BlockStmsContext))
-
-	if scope != nil {
-		v.popStack()
-	}
-	return ret
 }
 
 func (v *Visitor) VisitStmBlockLabel(ctx *parser.StmBlockLabelContext) interface{} {
