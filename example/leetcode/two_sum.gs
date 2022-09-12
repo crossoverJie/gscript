@@ -8,10 +8,8 @@ int[] twoSum(int[] nums, int target){
             if (nums[i] + nums[j] == target){
                 ret[0]=i;
                 ret[1]=j;
-                println("ok");
-                break;
+                return ret;
             }
-            println("内层循环");
         }
     }
     return ret;

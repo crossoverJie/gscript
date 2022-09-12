@@ -1,6 +1,9 @@
 package gscript
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestFor(t *testing.T) {
 	script := `
@@ -75,6 +78,47 @@ for(int i=0;i<5;i++){
 `
 	NewCompiler().Compiler(script)
 }
+func TestCompiler_Return5(t *testing.T) {
+	script := `
+int run(){
+	for(int i=0;i<3;i++){
+		for(int i=0;i<2;i++){
+			//println("inner i=" +i);
+			// todo crossoverJie 应该直接返回 
+			//println("return finish i=" + i);
+			return 100;
+		}
+		println("outer i=" +i);
+	}
+	println("不会执行");
+	return 200;
+}
+int ret = run();
+println(ret);
+`
+	NewCompiler().Compiler(script)
+}
+func TestCompiler_Return6(t *testing.T) {
+	script := `
+	int run(int ret){
+		int a=1;
+		for (a<=3) {
+			println("外层if,a=" + a);
+			a++;
+			return ret;
+			println("return 之后不打印");
+		}
+		println("!!最终a="+ a);		
+	}
+	int ret = run(100);
+	println("run 之后 ret="+ ret);
+	assertEqual(ret,100);
+	ret = run(200);
+	assertEqual(ret,200);
+	println("run 之后 ret="+ ret);
+`
+	NewCompiler().Compiler(script)
+}
 func TestCompiler_Return2(t *testing.T) {
 	script := `
 int a=0;
@@ -107,4 +151,53 @@ if(x){
 }
 `
 	NewCompiler().Compiler(script)
+}
+
+func TestFor99(t *testing.T) {
+	a := 1
+	for a <= 3 {
+		//if a<=2 {
+		//	println("return a=",a);
+		//	return;
+		//}
+		println("外层if,a=", a)
+		a++
+		return
+	}
+	fmt.Println("!!最终a=", a)
+}
+
+func TestFor100(t *testing.T) {
+
+	for i := 0; i < 3; i++ {
+		for i := 0; i < 2; i++ {
+			println("inner i=", i)
+			// todo crossoverJie 应该直接返回
+			println("return finish")
+			return
+		}
+		println("outer i=", i)
+	}
+}
+
+func TestScope(t *testing.T) {
+	scope()
+	fmt.Println("test")
+}
+func scope() {
+	a := 1
+	for a <= 3 {
+		println("外层if,a=", a)
+		a++
+		return
+	}
+	fmt.Println("!!最终a=", a)
+}
+
+func TestSlice(t *testing.T) {
+	x := []int{1, 2, 3}
+	if len(x) > 0 {
+		x = x[:len(x)-1]
+	}
+	fmt.Println(x)
 }

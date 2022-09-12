@@ -12,8 +12,9 @@ import (
 
 type Visitor struct {
 	parser.BaseGScriptVisitor
-	at    *resolver.AnnotatedTree
-	stack stack.Stack
+	at       *resolver.AnnotatedTree
+	stack    stack.Stack
+	ctx2Mark map[*parser.BlockStmsContext]interface{}
 }
 
 func NewVisitor(at *resolver.AnnotatedTree) *Visitor {
@@ -160,6 +161,15 @@ func (v *Visitor) VisitProg(ctx *parser.ProgContext) interface{} {
 func (v *Visitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{} {
 	var ret interface{}
 	for _, context := range ctx.AllBlockStatement() {
+		_, ok := context.(*parser.BlockStmContext)
+		if ok {
+			ret, ok := v.ctx2Mark[ctx]
+			if ok {
+				v.ctx2Mark = nil
+				return ret
+			}
+		}
+
 		ret = v.Visit(context)
 		switch ret.(type) {
 		case *ContinueObject:
@@ -167,11 +177,34 @@ func (v *Visitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{} {
 		case *BreakObject:
 			return ret
 		case *ReturnObject:
+			v.markReturnCtx(context, ret)
 			return ret
 		}
 		//ret = retTemp
 	}
 	return ret
+}
+
+func (v *Visitor) markReturnCtx(tree antlr.ParseTree, value interface{}) {
+	ctx := v.getReturnCtx(tree.GetParent().(antlr.ParseTree))
+	if v.ctx2Mark == nil {
+		v.ctx2Mark = make(map[*parser.BlockStmsContext]interface{})
+	}
+	if ctx != nil {
+		v.ctx2Mark[ctx.GetParent().(*parser.BlockStmsContext)] = value
+	}
+}
+
+func (v *Visitor) getReturnCtx(tree antlr.ParseTree) *parser.BlockStmContext {
+	context, ok := tree.(*parser.BlockStmContext)
+	if !ok {
+		if tree.GetParent() != nil {
+			return v.getReturnCtx(tree.GetParent().(antlr.ParseTree))
+		}
+	}
+
+	return context
+
 }
 
 func (v *Visitor) VisitBlockVarDeclar(ctx *parser.BlockVarDeclarContext) interface{} {
