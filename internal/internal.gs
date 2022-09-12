@@ -80,22 +80,18 @@ class Map{
         int hashcode = hash(key);
         int i = hashcode % len(table) ;
         Entry e = table[i];
-        bool write = true;
         if (e != nil){
             Entry tempEntry = e;
             for (tempEntry != nil) {
                 int currentHash = hash(tempEntry.key);
                 if (currentHash == hashcode && key == tempEntry.key){
                     tempEntry.value= value;
-                    write =false;
                     return;
                 }
                 tempEntry = tempEntry.next;
             }
             table[i] = Entry(key, value, e);
-            if (write){
-                size++;
-            }
+            size++;
 
         } else {
             // 参考 jdk1.7 链表头插法
