@@ -40,7 +40,7 @@ httpHandle("get", "/p/1", handle1);
 httpHandle("get", "/p/2", handle2);
 string[] args = getOSArgs();
 println(args);
-if (args[2] != nil){
+if (len(args) == 3){
     httpRun(":" + args[2]);
 }else {
     httpRun(":8000");
