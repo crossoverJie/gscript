@@ -60,6 +60,8 @@ assertEqual(m1.getSize(),3);
 assertEqual(m1.get("1"),"10");
 assertEqual(m1.get("2"),"20");
 assertEqual(m1.get("3"),"300");
+println("get 4=" + m1.get("4"));
+assertEqual(m1.get("4"), nil);
 `
 	NewCompiler().Compiler(script)
 }
@@ -133,6 +135,10 @@ for (int i=0;i<count;i++){
 int v = m1.get(80);
 println(v);
 assertEqual(v,80);
+
+int v2 = m1.get(900);
+println(v2);
+assertEqual(v2,nil);
 `
 	NewCompiler().Compiler(script)
 }

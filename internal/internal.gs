@@ -115,7 +115,11 @@ class Map{
             }
             e = e.next;
         }
-        return e.value;
+        if (hash(e.key) == hashcode  && key == e.key){
+            return e.value;
+        }else {
+            return nil;
+        }
     }
 
     int getSize(){
