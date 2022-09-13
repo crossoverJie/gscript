@@ -1,6 +1,9 @@
 package gscript
 
-import "testing"
+import (
+	"os"
+	"testing"
+)
 
 func Test_array(t *testing.T) {
 	script := `
@@ -195,6 +198,15 @@ int x = n[0] + n[1];
 println(x);
 assertEqual(x,3);
 
+`
+	NewCompiler().Compiler(script)
+}
+func Test_OSArgs14(t *testing.T) {
+	Args = os.Args
+	script := `
+string[] args = getOSArgs();
+println(len(args));
+println(args);
 `
 	NewCompiler().Compiler(script)
 }

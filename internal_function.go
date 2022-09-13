@@ -98,9 +98,18 @@ func (v *Visitor) len(ctx *parser.FunctionCallContext) int {
 		// todo crossoverJie 运行时报错
 		panic("")
 	}
-	switch paramValues[0].(type) {
+	p0 := paramValues[0]
+	switch p0.(type) {
 	case []interface{}:
-		return len(paramValues[0].([]interface{}))
+		return len(p0.([]interface{}))
+	case []string:
+		return len(p0.([]string))
+	case []float64:
+		return len(p0.([]float64))
+	case []bool:
+		return len(p0.([]bool))
+	case []int:
+		return len(p0.([]int))
 	}
 	return 0
 }
