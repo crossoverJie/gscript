@@ -7,6 +7,11 @@ class ListNode{
     }
 }
 
+// 两个对象比较需要实现运算符重载
+bool operator == (ListNode p1, ListNode p2){
+    return p1.value == p2.value;
+}
+
 bool hasCycle(ListNode head){
     if (head == nil){
         return false;
@@ -17,8 +22,13 @@ bool hasCycle(ListNode head){
 
     ListNode fast = head.next;
     ListNode slow = head;
-    bool ret = false;
+    // bool ret = false;
     for (fast.next != nil){
+
+        if (fast == slow){
+            return true;
+        }
+
         if (fast.next == nil){
             return false;
         }
@@ -28,15 +38,11 @@ bool hasCycle(ListNode head){
         if (slow.next == nil){
             return false;
         }
-        if (fast == slow){
-            ret = true;
-            return true;
-        }
 
         fast = fast.next.next;
         slow = slow.next;
     }
-    return ret;
+    return false;
 }
 
 ListNode l1 = ListNode(1, nil);
