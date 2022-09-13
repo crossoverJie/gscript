@@ -95,6 +95,7 @@ int run(){
 }
 int ret = run();
 println(ret);
+assertEqual(ret,100);
 `
 	NewCompiler().Compiler(script)
 }
@@ -113,9 +114,10 @@ func TestCompiler_Return6(t *testing.T) {
 	int ret = run(100);
 	println("run 之后 ret="+ ret);
 	assertEqual(ret,100);
+	println("开始调第二次");
 	ret = run(200);
-	assertEqual(ret,200);
 	println("run 之后 ret="+ ret);
+	assertEqual(ret,200);
 `
 	NewCompiler().Compiler(script)
 }
@@ -151,6 +153,28 @@ if(x){
 }
 `
 	NewCompiler().Compiler(script)
+}
+func TestCompiler_Return4(t *testing.T) {
+	script := `
+int run(){
+	for(1<2){
+		for(1<2){
+			return 100;
+		}
+		println(12);
+		
+	}
+	println("不会执行");
+	return 200;
+}
+int x=run();
+println(x);
+assertEqual(x,100);
+int a =9999;
+println(a);
+assertEqual(a,9999);
+`
+	NewCompiler().CompilerWithoutNative(script)
 }
 
 func TestFor99(t *testing.T) {
@@ -200,4 +224,28 @@ func TestSlice(t *testing.T) {
 		x = x[:len(x)-1]
 	}
 	fmt.Println(x)
+}
+
+func TestTowSum(t *testing.T) {
+	script := `
+int twoSum(int target){
+    for(1<2){
+        for (3<4){
+            if (5+5==10){
+				println("准备return");
+                return target;
+            }
+        }
+		// 这里有注释，VisitBlockStms 特殊处理
+		//println("11");
+    }
+    println("不会执行");
+    return 100;
+}
+println("开始调用");
+int ret = twoSum( 9);
+println(ret);
+assertEqual(ret,9);
+`
+	NewCompiler().CompilerWithoutNative(script)
 }

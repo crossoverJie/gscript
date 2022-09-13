@@ -12,9 +12,10 @@ import (
 
 type Visitor struct {
 	parser.BaseGScriptVisitor
-	at           *resolver.AnnotatedTree
-	stack        stack.Stack
-	stmsCtx2Mark map[*parser.BlockStmsContext]interface{}
+	at    *resolver.AnnotatedTree
+	stack stack.Stack
+	// 当 return 时，标记该 statement 所属的 block 的返回值
+	blockCtx2Mark map[*parser.BlockContext]interface{}
 }
 
 func NewVisitor(at *resolver.AnnotatedTree) *Visitor {
@@ -165,6 +166,11 @@ func (v *Visitor) VisitBlock(ctx *parser.BlockContext) interface{} {
 		v.pushStack(stack.NewBlockScopeFrame(scope))
 	}
 
+	// 执行完一个 block 时，需要将标记的 block 置为空；不然在有循环调用时，第二次会直接返回第一次标记的数据。
+	if v.blockCtx2Mark != nil && len(v.blockCtx2Mark) > 0 {
+		v.blockCtx2Mark = nil
+	}
+
 	ret := v.VisitBlockStms(ctx.BlockStatements().(*parser.BlockStmsContext))
 
 	if scope != nil {
@@ -176,12 +182,16 @@ func (v *Visitor) VisitBlock(ctx *parser.BlockContext) interface{} {
 func (v *Visitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{} {
 	var ret interface{}
 	for _, context := range ctx.AllBlockStatement() {
-		_, ok := context.(*parser.BlockStmContext)
+
+		// 当下级的 statement 中有 return，该 return 以上的所有 block 都得需要返回 return。
+		stmCtx, ok := context.(*parser.BlockStmContext)
 		if ok {
-			ret, ok := v.stmsCtx2Mark[ctx]
+			blockContext, ok := stmCtx.GetParent().GetParent().(*parser.BlockContext)
 			if ok {
-				v.stmsCtx2Mark = nil
-				return ret
+				ret, ok := v.blockCtx2Mark[blockContext]
+				if ok {
+					return ret
+				}
 			}
 		}
 
@@ -192,34 +202,38 @@ func (v *Visitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{} {
 		case *BreakObject:
 			return ret
 		case *ReturnObject:
-			v.markReturnStatementCtx(context, ret)
+			if ctx.GetParent() != nil && ctx.GetParent().GetParent() != nil {
+				// 获取两级父级，可以少扫描一次 Block
+				v.scanBlockStatementCtx(ctx.GetParent().GetParent().(antlr.ParseTree), ret)
+			}
 			return ret
 		}
 		//ret = retTemp
 	}
+
+	// 当 return 时， statements 下只有一个时，需要返回数据。
+	// 不然会返回 nil：for_test.go TestTowSum()
+	if len(ctx.AllBlockStatement()) == 1 && len(v.blockCtx2Mark) > 0 {
+		blockContext, ok := ctx.GetParent().(*parser.BlockContext)
+		if ok {
+			return v.blockCtx2Mark[blockContext]
+		}
+	}
 	return ret
 }
 
-func (v *Visitor) markReturnStatementCtx(tree antlr.ParseTree, value interface{}) {
-	ctx := v.getReturnStatementCtx(tree.GetParent().(antlr.ParseTree))
-	if v.stmsCtx2Mark == nil {
-		v.stmsCtx2Mark = make(map[*parser.BlockStmsContext]interface{})
-	}
-	if ctx != nil {
-		v.stmsCtx2Mark[ctx.GetParent().(*parser.BlockStmsContext)] = value
-	}
-}
-
-func (v *Visitor) getReturnStatementCtx(tree antlr.ParseTree) *parser.BlockStmContext {
-	context, ok := tree.(*parser.BlockStmContext)
-	if !ok {
-		if tree.GetParent() != nil {
-			return v.getReturnStatementCtx(tree.GetParent().(antlr.ParseTree))
+// 在 return 的时候递归向上扫描所有的 Block，并打上标记，用于后面执行 return 的时候直接返回。
+func (v *Visitor) scanBlockStatementCtx(tree antlr.ParseTree, value interface{}) {
+	context, ok := tree.(*parser.BlockContext)
+	if ok {
+		if v.blockCtx2Mark == nil {
+			v.blockCtx2Mark = make(map[*parser.BlockContext]interface{})
 		}
+		v.blockCtx2Mark[context] = value
 	}
-
-	return context
-
+	if tree.GetParent() != nil {
+		v.scanBlockStatementCtx(tree.GetParent().(antlr.ParseTree), value)
+	}
 }
 
 func (v *Visitor) VisitBlockVarDeclar(ctx *parser.BlockVarDeclarContext) interface{} {
