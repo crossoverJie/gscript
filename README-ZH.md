@@ -37,6 +37,7 @@ hello world
 # 特性
 - [x] [class声明](#class)。
 - [x] [函数声明与调用](#函数)。
+	- [x] [运算符重载](#运算符重载)
 - [x] [基本类型](#基本类型): `int/string/float/bool`
 - [x] [array数组类型](#数组)。
 - [x] `any` [通用类型](#any)。
