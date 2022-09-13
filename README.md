@@ -52,11 +52,12 @@ hello world
 - [x] [Native support](#native-function) `json`.
 - [x] [Native support `http`](#http).
 - [x] Example
+	- [x] LeetCode
+		- [x] [LeetCode: Linked list cycle](https://github.com/crossoverJie/gscript/blob/main/example/linked_list_cycle141.gs)
+		- [x] [LeetCode: Two sum](https://github.com/crossoverJie/gscript/blob/main/example/leetcode/two_sum.gs)
 	- [x] [Print fibonacci](#print-fibonacci)
-	- [x] [LeetCode: Linked list cycle](https://github.com/crossoverJie/gscript/blob/main/example/linked_list_cycle141.gs)
-	- [x] [LeetCode: Two sum](https://github.com/crossoverJie/gscript/blob/main/example/leetcode/two_sum.gs)
 	- [x] [HTTP Service](https://github.com/crossoverJie/gscript/blob/main/example/http_server.gs)
-- [ ] Unit Test commond line.
+- [ ] Unit Test command line.
 
 
 
