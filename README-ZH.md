@@ -86,6 +86,8 @@ for (int i = 0; i < 10; i++){
 }
 ```
 
+更多例子：[https://github.com/crossoverJie/gscript/tree/main/example](https://github.com/crossoverJie/gscript/tree/main/example)
+
 # REPL
 ```shell
 > ./gscript 
