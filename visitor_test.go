@@ -173,6 +173,11 @@ if ( (10 +10 ) == 20 ) {
 	return 20 ;
 }
 `
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println(r)
+		}
+	}()
 	var result = NewCompiler().Compiler(expression)
 	fmt.Println(result)
 }

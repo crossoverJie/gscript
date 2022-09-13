@@ -135,3 +135,42 @@ func Value2Float(v interface{}) float64 {
 		return 0
 	}
 }
+
+// GetType 运行时根据实际值推算出类型
+/**
+if( n[0] + n[1] == 3){
+	println(3);
+}
+推断出  n[0] + n[1] 的 type 为 int，因为这个表达式 type 在编译器计算不出来
+*/
+func GetType(t1, t2 Type, left, right interface{}) (Type, Type) {
+	var (
+		type1, type2 = t1, t2
+	)
+	if t1 == nil {
+		switch left.(type) {
+		case string:
+			type1 = String
+		case int:
+			type1 = Int
+		case float64:
+			type1 = Float
+		case bool:
+			type1 = Bool
+		}
+	}
+
+	if t2 == nil {
+		switch right.(type) {
+		case string:
+			type2 = String
+		case int:
+			type2 = Int
+		case float64:
+			type2 = Float
+		case bool:
+			type2 = Bool
+		}
+	}
+	return type1, type2
+}

@@ -67,7 +67,7 @@ func (v *Visitor) assertEqual(ctx *parser.FunctionCallContext) {
 		// todo crossoverJie 编译器报错
 		panic("")
 	}
-	// todo crossoverJie 参数是个变量，需要取左值
+	// todo crossoverJie 参数是个变量，需要取左值，也可以是个数组取值 a[0]
 	if paramValues[0] != paramValues[1] {
 		line := ctx.GetStart().GetLine()
 		column := ctx.GetStart().GetColumn()

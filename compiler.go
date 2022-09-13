@@ -1,7 +1,6 @@
 package gscript
 
 import (
-	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/crossoverJie/gscript/internal"
 	"github.com/crossoverJie/gscript/parser"
@@ -47,11 +46,11 @@ func (c *Compiler) compile(script string) interface{} {
 }
 
 func (c *Compiler) Compiler(script string) interface{} {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println(r)
-		}
-	}()
+	//defer func() {
+	//	if r := recover(); r != nil {
+	//		fmt.Println(r)
+	//	}
+	//}()
 	internal := c.loadInternal()
 	script = internal + script
 	return c.compile(script)
