@@ -37,7 +37,6 @@ hello world
 # 特性
 - [x] [class声明](#class)
 - [x] [函数声明与调用](#函数)
-	- [x] [运算符重载](#运算符重载)
 - [x] [基本类型](#基本类型): `int/string/float/bool`
 - [x] [array数组类型](#数组)
 - [x] `any` [通用类型](#any)
@@ -47,10 +46,14 @@ hello world
 - [x] [内置函数](#内置函数): `len()/hash()/assertEqual()/JSON()/JSONGet()`
 - [x] [标准库](#标准库)
 	- [x] [Map](#map)
-	- [x] LinkedList
 - [x] [运算符重载](#运算符重载)
 - [x] [原生 `json` 支持](#内置函数)
 - [x] [原生 `http` 包支持](#http)
+- [x] 案例
+	- [x] [打印斐波那契数列 ](#打印斐波那契数列)
+	- [x] [判断链表是否有环 ](https://github.com/crossoverJie/gscript/blob/main/example/linked_list_cycle141.gs)
+	- [x] [HTTP Service](https://github.com/crossoverJie/gscript/blob/main/example/http_server.gs)
+	- [x] [两数之和](https://github.com/crossoverJie/gscript/blob/main/example/leetcode/two_sum.gs)
 -  [ ] 单测命令行工具
 
 # 例子
