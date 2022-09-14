@@ -67,7 +67,7 @@ println("hello world");
 ## 打印斐波那契数列
 
 ```js
-func int() fun(){
+func int() fib(){
     int a = 0;
     int b = 1;
     int fibonacci(){
