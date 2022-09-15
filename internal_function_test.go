@@ -19,6 +19,9 @@ if (1<a()){
 }
 
 func TestPrint(t *testing.T) {
-	fmt.Printf("hello %s", "gscript")
+	args := []interface{}{
+		"1", "2",
+	}
+	fmt.Printf("hello %s %s", args...)
 	fmt.Println(fmt.Sprintf("abc %d", 123))
 }

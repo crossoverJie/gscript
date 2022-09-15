@@ -286,3 +286,23 @@ func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
 func (v *Visitor) getOSArgs(ctx *parser.FunctionCallContext) []string {
 	return Args
 }
+
+func (v *Visitor) buildParamValuesReturnLeft(ctx *parser.FunctionCallContext) ([]interface{}, *LeftValue) {
+	ret := make([]interface{}, 0)
+	if ctx.ExpressionList() == nil {
+		return ret, nil
+	}
+	var left *LeftValue
+	for _, context := range ctx.ExpressionList().(*parser.ExpressionListContext).AllExpr() {
+		value := v.Visit(context)
+		switch value.(type) {
+		case *LeftValue:
+			leftValue := value.(*LeftValue)
+			left = leftValue
+			ret = append(ret, leftValue.GetValue())
+		default:
+			ret = append(ret, value)
+		}
+	}
+	return ret, left
+}
