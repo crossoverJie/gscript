@@ -76,7 +76,7 @@ func (v *Visitor) assertEqual(ctx *parser.FunctionCallContext) {
 }
 
 func (v *Visitor) append(ctx *parser.FunctionCallContext) []interface{} {
-	paramValues := v.buildParamValues(ctx)
+	paramValues, left := v.buildParamValuesReturnLeft(ctx)
 	if len(paramValues) != 2 {
 		// todo crossoverJie 运行时报错
 		panic("")
@@ -85,6 +85,7 @@ func (v *Visitor) append(ctx *parser.FunctionCallContext) []interface{} {
 	case []interface{}:
 		array := paramValues[0].([]interface{})
 		array = append(array, paramValues[1])
+		left.SetValue(array)
 		return array
 	default:
 		// todo crossoverJie 运行时报错

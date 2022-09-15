@@ -210,3 +210,21 @@ println(args);
 `
 	NewCompiler().Compiler(script)
 }
+
+func Test_array14(t *testing.T) {
+	script := `
+int[] a={1,2,3};
+println(a);
+println();
+append(a,4);
+int b = a[3];
+assertEqual(4, b);
+println(a);
+for(int i=0;i<len(a);i++){
+	println(a[i]);
+	int temp = a[i];
+	assertEqual(temp, i+1);
+}
+`
+	NewCompiler().Compiler(script)
+}

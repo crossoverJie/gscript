@@ -867,6 +867,26 @@ func (v *Visitor) buildParamValues(ctx *parser.FunctionCallContext) []interface{
 	return ret
 }
 
+func (v *Visitor) buildParamValuesReturnLeft(ctx *parser.FunctionCallContext) ([]interface{}, *LeftValue) {
+	ret := make([]interface{}, 0)
+	if ctx.ExpressionList() == nil {
+		return ret, nil
+	}
+	var left *LeftValue
+	for _, context := range ctx.ExpressionList().(*parser.ExpressionListContext).AllExpr() {
+		value := v.Visit(context)
+		switch value.(type) {
+		case *LeftValue:
+			leftValue := value.(*LeftValue)
+			left = leftValue
+			ret = append(ret, leftValue.GetValue())
+		default:
+			ret = append(ret, value)
+		}
+	}
+	return ret, left
+}
+
 // 执行函数调用
 // 1. 先给参数赋值
 // 2. 调用函数，内部就是递归调用 block
