@@ -49,9 +49,10 @@ func (t *TypeResolver) EnterVariableDeclaratorId(ctx *parser.VariableDeclaratorI
 
 	// todo crossoverJie scope is class
 	_, ok := ctx.GetParent().(*parser.FormalParameterContext)
-	if t.isLocalVariable || ok || isClass {
+	_, last := ctx.GetParent().(*parser.LastFormalParameterContext)
+	if t.isLocalVariable || ok || isClass || last {
 		// 本地变量/ class/ parent.FormalParameterContext(.g4 105)函数中的参数才写入
-		variable := symbol.NewVariable(ctx, id, scope)
+		variable := symbol.NewVariable(ctx, id, scope, last)
 
 		if symbol.GetVariable(scope, id) != nil {
 			panic(fmt.Sprintf("repeat variable %s, at %d", id, ctx.GetStart().GetLine()))
@@ -89,6 +90,30 @@ func (t *TypeResolver) ExitFormalParameter(ctx *parser.FormalParameterContext) {
 	// 获取在 typeType 中声明的类型
 	symbolType := t.at.GetTypeOfNode()[ctx.TypeType()]
 
+	// 获取在 EnterVariableDeclaratorId 中设置的变量
+	variable := t.at.GetSymbolOfNode()[ctx.VariableDeclaratorId()]
+	switch variable.(type) {
+	case *symbol.Variable:
+		// 为变量设置类型
+		v := variable.(*symbol.Variable)
+		v.SetType(symbolType)
+
+		scope := t.at.FindEncloseScopeOfNode(ctx)
+		switch scope.(type) {
+		case *symbol.Func:
+			// 为函数设置入参
+			scope.(*symbol.Func).AppendParameter(v)
+		}
+	}
+}
+
+// ExitLastFormalParameter is called when production lastFormalParameter is exited.
+func (t *TypeResolver) ExitLastFormalParameter(ctx *parser.LastFormalParameterContext) {
+	if ctx.ELLIPSIS() == nil {
+		// todo crossoverJie 编译器报错
+	}
+	// 获取在 typeType 中声明的类型
+	symbolType := t.at.GetTypeOfNode()[ctx.TypeType()]
 	// 获取在 EnterVariableDeclaratorId 中设置的变量
 	variable := t.at.GetSymbolOfNode()[ctx.VariableDeclaratorId()]
 	switch variable.(type) {

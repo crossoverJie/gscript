@@ -147,7 +147,7 @@ func GetFunction(scope Scope, name string, paramTypes []Type) *Func {
 		switch s.(type) {
 		case *Func:
 			f := s.(*Func)
-			if f.MatchParameterTypes(paramTypes) && name == f.GetName() {
+			if name == f.GetName() && f.MatchParameterTypes(paramTypes) {
 				return f
 			}
 		}
@@ -205,16 +205,18 @@ func NewBlockScope(ctx antlr.ParserRuleContext, name string, s Scope) Scope {
 
 type Variable struct {
 	*symbol
-	t Type
+	t              Type
+	isVariableArgs bool
 }
 
-func NewVariable(ctx antlr.ParserRuleContext, name string, enclose Scope) *Variable {
+func NewVariable(ctx antlr.ParserRuleContext, name string, enclose Scope, isVariableArgs bool) *Variable {
 	return &Variable{
 		symbol: &symbol{
 			name:         name,
 			encloseScope: enclose,
 			ctx:          ctx,
 		},
+		isVariableArgs: isVariableArgs,
 	}
 }
 
@@ -226,6 +228,9 @@ func (v *Variable) SetType(t Type) {
 }
 func (v *Variable) String() string {
 	return v.name
+}
+func (v *Variable) getVariableArgs() bool {
+	return v.isVariableArgs
 }
 
 // function
@@ -310,6 +315,32 @@ func (f *Func) AppendParameter(v *Variable) {
 
 // MatchParameterTypes 通过参数类型匹配函数是否一致
 func (f *Func) MatchParameterTypes(paramTypes []Type) bool {
+	if len(f.parameters) > 0 {
+		last := f.parameters[len(f.parameters)-1]
+		if last.isVariableArgs {
+			// 存在可变参数
+			// 比较可变参数前的普通参数
+			normalParams := f.parameters[0 : len(f.parameters)-1]
+			for i, normalParam := range normalParams {
+				t := paramTypes[i]
+				if !t.IsType(normalParam.t) {
+					return false
+				}
+			}
+			// 比较剩下类型与可变参数是否匹配
+			types := paramTypes[len(normalParams):]
+			for _, t := range types {
+				if !t.IsType(last.t) {
+					return false
+				}
+			}
+
+			// 全部比较完成
+			return true
+		}
+	}
+
+	// 比较没有可变参数
 	if len(f.parameters) != len(paramTypes) {
 		return false
 	}
