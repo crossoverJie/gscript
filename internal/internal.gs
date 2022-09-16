@@ -5,6 +5,12 @@ int len(any[] a){}
 int hash(any s){}
 
 println(){}
+
+//formats according to a format specifier and writes to standard output.
+printf(string format, any ...a){}
+
+//formats according to a format specifier and returns the resulting string.
+string sprintf(string format, any ...a){}
 assertEqual(){}
 append(){}
 

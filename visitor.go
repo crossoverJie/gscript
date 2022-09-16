@@ -753,6 +753,11 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return v.formValue(ctx)
 	} else if name == "getOSArgs" {
 		return v.getOSArgs(ctx)
+	} else if name == "printf" {
+		v.printf(ctx)
+		return nil
+	} else if name == "sprintf" {
+		return v.sprintf(ctx)
 	}
 
 	// 默认构造函数
@@ -891,6 +896,24 @@ func (v *Visitor) executeFunctionCall(functionObject *stack.FuncObject, paramVal
 				leftValue.SetValue(paramValues[i])
 			}
 		}
+
+		// 支持可变参数
+		lastParam, ok := formalParametersContext.FormalParameterList().(*parser.FormalParameterListContext)
+		if ok {
+			context, ok := lastParam.LastFormalParameter().(*parser.LastFormalParameterContext)
+			if ok {
+				normalParamSize := len(lastParam.AllFormalParameter())
+				value := v.VisitVariableDeclaratorId(context.VariableDeclaratorId().(*parser.VariableDeclaratorIdContext))
+				switch value.(type) {
+				case *LeftValue:
+					leftValue := value.(*LeftValue)
+					// 去掉普通参数
+					variableParams := paramValues[normalParamSize:]
+					leftValue.SetValue(variableParams)
+				}
+			}
+		}
+
 	}
 
 	// 执行方法体

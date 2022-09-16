@@ -76,7 +76,7 @@ func (v *Visitor) assertEqual(ctx *parser.FunctionCallContext) {
 }
 
 func (v *Visitor) append(ctx *parser.FunctionCallContext) []interface{} {
-	paramValues := v.buildParamValues(ctx)
+	paramValues, left := v.buildParamValuesReturnLeft(ctx)
 	if len(paramValues) != 2 {
 		// todo crossoverJie 运行时报错
 		panic("")
@@ -85,6 +85,7 @@ func (v *Visitor) append(ctx *parser.FunctionCallContext) []interface{} {
 	case []interface{}:
 		array := paramValues[0].([]interface{})
 		array = append(array, paramValues[1])
+		left.SetValue(array)
 		return array
 	default:
 		// todo crossoverJie 运行时报错
@@ -284,4 +285,58 @@ func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
 
 func (v *Visitor) getOSArgs(ctx *parser.FunctionCallContext) []string {
 	return Args
+}
+
+func (v *Visitor) buildParamValuesReturnLeft(ctx *parser.FunctionCallContext) ([]interface{}, *LeftValue) {
+	ret := make([]interface{}, 0)
+	if ctx.ExpressionList() == nil {
+		return ret, nil
+	}
+	var left *LeftValue
+	for _, context := range ctx.ExpressionList().(*parser.ExpressionListContext).AllExpr() {
+		value := v.Visit(context)
+		switch value.(type) {
+		case *LeftValue:
+			leftValue := value.(*LeftValue)
+			left = leftValue
+			ret = append(ret, leftValue.GetValue())
+		default:
+			ret = append(ret, value)
+		}
+	}
+	return ret, left
+}
+
+func (v *Visitor) printf(ctx *parser.FunctionCallContext) {
+	format, variableParams := v.getPrintfParams(ctx)
+
+	fmt.Printf(format, variableParams...)
+}
+
+// 获取格式化字符串参数
+func (v *Visitor) getPrintfParams(ctx *parser.FunctionCallContext) (string, []interface{}) {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	var format string
+	switch p0.(type) {
+	case string:
+		format = p0.(string)
+	case *LeftValue:
+		value := p0.(*LeftValue).GetValue()
+		switch value.(type) {
+		case string:
+			format = value.(string)
+		default:
+			// todo crossoverJie 运行时报错
+			panic("not string")
+		}
+	}
+
+	variableParams := paramValues[1:]
+	return format, variableParams
+}
+
+func (v *Visitor) sprintf(ctx *parser.FunctionCallContext) string {
+	format, variableParams := v.getPrintfParams(ctx)
+	return fmt.Sprintf(format, variableParams...)
 }
