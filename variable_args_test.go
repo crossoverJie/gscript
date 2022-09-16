@@ -68,6 +68,24 @@ assertEqual(g, "1");
 `
 	NewCompiler().CompilerWithoutNative(script)
 }
+func TestVariableArgs4(t *testing.T) {
+	script := `
+
+int add(string s, int ...num){
+	println(s);
+	int sum = 0;
+	for(int i=0;i<len(num);i++){
+		int v = num[i];
+		sum = sum+v;
+	}
+	return sum;
+}
+int x = add("abc", 1,2,3,4);
+println(x);
+assertEqual(x, 10);
+`
+	NewCompiler().CompilerWithoutNative(script)
+}
 
 func TestVariable(t *testing.T) {
 	test("123", 4, 5, 6)
