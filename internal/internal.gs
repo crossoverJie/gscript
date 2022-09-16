@@ -5,6 +5,8 @@ int len(any[] a){}
 int hash(any s){}
 
 println(){}
+printf(string format, any ...a){}
+string sprintf(string format, any ...a){}
 assertEqual(){}
 append(){}
 

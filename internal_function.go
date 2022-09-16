@@ -306,3 +306,37 @@ func (v *Visitor) buildParamValuesReturnLeft(ctx *parser.FunctionCallContext) ([
 	}
 	return ret, left
 }
+
+func (v *Visitor) printf(ctx *parser.FunctionCallContext) {
+	format, variableParams := v.getPrintfParams(ctx)
+
+	fmt.Printf(format, variableParams...)
+}
+
+// 获取格式化字符串参数
+func (v *Visitor) getPrintfParams(ctx *parser.FunctionCallContext) (string, []interface{}) {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	var format string
+	switch p0.(type) {
+	case string:
+		format = p0.(string)
+	case *LeftValue:
+		value := p0.(*LeftValue).GetValue()
+		switch value.(type) {
+		case string:
+			format = value.(string)
+		default:
+			// todo crossoverJie 运行时报错
+			panic("not string")
+		}
+	}
+
+	variableParams := paramValues[1:]
+	return format, variableParams
+}
+
+func (v *Visitor) sprintf(ctx *parser.FunctionCallContext) string {
+	format, variableParams := v.getPrintfParams(ctx)
+	return fmt.Sprintf(format, variableParams...)
+}
