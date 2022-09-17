@@ -453,7 +453,7 @@ int[] a={1,2,3};
 println(len(a));
 
 // 向数组追加数据
-a = append(a,4);
+append(a,4);
 println(a);
 // output: [1,2,3,4]
 

@@ -144,7 +144,7 @@ int[] table = [4]{};
 
 println();
 // Append data to array.
-a = append(a,4);
+append(a,4);
 println(a);
 for(int i=0;i<len(a);i++){
 	println(a[i]);
