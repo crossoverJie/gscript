@@ -48,6 +48,7 @@ hello world
 - [x] [Native function](#native-function): `len()/hash()/assertEqual()/JSON()/JSONGet()`.
 - [x] [Standard library](#standard-library)：`Map/LinkedList/Array`.
 	- [x] [Map](#map)
+- [x] [Variable arguments](#variable-arguments)
 - [x] [Operator overloading](#operator-overloading).
 - [x] [Native support](#native-function) `json`.
 - [x] [Native support `http`](#http).
@@ -89,6 +90,15 @@ for (int i = 0; i < 10; i++){
     println(f());
 }
 ```
+
+## Webapp
+
+This is a dynamic web application written in `GScript`.
+
+[https://gscript.crossoverjie.top/index](https://gscript.crossoverjie.top/index)
+
+Source code：
+[https://github.com/crossoverjie/gscript-homepage](https://github.com/crossoverjie/gscript-homepage)
 
 More examples:[https://github.com/crossoverJie/gscript/tree/main/example](https://github.com/crossoverJie/gscript/tree/main/example)
 
@@ -343,6 +353,25 @@ varInner=22, varExternal=14
 
 ```
 
+## Variable arguments
+
+`GScript` also support variable arguments：
+
+```js
+int add(string s, int ...num){
+	println(s);
+	int sum = 0;
+	for(int i=0;i<len(num);i++){
+		int v = num[i];
+		sum = sum+v;
+	}
+	return sum;
+}
+int x = add("abc", 1,2,3,4);
+println(x);
+assertEqual(x, 10);
+```
+
 ## Operator overloading
 
 Operator that `Gscript` support:
@@ -447,12 +476,21 @@ Standard library source code: [https://github.com/crossoverJie/gscript/tree/main
 
 ## Native function
 ```js
+
+printf("hello %s ","123");
+printf("hello-%s-%s ","123","abc");
+printf("hello-%s-%d ","123",123);
+
+string s = sprintf("nice to meet %s", "you");
+println(s);
+assertEqual(s,"nice to meet you");
+
 int[] a={1,2,3};
 // len return array length.
 println(len(a));
 
 // Append data to array.
-a = append(a,4);
+append(a,4);
 println(a);
 // output: [1,2,3,4]
 

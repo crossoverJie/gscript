@@ -46,6 +46,7 @@ hello world
 - [x] [内置函数](#内置函数): `len()/hash()/assertEqual()/JSON()/JSONGet()`
 - [x] [标准库](#标准库)
 	- [x] [Map](#map)
+- [x] [可变参数](#可变参数)
 - [x] [运算符重载](#运算符重载)
 - [x] [原生 `json` 支持](#内置函数)
 - [x] [原生 `http` 包支持](#http)
@@ -85,6 +86,15 @@ for (int i = 0; i < 10; i++){
     println(f());
 }
 ```
+
+## 网站程序
+
+这是用 `GScript` 编写的动态网页：
+
+[https://gscript.crossoverjie.top/index](https://gscript.crossoverjie.top/index)
+
+源码地址：
+[https://github.com/crossoverjie/gscript-homepage](https://github.com/crossoverjie/gscript-homepage)
 
 更多例子：[https://github.com/crossoverJie/gscript/tree/main/example](https://github.com/crossoverJie/gscript/tree/main/example)
 
@@ -346,6 +356,26 @@ varInner=22, varExternal=14
 
 ```
 
+## 可变参数
+
+`GScript` 支持函数定义可变参数，语法如下：
+
+```js
+int add(string s, int ...num){
+	println(s);
+	int sum = 0;
+	for(int i=0;i<len(num);i++){
+		int v = num[i];
+		sum = sum+v;
+	}
+	return sum;
+}
+int x = add("abc", 1,2,3,4);
+println(x);
+assertEqual(x, 10);
+```
+
+
 ## 运算符重载
 `GScript` 支持以下运算符重载：
 - `+-*/`
@@ -448,6 +478,15 @@ assertEqual(b6,true);
 ## 内置函数
 
 ```js
+
+printf("hello %s ","123");
+printf("hello-%s-%s ","123","abc");
+printf("hello-%s-%d ","123",123);
+
+string s = sprintf("nice to meet %s", "you");
+println(s);
+assertEqual(s,"nice to meet you");
+
 int[] a={1,2,3};
 // len 返回数组大小
 println(len(a));
@@ -495,6 +534,8 @@ assertEqual(name,"abc");
 // 获取启动参数
 string[] args = getOSArgs();
 ```
+
+
 
 > 更多 JSON 查询语法请参考：[xjson](https://github.com/crossoverJie/xjson#arithmetic-syntax)
 
