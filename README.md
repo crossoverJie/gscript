@@ -100,6 +100,8 @@ This is a dynamic web application written in `GScript`.
 Source code：
 [https://github.com/crossoverjie/gscript-homepage](https://github.com/crossoverjie/gscript-homepage)
 
+---
+
 More examples:[https://github.com/crossoverJie/gscript/tree/main/example](https://github.com/crossoverJie/gscript/tree/main/example)
 
 # REPL

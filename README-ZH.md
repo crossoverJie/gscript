@@ -87,7 +87,7 @@ for (int i = 0; i < 10; i++){
 }
 ```
 
-## 网站程序
+## 网站应用
 
 这是用 `GScript` 编写的动态网页：
 
@@ -95,6 +95,8 @@ for (int i = 0; i < 10; i++){
 
 源码地址：
 [https://github.com/crossoverjie/gscript-homepage](https://github.com/crossoverjie/gscript-homepage)
+
+---
 
 更多例子：[https://github.com/crossoverJie/gscript/tree/main/example](https://github.com/crossoverJie/gscript/tree/main/example)
 
