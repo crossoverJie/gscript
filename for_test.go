@@ -196,12 +196,24 @@ func TestFor100(t *testing.T) {
 	for i := 0; i < 3; i++ {
 		for i := 0; i < 2; i++ {
 			println("inner i=", i)
-			// todo crossoverJie 应该直接返回
 			println("return finish")
 			return
 		}
 		println("outer i=", i)
 	}
+}
+func TestFor101(t *testing.T) {
+	script := `
+	for (int i = 0; i < 3; i++) {
+		for (int i=0; i < 2; i++) {
+			println("inner i="+i);
+			println("return finish");
+			return;
+		}
+		println("outer i="+i);
+	}
+`
+	NewCompiler().Compiler(script)
 }
 
 func TestScope(t *testing.T) {
