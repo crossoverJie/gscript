@@ -87,5 +87,5 @@ bool b6 = p1 <= p2;
 println("b6=="+b6);
 assertEqual(b6,true);
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }

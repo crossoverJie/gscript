@@ -4,15 +4,15 @@ int len(any[] a){}
 // return hashcode
 int hash(any s){}
 
-println(){}
+println(any a){}
 
 //formats according to a format specifier and writes to standard output.
 printf(string format, any ...a){}
 
 //formats according to a format specifier and returns the resulting string.
 string sprintf(string format, any ...a){}
-assertEqual(){}
-append(){}
+assertEqual(any a1, any a2){}
+append(any[] a, any v){}
 
 // Date
 string getCurrentTime(string tz, string layout){}
@@ -140,7 +140,7 @@ class LinkedNode{
     LinkedNode next;
     LinkedNode(any v){
         value = v;
-        next = n;
+        next = nil;
     }
 }
 class LinkedList{

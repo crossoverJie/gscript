@@ -1,9 +1,12 @@
 package resolver
 
 import (
+	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/crossoverJie/gscript/symbol"
 )
+
+var NativeLine int
 
 type AnnotatedTree struct {
 	ast antlr.ParseTree
@@ -24,6 +27,9 @@ type AnnotatedTree struct {
 
 	// http 运行时 path 变量，用于运行时获取。
 	httpPathVariable *symbol.Variable
+
+	// 是否编译错误
+	isCompileFail bool
 }
 
 func NewAnnotatedTree(ast antlr.ParseTree) *AnnotatedTree {
@@ -175,4 +181,33 @@ func (a *AnnotatedTree) SetHttpPathVariable(path *symbol.Variable) {
 }
 func (a *AnnotatedTree) GetHttpPathVariable() *symbol.Variable {
 	return a.httpPathVariable
+}
+
+type Log struct {
+	ctx antlr.ParserRuleContext
+	msg string
+}
+
+func (l *Log) String() string {
+	line := l.ctx.GetStart().GetLine() - NativeLine
+	return fmt.Sprintf("%d:%d: %s", line, l.ctx.GetStart().GetColumn(), l.msg)
+}
+
+func recordLog(ctx antlr.ParserRuleContext, msg string) {
+	l := &Log{
+		ctx: ctx,
+		msg: msg,
+	}
+	fmt.Println(l)
+}
+
+func (a *AnnotatedTree) Log(ctx antlr.ParserRuleContext, msg string) {
+	if !a.isCompileFail {
+		a.isCompileFail = true
+	}
+	recordLog(ctx, msg)
+}
+
+func (a *AnnotatedTree) IsCompileFail() bool {
+	return a.isCompileFail
 }

@@ -33,7 +33,7 @@ func (b *PrimitiveType) GetEncloseScope() Scope {
 }
 
 func (b *PrimitiveType) IsType(t Type) bool {
-	if b.name == PrimitiveAny {
+	if b.name == PrimitiveAny || t.GetName() == PrimitiveAny {
 		return true
 	}
 	return b == t

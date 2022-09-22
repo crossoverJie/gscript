@@ -154,7 +154,7 @@ println(a);
 // Declare an empty array and specify the length
 int[] table = [4]{};
 
-println();
+println("");
 // Append data to array.
 append(a,4);
 println(a);

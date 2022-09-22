@@ -188,5 +188,5 @@ handleFunc(string path, func (int, int) handle){
 func (int, int) x = handle1;
 handleFunc("/abc", handle1);
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }

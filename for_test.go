@@ -174,7 +174,7 @@ int a =9999;
 println(a);
 assertEqual(a,9999);
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }
 
 func TestFor99(t *testing.T) {
@@ -247,5 +247,5 @@ int ret = twoSum( 9);
 println(ret);
 assertEqual(ret,9);
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }

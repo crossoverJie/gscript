@@ -39,5 +39,5 @@ string s = sprintf("nice to meet %s", "you");
 println(s);
 assertEqual(s,"nice to meet you");
 `
-	NewCompiler().compile(script)
+	NewCompiler().Compiler(script)
 }

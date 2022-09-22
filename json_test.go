@@ -43,7 +43,7 @@ json = JSON(list);
 println(json);
 
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }
 func TestJSONGet(t *testing.T) {
 	script := `
@@ -147,7 +147,7 @@ println(s);
 string s1=^123^;
 println(s1);
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }
 func TestVisitor_JSONGet3(t *testing.T) {
 	script := `

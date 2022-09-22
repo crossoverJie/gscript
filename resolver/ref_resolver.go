@@ -1,9 +1,11 @@
 package resolver
 
 import (
+	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/symbol"
+	"strings"
 )
 
 // RefResolver 引用消解和类型推断
@@ -53,12 +55,8 @@ func (s *RefResolver) ExitPrimary(ctx *parser.PrimaryContext) {
 				s.at.PutSymbolOfNode(ctx, fun)
 				symbolType = fun
 			} else {
-				// todo crossoverJie 完善编译报错信息
+				s.at.Log(ctx, fmt.Sprintf("undefined: %s", idName))
 			}
-
-			//line := ctx.GetStart().GetLine()
-			//column := ctx.GetStart().GetColumn()
-			//panic(fmt.Sprintf("unknown variable %s, at %d and column:%d", idName, line, column))
 		} else {
 			s.at.PutSymbolOfNode(ctx, variable)
 			symbolType = variable.GetType()
@@ -105,7 +103,7 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 							// 改函数变量的返回类型
 							s.at.PutTypeOfNode(ctx, functionVariable.GetType().(symbol.FuncType).GetReturnType())
 						} else {
-							// todo crossoverJie 完善编译报错信息
+							s.at.Log(ctx, fmt.Sprintf("%s.%s undefined (class %s has no function or function avariable)", variable.GetName(), name, class.GetName()))
 						}
 					}
 
@@ -139,7 +137,15 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 				found = true
 				s.at.PutSymbolOfNode(ctx, class.GetDefaultConstructorFunc())
 			} else {
-				// todo crossoverJie 完善编译报错信息
+				var paramStr strings.Builder
+				for _, t := range paramTypes {
+					if t == nil {
+						continue
+					}
+					paramStr.WriteString(t.GetName() + " ")
+
+				}
+				s.at.Log(ctx, fmt.Sprintf("class:%s constructor not found (parameter:%s)", class.GetName(), paramStr.String()))
 			}
 			s.at.PutTypeOfNode(ctx, class)
 		} else {
@@ -150,7 +156,14 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 				s.at.PutSymbolOfNode(ctx, functionVariable)
 				s.at.PutTypeOfNode(ctx, functionVariable.GetType())
 			} else {
-				// todo crossoverJie 完善编译报错信息
+				var paramStr strings.Builder
+				for _, t := range paramTypes {
+					if t == nil {
+						continue
+					}
+					paramStr.WriteString(t.GetName() + " ")
+				}
+				s.at.Log(ctx, fmt.Sprintf("function or function avariable undefined:%s (parameter:%s)", name, paramStr.String()))
 			}
 
 		}
@@ -177,7 +190,7 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 						// 写入变量类型
 						s.at.PutTypeOfNode(ctx, findVariable.GetType())
 					} else {
-						// todo crossoverJie 编译报错信息
+						s.at.Log(ctx, fmt.Sprintf("%s.%s undefined (class %s has no function or function avariable)", variable.GetName(), name, class.GetName()))
 					}
 				} else if ctx.FunctionCall() != nil {
 					symbolType := s.at.GetTypeOfNode()[ctx.FunctionCall()]
@@ -215,7 +228,7 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 			s.at.PutTypeOfNode(ctx, deriveType)
 		case parser.GScriptParserSUB:
 			if type1 == symbol.String || type2 == symbol.String {
-				// todo crossoverJie 记录编译错误
+				s.at.Log(ctx, fmt.Sprintf("invalid operation: string - string"))
 				return
 			}
 			deriveType := symbol.GetUpperType(type1, type2)
@@ -224,7 +237,7 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 			if type1 == symbol.Int && type2 == symbol.Int {
 				s.at.PutTypeOfNode(ctx, symbol.Int)
 			} else {
-				// todo crossoverJie 记录编译错误
+				s.at.Log(ctx, fmt.Sprintf("invalid operation: %s mod %s", type1.GetName(), type2.GetName()))
 			}
 		}
 	}

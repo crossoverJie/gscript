@@ -150,7 +150,7 @@ println(a);
 // 声明一个空数组并指定大小
 int[] table = [4]{};
 
-println();
+println("");
 // 向数组 append 数据
 a = append(a,4);
 println(a);
