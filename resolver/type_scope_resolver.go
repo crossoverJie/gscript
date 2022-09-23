@@ -1,6 +1,7 @@
 package resolver
 
 import (
+	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/stack"
@@ -111,11 +112,15 @@ func (t *TypeScopeResolver) ExitFunctionDeclaration(ctx *parser.FunctionDeclarat
 
 func (t *TypeScopeResolver) EnterClassDeclaration(ctx *parser.ClassDeclarationContext) {
 	className := ctx.IDENTIFIER().GetText()
+	findClass := t.at.FindClass(t.currentScope(), className)
+	if findClass != nil {
+		t.at.Log(ctx, fmt.Sprintf("class %s redeclared in this block", className))
+	}
+
 	class := symbol.NewClass(ctx, className)
 	t.currentScope().AddSymbol(class)
 	t.at.AppendType(class)
 
-	// todo crossoverJie 重复校验
 	t.pushScope(ctx, class)
 }
 

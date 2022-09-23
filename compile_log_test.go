@@ -64,6 +64,13 @@ int run(){}
 `
 	NewCompiler().Compiler(script)
 }
+func TestCompileFail8(t *testing.T) {
+	script := `
+class T{}
+class T{}
+`
+	NewCompiler().Compiler(script)
+}
 
 func TestSlice2(t *testing.T) {
 	types := get()
