@@ -127,7 +127,7 @@ func (t *TypeScopeResolver) ExitClassDeclaration(ctx *parser.ClassDeclarationCon
 func (t *TypeScopeResolver) EnterOperatorOverloading(ctx *parser.OperatorOverloadingContext) {
 	var opOverload *symbol.OpOverload
 	function, ok := t.currentScope().(*symbol.Func)
-	if !ok || function.GetName() != symbol.OperName {
+	if !ok || function.GetName() != symbol.OperatorName {
 		return
 	}
 	if ctx.PLUS() != nil {

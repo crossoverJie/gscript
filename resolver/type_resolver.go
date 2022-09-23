@@ -81,7 +81,15 @@ func (t *TypeResolver) ExitFunctionDeclaration(ctx *parser.FunctionDeclarationCo
 		}
 	}
 
-	// todo crossoverJie func 查询是否重复
+	switch function.(type) {
+	case *symbol.Func:
+		fn := function.(*symbol.Func)
+		scope := t.at.FindEncloseScopeOfNode(ctx)
+		found := t.at.FindFunction(scope, fn.GetName(), fn.GetParameterType())
+		if found != nil && found != function && found.GetName() != symbol.OperatorName {
+			t.at.Log(ctx, fmt.Sprintf("%s already declared in this block", found.GetName()))
+		}
+	}
 
 }
 
@@ -110,7 +118,7 @@ func (t *TypeResolver) ExitFormalParameter(ctx *parser.FormalParameterContext) {
 // ExitLastFormalParameter is called when production lastFormalParameter is exited.
 func (t *TypeResolver) ExitLastFormalParameter(ctx *parser.LastFormalParameterContext) {
 	if ctx.ELLIPSIS() == nil {
-		// todo crossoverJie 编译器报错
+		// todo crossoverJie ?
 	}
 	// 获取在 typeType 中声明的类型
 	symbolType := t.at.GetTypeOfNode()[ctx.TypeType()]

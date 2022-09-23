@@ -57,6 +57,13 @@ println("1"%"2");
 `
 	NewCompiler().Compiler(script)
 }
+func TestCompileFail7(t *testing.T) {
+	script := `
+int run(){}
+int run(){}
+`
+	NewCompiler().Compiler(script)
+}
 
 func TestSlice2(t *testing.T) {
 	types := get()

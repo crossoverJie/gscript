@@ -1,6 +1,6 @@
 package symbol
 
-const OperName = "operator"
+const OperatorName = "operator"
 
 // OpOverload 重载符
 type OpOverload struct {
