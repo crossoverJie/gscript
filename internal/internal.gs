@@ -13,7 +13,7 @@ printf(string format, any ...a){}
 string sprintf(string format, any ...a){}
 
 // formats using the default formats for its operands and writes to standard output.
-string print(any ...a){}
+print(any ...a){}
 
 assertEqual(any a1, any a2){}
 
