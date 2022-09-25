@@ -102,7 +102,7 @@ func (t *TypeScopeResolver) EnterFunctionDeclaration(ctx *parser.FunctionDeclara
 	// add type
 	t.at.AppendType(newFunc)
 
-	// 保存当前 ctx 的函数
+	// 保存当前 ctx 的函数，用于递归函数判断
 	t.at.PutFunction2Scope(ctx, newFunc)
 
 	t.pushScope(ctx, newFunc)

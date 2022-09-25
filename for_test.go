@@ -251,40 +251,44 @@ func TestFor103(t *testing.T) {
 	script := `
 	printf(string format, any ...a){}
 	println(any a){}
-	string print(any ...a){}
-	//assertEqual(any a1, any a2){}
+	assertEqual(any a1, any a2){}
 	int r(int x, int ret){
 		if(x==0){
 			return ret;
 		}else{
 			ret = ret+1;
 		}
-		int b = r(x-1, ret);
-		printf("b=%d ", b);
-		return b;
-	}
-
-	int num(int x,int y){
-		if (y==1 || y ==x) {
-			return 1;
-		}
-		int c = num(x - 1, y - 1) + num(x - 1, y);
-		printf("c=%d ", c);
-		return c;
-	}
-
-	fun(int row){
-		for (int i = 1; i <= row; i++) {
-			for (int j = 1; j <= i; j++) {
-            	int i = r(10, 0);
-				//println(i);
-				//print(num(i, j) + " ");
-        	}
-		}
+		//int b = r(x-1, ret);
+		//int d = r(x-1, ret);
+		//printf("b=%d d=%d", b,d);
+		//printf("11");
+		//int c = r(x-1, ret) +r(x-1, ret);
+		//int c = r(x-1, ret) +r(x-1, ret);
+		return r(x-1, ret) +r(x-1, ret);
+		//return r(x-1, ret) +r(x-1, ret);
 	}
 	
-	fun(10);
-	//assertEqual(i,10);
+	int i = r(10, 0);
+	println(i);
+	assertEqual(i,10240);
+`
+	NewCompiler().CompilerWithoutNative(script)
+}
+func TestFor104(t *testing.T) {
+	script := `
+	printf(string format, any ...a){}
+	println(any a){}
+	assertEqual(any a1, any a2){}
+	r(int x, int ret){
+		if(x==0){
+			return ret;
+		}else{
+			ret = ret+1;
+		}
+		r(x-1, ret);
+		println("r(x-1, ret);");
+	}	
+	r(10, 0);
 `
 	NewCompiler().CompilerWithoutNative(script)
 }
@@ -302,8 +306,9 @@ func r(x, ret int) int {
 		ret = ret + 1
 	}
 	i := r(x-1, ret)
+	d := r(x-1, ret)
 	fmt.Println("i=" + fmt.Sprint(i))
-	return i
+	return i + d
 }
 
 func TestScope(t *testing.T) {

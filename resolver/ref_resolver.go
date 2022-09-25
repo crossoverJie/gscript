@@ -100,6 +100,7 @@ func (s *RefResolver) ExitBlockStms(ctx *parser.BlockStmsContext) {
 						paramTypes := s.getParamTypes(callContext)
 						function := s.at.FindFunction(scope, name, paramTypes)
 						// 当前函数为递归函数
+						// r(x-1, ret); r() 是递归函数，直接调用，没有变量声明
 						if function == function2Scope {
 							blockContext, ok := context.GetParent().GetParent().(*parser.BlockContext)
 							if ok {
@@ -126,6 +127,7 @@ func (s *RefResolver) ExitBlockStms(ctx *parser.BlockStmsContext) {
 					}
 					call := exprContext.FunctionCall()
 					if call != nil {
+						// int v1 = num(x - 1, y - 1); num() 是递归函数
 						callContext := call.(*parser.FunctionCallContext)
 						name := callContext.IDENTIFIER().GetText()
 						scope := s.at.FindEncloseScopeOfNode(callContext)
@@ -135,6 +137,26 @@ func (s *RefResolver) ExitBlockStms(ctx *parser.BlockStmsContext) {
 							blockContext, ok := context.GetParent().GetParent().(*parser.BlockContext)
 							if ok {
 								s.at.SetRecursion(blockContext, function == function2Scope)
+							}
+						}
+					} else {
+						//int c = r(x-1, ret) +r(x-1, ret);  r() 递归函数
+						for _, iExprContext := range exprContext.AllExpr() {
+							expr := iExprContext.(*parser.ExprContext)
+							call := expr.FunctionCall()
+							if call != nil {
+								// int v1 = num(x - 1, y - 1); num() 是递归函数
+								callContext := call.(*parser.FunctionCallContext)
+								name := callContext.IDENTIFIER().GetText()
+								scope := s.at.FindEncloseScopeOfNode(callContext)
+								paramTypes := s.getParamTypes(callContext)
+								function := s.at.FindFunction(scope, name, paramTypes)
+								if function == function2Scope {
+									blockContext, ok := context.GetParent().GetParent().(*parser.BlockContext)
+									if ok {
+										s.at.SetRecursion(blockContext, function == function2Scope)
+									}
+								}
 							}
 						}
 					}
