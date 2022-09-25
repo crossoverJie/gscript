@@ -340,3 +340,7 @@ func (v *Visitor) sprintf(ctx *parser.FunctionCallContext) string {
 	format, variableParams := v.getPrintfParams(ctx)
 	return fmt.Sprintf(format, variableParams...)
 }
+func (v *Visitor) print(ctx *parser.FunctionCallContext) {
+	paramValues := v.buildParamValues(ctx)
+	fmt.Print(paramValues...)
+}

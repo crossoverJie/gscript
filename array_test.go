@@ -42,7 +42,7 @@ for(int i=0;i<3;i++){
 	int temp = a[i];
 	a[i]=temp+1;
 }
-println();
+println("");
 for(int i=0;i<3;i++){
 	println(a[i]);
 	int ret = a[i];
@@ -55,7 +55,7 @@ func Test_array5(t *testing.T) {
 	script := `
 int[] a={1,2,3};
 println(a);
-println();
+println("");
 a = append(a,4);
 println(a);
 for(int i=0;i<len(a);i++){
@@ -71,7 +71,7 @@ func Test_array6(t *testing.T) {
 int[] a={1,2,3};
 println(a);
 assertEqual(len(a),3);
-println();
+println("");
 a = append(a,4);
 println(a);
 for(int i=0;i<len(a);i++){
@@ -215,7 +215,7 @@ func Test_array14(t *testing.T) {
 	script := `
 int[] a={1,2,3};
 println(a);
-println();
+println("");
 append(a,4);
 int b = a[3];
 assertEqual(4, b);

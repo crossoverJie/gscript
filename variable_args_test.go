@@ -16,7 +16,7 @@ println(b);
 int x = b[0];
 assertEqual(x,10);
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }
 func TestVariableArgs2(t *testing.T) {
 	script := `
@@ -44,7 +44,7 @@ string g = get2("1",2,3,4,5);
 println(g);
 assertEqual(g, "1");
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }
 func TestVariableArgs3(t *testing.T) {
 	script := `
@@ -66,7 +66,7 @@ string g = get2("1",999.99, 2,3,4,5);
 //println(g);
 assertEqual(g, "1");
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }
 func TestVariableArgs4(t *testing.T) {
 	script := `
@@ -84,7 +84,7 @@ int x = add("abc", 1,2,3,4);
 println(x);
 assertEqual(x, 10);
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }
 
 func TestVariable(t *testing.T) {

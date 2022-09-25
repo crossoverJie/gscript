@@ -1,6 +1,7 @@
 package resolver
 
 import (
+	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/stack"
@@ -101,6 +102,9 @@ func (t *TypeScopeResolver) EnterFunctionDeclaration(ctx *parser.FunctionDeclara
 	// add type
 	t.at.AppendType(newFunc)
 
+	// 保存当前 ctx 的函数，用于递归函数判断
+	t.at.PutFunction2Scope(ctx, newFunc)
+
 	t.pushScope(ctx, newFunc)
 }
 
@@ -111,11 +115,15 @@ func (t *TypeScopeResolver) ExitFunctionDeclaration(ctx *parser.FunctionDeclarat
 
 func (t *TypeScopeResolver) EnterClassDeclaration(ctx *parser.ClassDeclarationContext) {
 	className := ctx.IDENTIFIER().GetText()
+	findClass := t.at.FindClass(t.currentScope(), className)
+	if findClass != nil {
+		t.at.Log(ctx, fmt.Sprintf("class %s redeclared in this block", className))
+	}
+
 	class := symbol.NewClass(ctx, className)
 	t.currentScope().AddSymbol(class)
 	t.at.AppendType(class)
 
-	// todo crossoverJie 重复校验
 	t.pushScope(ctx, class)
 }
 
@@ -127,7 +135,7 @@ func (t *TypeScopeResolver) ExitClassDeclaration(ctx *parser.ClassDeclarationCon
 func (t *TypeScopeResolver) EnterOperatorOverloading(ctx *parser.OperatorOverloadingContext) {
 	var opOverload *symbol.OpOverload
 	function, ok := t.currentScope().(*symbol.Func)
-	if !ok || function.GetName() != symbol.OperName {
+	if !ok || function.GetName() != symbol.OperatorName {
 		return
 	}
 	if ctx.PLUS() != nil {

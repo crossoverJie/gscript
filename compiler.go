@@ -5,6 +5,7 @@ import (
 	"github.com/crossoverJie/gscript/internal"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/resolver"
+	"strings"
 )
 
 var Args []string
@@ -41,6 +42,9 @@ func (c *Compiler) compile(script string) interface{} {
 	// 闭包分析
 	resolver.NewClosureResolver(at).Analyze()
 
+	if at.IsCompileFail() {
+		return nil
+	}
 	visitor := NewVisitor(at)
 	return visitor.Visit(tree)
 }
@@ -51,8 +55,8 @@ func (c *Compiler) Compiler(script string) interface{} {
 	//		fmt.Println(r)
 	//	}
 	//}()
-	internal := c.loadInternal()
-	script = internal + script
+	native := c.loadInternal()
+	script = native + script
 	return c.compile(script)
 }
 
@@ -62,6 +66,8 @@ func (c *Compiler) loadInternal() string {
 	if err != nil {
 		panic(err)
 	}
-	return string(bytes)
+	v := string(bytes)
+	resolver.NativeLine = strings.Count(v, "\n") + 1
+	return v
 
 }

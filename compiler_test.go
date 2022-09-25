@@ -96,8 +96,7 @@ if (age>10){
 return abc;
 `
 	compiler := NewCompiler().Compiler(script)
-	object := compiler.(*ReturnObject)
-	fmt.Println(object.GetReturnObject())
+	assert.Nil(t, compiler)
 }
 
 func TestCompiler_FunctionCall(t *testing.T) {
@@ -341,7 +340,7 @@ t2(int x){
 	println("t2");
 }
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }
 func TestCompiler_Condition(t *testing.T) {
 	script := `
@@ -364,7 +363,7 @@ if(a||b){
 	println("a||b");
 }
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }
 func TestCompiler_Main(t *testing.T) {
 	script := `
@@ -436,7 +435,7 @@ Person p = Person();
 p.name = "abc";
 t1.HJSON(p,10);
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }
 func TestCompiler_InitSub(t *testing.T) {
 	script := `

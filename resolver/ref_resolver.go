@@ -1,9 +1,11 @@
 package resolver
 
 import (
+	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/symbol"
+	"strings"
 )
 
 // RefResolver 引用消解和类型推断
@@ -53,12 +55,8 @@ func (s *RefResolver) ExitPrimary(ctx *parser.PrimaryContext) {
 				s.at.PutSymbolOfNode(ctx, fun)
 				symbolType = fun
 			} else {
-				// todo crossoverJie 完善编译报错信息
+				s.at.Log(ctx, fmt.Sprintf("undefined: %s", idName))
 			}
-
-			//line := ctx.GetStart().GetLine()
-			//column := ctx.GetStart().GetColumn()
-			//panic(fmt.Sprintf("unknown variable %s, at %d and column:%d", idName, line, column))
 		} else {
 			s.at.PutSymbolOfNode(ctx, variable)
 			symbolType = variable.GetType()
@@ -66,6 +64,107 @@ func (s *RefResolver) ExitPrimary(ctx *parser.PrimaryContext) {
 	}
 
 	s.at.PutTypeOfNode(ctx, symbolType)
+}
+
+// 处理递归函数
+func (s *RefResolver) ExitBlockStms(ctx *parser.BlockStmsContext) {
+
+	var function2Scope *symbol.Func
+	parent := ctx.GetParent()
+	if parent != nil {
+		pParent := parent.GetParent()
+		if pParent != nil {
+			functionDeclarationContext, ok := pParent.GetParent().(*parser.FunctionDeclarationContext)
+			if ok {
+				function2Scope = s.at.GetFunction2Scope(functionDeclarationContext)
+			}
+		}
+
+	}
+
+	for _, context := range ctx.AllBlockStatement() {
+		stmCtx, ok := context.(*parser.BlockStmContext)
+		if ok {
+			statementContext, ok := stmCtx.Statement().(*parser.StmExprContext)
+			if ok {
+				for _, tree := range statementContext.GetChildren() {
+					exprContext, ok := tree.(*parser.ExprContext)
+					if !ok {
+						continue
+					}
+					call := exprContext.FunctionCall()
+					if call != nil {
+						callContext := call.(*parser.FunctionCallContext)
+						name := callContext.IDENTIFIER().GetText()
+						scope := s.at.FindEncloseScopeOfNode(callContext)
+						paramTypes := s.getParamTypes(callContext)
+						function := s.at.FindFunction(scope, name, paramTypes)
+						// 当前函数为递归函数
+						// r(x-1, ret); r() 是递归函数，直接调用，没有变量声明
+						if function == function2Scope {
+							blockContext, ok := context.GetParent().GetParent().(*parser.BlockContext)
+							if ok {
+								s.at.SetRecursion(blockContext, function == function2Scope)
+							}
+						}
+					}
+				}
+			}
+		} else {
+			// 赋值语句的递归函数
+			declarContext, ok := context.(*parser.BlockVarDeclarContext)
+			if ok {
+				declaratorsContext := declarContext.VariableDeclarators().(*parser.VariableDeclaratorsContext)
+				for _, declaratorContext := range declaratorsContext.AllVariableDeclarator() {
+					variableDeclaratorContext, ok := declaratorContext.(*parser.VariableDeclaratorContext)
+					if !ok {
+						continue
+					}
+					initializerContext := variableDeclaratorContext.VariableInitializer().(*parser.VariableInitializerContext)
+					exprContext, ok := initializerContext.Expr().(*parser.ExprContext)
+					if !ok {
+						continue
+					}
+					call := exprContext.FunctionCall()
+					if call != nil {
+						// int v1 = num(x - 1, y - 1); num() 是递归函数
+						callContext := call.(*parser.FunctionCallContext)
+						name := callContext.IDENTIFIER().GetText()
+						scope := s.at.FindEncloseScopeOfNode(callContext)
+						paramTypes := s.getParamTypes(callContext)
+						function := s.at.FindFunction(scope, name, paramTypes)
+						if function == function2Scope {
+							blockContext, ok := context.GetParent().GetParent().(*parser.BlockContext)
+							if ok {
+								s.at.SetRecursion(blockContext, function == function2Scope)
+							}
+						}
+					} else {
+						//int c = r(x-1, ret) +r(x-1, ret);  r() 递归函数
+						for _, iExprContext := range exprContext.AllExpr() {
+							expr := iExprContext.(*parser.ExprContext)
+							call := expr.FunctionCall()
+							if call != nil {
+								// int v1 = num(x - 1, y - 1); num() 是递归函数
+								callContext := call.(*parser.FunctionCallContext)
+								name := callContext.IDENTIFIER().GetText()
+								scope := s.at.FindEncloseScopeOfNode(callContext)
+								paramTypes := s.getParamTypes(callContext)
+								function := s.at.FindFunction(scope, name, paramTypes)
+								if function == function2Scope {
+									blockContext, ok := context.GetParent().GetParent().(*parser.BlockContext)
+									if ok {
+										s.at.SetRecursion(blockContext, function == function2Scope)
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
 }
 
 // ExitFunctionCall 设置当前 scope 中的函数以及函数返回值
@@ -105,7 +204,7 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 							// 改函数变量的返回类型
 							s.at.PutTypeOfNode(ctx, functionVariable.GetType().(symbol.FuncType).GetReturnType())
 						} else {
-							// todo crossoverJie 完善编译报错信息
+							s.at.Log(ctx, fmt.Sprintf("%s.%s undefined (class %s has no function or function avariable)", variable.GetName(), name, class.GetName()))
 						}
 					}
 
@@ -139,7 +238,15 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 				found = true
 				s.at.PutSymbolOfNode(ctx, class.GetDefaultConstructorFunc())
 			} else {
-				// todo crossoverJie 完善编译报错信息
+				var paramStr strings.Builder
+				for _, t := range paramTypes {
+					if t == nil {
+						continue
+					}
+					paramStr.WriteString(t.GetName() + " ")
+
+				}
+				s.at.Log(ctx, fmt.Sprintf("class:%s constructor not found (parameter:%s)", class.GetName(), paramStr.String()))
 			}
 			s.at.PutTypeOfNode(ctx, class)
 		} else {
@@ -150,7 +257,14 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 				s.at.PutSymbolOfNode(ctx, functionVariable)
 				s.at.PutTypeOfNode(ctx, functionVariable.GetType())
 			} else {
-				// todo crossoverJie 完善编译报错信息
+				var paramStr strings.Builder
+				for _, t := range paramTypes {
+					if t == nil {
+						continue
+					}
+					paramStr.WriteString(t.GetName() + " ")
+				}
+				s.at.Log(ctx, fmt.Sprintf("function or function avariable undefined:%s (parameter:%s)", name, paramStr.String()))
 			}
 
 		}
@@ -177,7 +291,7 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 						// 写入变量类型
 						s.at.PutTypeOfNode(ctx, findVariable.GetType())
 					} else {
-						// todo crossoverJie 编译报错信息
+						s.at.Log(ctx, fmt.Sprintf("%s.%s undefined (class %s has no function or function avariable)", variable.GetName(), name, class.GetName()))
 					}
 				} else if ctx.FunctionCall() != nil {
 					symbolType := s.at.GetTypeOfNode()[ctx.FunctionCall()]
@@ -215,7 +329,7 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 			s.at.PutTypeOfNode(ctx, deriveType)
 		case parser.GScriptParserSUB:
 			if type1 == symbol.String || type2 == symbol.String {
-				// todo crossoverJie 记录编译错误
+				s.at.Log(ctx, fmt.Sprintf("invalid operation: string - string"))
 				return
 			}
 			deriveType := symbol.GetUpperType(type1, type2)
@@ -224,7 +338,7 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 			if type1 == symbol.Int && type2 == symbol.Int {
 				s.at.PutTypeOfNode(ctx, symbol.Int)
 			} else {
-				// todo crossoverJie 记录编译错误
+				s.at.Log(ctx, fmt.Sprintf("invalid operation: %s mod %s", type1.GetName(), type2.GetName()))
 			}
 		}
 	}

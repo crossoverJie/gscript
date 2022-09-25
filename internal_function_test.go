@@ -39,5 +39,13 @@ string s = sprintf("nice to meet %s", "you");
 println(s);
 assertEqual(s,"nice to meet you");
 `
-	NewCompiler().compile(script)
+	NewCompiler().Compiler(script)
+}
+
+func TestPrint2(t *testing.T) {
+	script := `
+print("123" + " ");
+print("456" + " ");
+`
+	NewCompiler().Compiler(script)
 }

@@ -33,7 +33,7 @@ func (b *PrimitiveType) GetEncloseScope() Scope {
 }
 
 func (b *PrimitiveType) IsType(t Type) bool {
-	if b.name == PrimitiveAny {
+	if b.name == PrimitiveAny || t.GetName() == PrimitiveAny {
 		return true
 	}
 	return b == t
@@ -92,7 +92,7 @@ func GetUpperType(t1, t2 Type) Type {
 	} else if t1 == Float && t2 == Int {
 		return Float
 	} else {
-		// todo crossoverJie 记录异常
+		// todo crossoverJie 运行时异常
 		return nil
 	}
 }

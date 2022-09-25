@@ -6,7 +6,7 @@ import (
 
 func Test_map(t *testing.T) {
 	script := `
-class Map{
+class Map2{
 	string key, value;
 	put(string k, string v){
 		key=k;
@@ -19,20 +19,20 @@ class Map{
 		return value;
 	}
 }
-Map m=Map();
+Map2 m=Map2();
 m.put("1","1");
 println(m.str());
 println(m.getValue());
 
 Map[] list = {};
 list = append(list,m);
-Map m2=Map();
+Map2 m2=Map2();
 m2.put("2","2");
 list = append(list,m2);
 println(list);
 println(len(list));
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }
 func Test_map2(t *testing.T) {
 	script := `

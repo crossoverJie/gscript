@@ -174,7 +174,7 @@ int a =9999;
 println(a);
 assertEqual(a,9999);
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }
 
 func TestFor99(t *testing.T) {
@@ -196,12 +196,119 @@ func TestFor100(t *testing.T) {
 	for i := 0; i < 3; i++ {
 		for i := 0; i < 2; i++ {
 			println("inner i=", i)
-			// todo crossoverJie 应该直接返回
 			println("return finish")
 			return
 		}
 		println("outer i=", i)
 	}
+}
+func TestFor101(t *testing.T) {
+	script := `
+	for (int i = 0; i < 3; i++) {
+		for (int i=0; i < 2; i++) {
+			println("inner i="+i);
+			println("return finish");
+			return;
+		}
+		println("outer i="+i);
+	}
+`
+	NewCompiler().Compiler(script)
+}
+
+func TestFor98(t *testing.T) {
+	script := `
+int f1(int x){
+	f1(1);
+}
+`
+	NewCompiler().CompilerWithoutNative(script)
+}
+
+func TestFor102(t *testing.T) {
+	script := `
+	printf(string format, any ...a){}
+	println(any a){}
+	assertEqual(any a1, any a2){}
+	int r(int x, int ret){
+		if(x==0){
+			return ret;
+		}else{
+			ret = ret+1;
+		}
+		int b = r(x-1, ret);
+		printf("b=%d ", b);
+		return b;
+	}
+	
+	int i = r(10, 0);
+	println(i);
+	assertEqual(i,10);
+`
+	NewCompiler().CompilerWithoutNative(script)
+}
+func TestFor103(t *testing.T) {
+	script := `
+	printf(string format, any ...a){}
+	println(any a){}
+	assertEqual(any a1, any a2){}
+	int r(int x, int ret){
+		if(x==0){
+			return ret;
+		}else{
+			ret = ret+1;
+		}
+		//int b = r(x-1, ret);
+		//int d = r(x-1, ret);
+		//printf("b=%d d=%d", b,d);
+		//printf("11");
+		//int c = r(x-1, ret) +r(x-1, ret);
+		//int c = r(x-1, ret) +r(x-1, ret);
+		return r(x-1, ret) +r(x-1, ret);
+		//return r(x-1, ret) +r(x-1, ret);
+	}
+	
+	int i = r(10, 0);
+	println(i);
+	assertEqual(i,10240);
+`
+	NewCompiler().CompilerWithoutNative(script)
+}
+func TestFor104(t *testing.T) {
+	script := `
+	printf(string format, any ...a){}
+	println(any a){}
+	assertEqual(any a1, any a2){}
+	r(int x, int ret){
+		if(x==0){
+			return ret;
+		}else{
+			ret = ret+1;
+		}
+		r(x-1, ret);
+		println("r(x-1, ret);");
+	}	
+	r(10, 0);
+`
+	NewCompiler().CompilerWithoutNative(script)
+}
+
+func TestRe(t *testing.T) {
+	i := r(10, 0)
+	fmt.Println(i)
+}
+
+func r(x, ret int) int {
+
+	if x == 0 {
+		return ret
+	} else {
+		ret = ret + 1
+	}
+	i := r(x-1, ret)
+	d := r(x-1, ret)
+	fmt.Println("i=" + fmt.Sprint(i))
+	return i + d
 }
 
 func TestScope(t *testing.T) {
@@ -219,11 +326,28 @@ func scope() {
 }
 
 func TestSlice(t *testing.T) {
-	x := []int{1, 2, 3}
-	if len(x) > 0 {
-		x = x[:len(x)-1]
+	print(5)
+	//fmt.Print("123" + " ")
+	//fmt.Print("456" + " ")
+}
+func num(x, y int) int {
+	if y == 1 || y == x {
+		return 1
 	}
-	fmt.Println(x)
+	c := num(x-1, y-1) + num(x-1, y)
+	return c
+}
+func print(row int) {
+	for i := 0; i < row; i++ {
+		for j := i; j <= row-1; j++ {
+			fmt.Print(" ")
+		}
+		for j := 1; j <= i; j++ {
+			v := num(i, j)
+			fmt.Print(fmt.Sprint(v) + " ")
+		}
+		fmt.Println("")
+	}
 }
 
 func TestTowSum(t *testing.T) {
@@ -247,5 +371,5 @@ int ret = twoSum( 9);
 println(ret);
 assertEqual(ret,9);
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }

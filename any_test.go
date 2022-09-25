@@ -41,7 +41,7 @@ string v5 =fun4("10", "20");
 println(v5);
 assertEqual(v5,"1020");
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }
 func TestAny2(t *testing.T) {
 	script := `
@@ -55,7 +55,7 @@ func TestAny2(t *testing.T) {
 	println(len(b));
 	assertEqual(3, len(b));
 `
-	NewCompiler().compile(script)
+	NewCompiler().Compiler(script)
 }
 func TestAny4(t *testing.T) {
 	script := `
@@ -75,5 +75,5 @@ assertEqual(a==c,true);
 println(a!=c);
 assertEqual(a!=c,false);
 `
-	NewCompiler().compile(script)
+	NewCompiler().Compiler(script)
 }
