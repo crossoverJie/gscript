@@ -41,3 +41,11 @@ assertEqual(s,"nice to meet you");
 `
 	NewCompiler().Compiler(script)
 }
+
+func TestPrint2(t *testing.T) {
+	script := `
+print("123" + " ");
+print("456" + " ");
+`
+	NewCompiler().Compiler(script)
+}

@@ -37,28 +37,29 @@ hello world
 
 # Features
 
-- [x] [Class declaration](#class).
-- [x] [Function declaration and call](#function).
-- [x] [Primitive type](#primitive): `int/string/float/bool`.
-- [x] [Array type](#array).
-- [x] `nil` type.
-- [x] [`any` type](#any-type).
-- [x] [Function type](#closure).
-- [x] [Closure：Functions as First-Class Objects](#closure).
-- [x] [Native function](#native-function): `len()/hash()/assertEqual()/JSON()/JSONGet()`.
-- [x] [Standard library](#standard-library)：`Map/LinkedList/Array`.
+- [x] [Class declaration](#class)
+- [x] [Function declaration and call](#function)
+- [x] [Primitive type](#primitive): `int/string/float/bool`
+- [x] [Array type](#array)
+- [x] `nil` type
+- [x] [`any` type](#any-type)
+- [x] [Function type](#closure)
+- [x] [Closure：Functions as First-Class Objects](#closure)
+- [x] [Native function](#native-function): `len()/hash()/assertEqual()/JSON()/JSONGet()`
+- [x] [Standard library](#standard-library)：`Map/LinkedList/Array`
 	- [x] [Map](#map)
 - [x] [Variable arguments](#variable-arguments)
-- [x] [Operator overloading](#operator-overloading).
-- [x] [Native support](#native-function) `json`.
-- [x] [Native support `http`](#http).
+- [x] [Operator overloading](#operator-overloading)
+- [x] [Native support](#native-function) `json`
+- [x] [Native support `http`](#http)
 - [x] Example
 	- [x] LeetCode
 		- [x] [LeetCode: Linked list cycle](https://github.com/crossoverJie/gscript/blob/main/example/linked_list_cycle141.gs)
 		- [x] [LeetCode: Two sum](https://github.com/crossoverJie/gscript/blob/main/example/leetcode/two_sum.gs)
 	- [x] [Print fibonacci](#print-fibonacci)
 	- [x] [HTTP Service](https://github.com/crossoverJie/gscript/blob/main/example/http_server.gs)
-- [ ] Unit Test command line.
+- [ ] PKG manager
+- [ ] Unit Test command line
 
 
 

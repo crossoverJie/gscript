@@ -19,6 +19,12 @@ type AnnotatedTree struct {
 	// ctx 中存放的所有类型
 	typeOfNode map[antlr.ParserRuleContext]symbol.Type
 
+	// 保存当前ctx中的函数
+	functionOfNode map[antlr.ParserRuleContext]*symbol.Func
+
+	// 当前 ctx 是否为递归函数
+	isRecursion map[antlr.ParserRuleContext]bool
+
 	// 所有的 class，function 的 type
 	types []symbol.Type
 
@@ -34,12 +40,14 @@ type AnnotatedTree struct {
 
 func NewAnnotatedTree(ast antlr.ParseTree) *AnnotatedTree {
 	return &AnnotatedTree{
-		ast:          ast,
-		symbolOfNode: make(map[antlr.ParserRuleContext]symbol.Symbol),
-		typeOfNode:   make(map[antlr.ParserRuleContext]symbol.Type),
-		node2Scope:   make(map[antlr.ParserRuleContext]symbol.Scope),
-		types:        make([]symbol.Type, 0),
-		opOverloads:  make([]*symbol.OpOverload, 0),
+		ast:            ast,
+		symbolOfNode:   make(map[antlr.ParserRuleContext]symbol.Symbol),
+		typeOfNode:     make(map[antlr.ParserRuleContext]symbol.Type),
+		node2Scope:     make(map[antlr.ParserRuleContext]symbol.Scope),
+		functionOfNode: make(map[antlr.ParserRuleContext]*symbol.Func),
+		isRecursion:    make(map[antlr.ParserRuleContext]bool),
+		types:          make([]symbol.Type, 0),
+		opOverloads:    make([]*symbol.OpOverload, 0),
 	}
 }
 
@@ -65,6 +73,25 @@ func (a *AnnotatedTree) PutNode2Scope(ctx antlr.ParserRuleContext, symbol symbol
 
 func (a *AnnotatedTree) GetNode2Scope() map[antlr.ParserRuleContext]symbol.Scope {
 	return a.node2Scope
+}
+func (a *AnnotatedTree) PutFunction2Scope(ctx antlr.ParserRuleContext, function *symbol.Func) {
+	a.functionOfNode[ctx] = function
+}
+
+func (a *AnnotatedTree) GetFunction2Scope(ctx antlr.ParserRuleContext) *symbol.Func {
+	return a.functionOfNode[ctx]
+}
+
+func (a *AnnotatedTree) SetRecursion(ctx antlr.ParserRuleContext, isRecursion bool) {
+	a.isRecursion[ctx] = isRecursion
+}
+
+func (a *AnnotatedTree) GetRecursion(ctx antlr.ParserRuleContext) bool {
+	is, ok := a.isRecursion[ctx]
+	if !ok {
+		return false
+	}
+	return is
 }
 
 func (a *AnnotatedTree) AppendType(t symbol.Type) {
@@ -166,7 +193,6 @@ func (a *AnnotatedTree) findMethodWithName(class *symbol.Class, name string) *sy
 }
 
 func (a *AnnotatedTree) findFunctionOnlyWithName(scope symbol.Scope, name string) *symbol.Func {
-	// todo crossoverJie 函数名重复的情况，应该在写入 symbol 时就行编译报错
 	for _, s := range scope.GetSymbols() {
 		function, ok := s.(*symbol.Func)
 		if ok && function.GetName() == name {

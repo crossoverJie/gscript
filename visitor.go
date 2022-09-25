@@ -184,14 +184,13 @@ func (v *Visitor) VisitBlockStms(ctx *parser.BlockStmsContext) interface{} {
 	for _, context := range ctx.AllBlockStatement() {
 
 		// 当下级的 statement 中有 return，该 return 以上的所有 block 都得需要返回 return。
-		stmCtx, ok := context.(*parser.BlockStmContext)
+		// 如果当前 block 中存在递归调用，则不需要 return，需要继续执行。
+		blockContext, ok := context.GetParent().GetParent().(*parser.BlockContext)
 		if ok {
-			blockContext, ok := stmCtx.GetParent().GetParent().(*parser.BlockContext)
-			if ok {
-				ret, ok := v.blockCtx2Mark[blockContext]
-				if ok {
-					return ret
-				}
+			ret, ok := v.blockCtx2Mark[blockContext]
+			recursion := v.at.GetRecursion(blockContext)
+			if ok && !recursion {
+				return ret
 			}
 		}
 
@@ -758,6 +757,9 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return nil
 	} else if name == "sprintf" {
 		return v.sprintf(ctx)
+	} else if name == "print" {
+		v.print(ctx)
+		return nil
 	}
 
 	// 默认构造函数

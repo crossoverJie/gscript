@@ -216,6 +216,96 @@ func TestFor101(t *testing.T) {
 	NewCompiler().Compiler(script)
 }
 
+func TestFor98(t *testing.T) {
+	script := `
+int f1(int x){
+	f1(1);
+}
+`
+	NewCompiler().CompilerWithoutNative(script)
+}
+
+func TestFor102(t *testing.T) {
+	script := `
+	printf(string format, any ...a){}
+	println(any a){}
+	assertEqual(any a1, any a2){}
+	int r(int x, int ret){
+		if(x==0){
+			return ret;
+		}else{
+			ret = ret+1;
+		}
+		int b = r(x-1, ret);
+		printf("b=%d ", b);
+		return b;
+	}
+	
+	int i = r(10, 0);
+	println(i);
+	assertEqual(i,10);
+`
+	NewCompiler().CompilerWithoutNative(script)
+}
+func TestFor103(t *testing.T) {
+	script := `
+	printf(string format, any ...a){}
+	println(any a){}
+	string print(any ...a){}
+	//assertEqual(any a1, any a2){}
+	int r(int x, int ret){
+		if(x==0){
+			return ret;
+		}else{
+			ret = ret+1;
+		}
+		int b = r(x-1, ret);
+		printf("b=%d ", b);
+		return b;
+	}
+
+	int num(int x,int y){
+		if (y==1 || y ==x) {
+			return 1;
+		}
+		int c = num(x - 1, y - 1) + num(x - 1, y);
+		printf("c=%d ", c);
+		return c;
+	}
+
+	fun(int row){
+		for (int i = 1; i <= row; i++) {
+			for (int j = 1; j <= i; j++) {
+            	int i = r(10, 0);
+				//println(i);
+				//print(num(i, j) + " ");
+        	}
+		}
+	}
+	
+	fun(10);
+	//assertEqual(i,10);
+`
+	NewCompiler().CompilerWithoutNative(script)
+}
+
+func TestRe(t *testing.T) {
+	i := r(10, 0)
+	fmt.Println(i)
+}
+
+func r(x, ret int) int {
+
+	if x == 0 {
+		return ret
+	} else {
+		ret = ret + 1
+	}
+	i := r(x-1, ret)
+	fmt.Println("i=" + fmt.Sprint(i))
+	return i
+}
+
 func TestScope(t *testing.T) {
 	scope()
 	fmt.Println("test")
@@ -231,11 +321,28 @@ func scope() {
 }
 
 func TestSlice(t *testing.T) {
-	x := []int{1, 2, 3}
-	if len(x) > 0 {
-		x = x[:len(x)-1]
+	print(5)
+	//fmt.Print("123" + " ")
+	//fmt.Print("456" + " ")
+}
+func num(x, y int) int {
+	if y == 1 || y == x {
+		return 1
 	}
-	fmt.Println(x)
+	c := num(x-1, y-1) + num(x-1, y)
+	return c
+}
+func print(row int) {
+	for i := 0; i < row; i++ {
+		for j := i; j <= row-1; j++ {
+			fmt.Print(" ")
+		}
+		for j := 1; j <= i; j++ {
+			v := num(i, j)
+			fmt.Print(fmt.Sprint(v) + " ")
+		}
+		fmt.Println("")
+	}
 }
 
 func TestTowSum(t *testing.T) {

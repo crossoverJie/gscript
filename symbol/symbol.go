@@ -302,8 +302,10 @@ func (f *Func) GetParameterType() []Type {
 	if f.parameterType == nil {
 		f.parameterType = make([]Type, 0)
 	}
-	for _, parameter := range f.parameters {
-		f.parameterType = append(f.parameterType, parameter.GetType())
+	if len(f.parameterType) == 0 {
+		for _, parameter := range f.parameters {
+			f.parameterType = append(f.parameterType, parameter.GetType())
+		}
 	}
 
 	return f.parameterType

@@ -102,6 +102,9 @@ func (t *TypeScopeResolver) EnterFunctionDeclaration(ctx *parser.FunctionDeclara
 	// add type
 	t.at.AppendType(newFunc)
 
+	// 保存当前 ctx 的函数
+	t.at.PutFunction2Scope(ctx, newFunc)
+
 	t.pushScope(ctx, newFunc)
 }
 

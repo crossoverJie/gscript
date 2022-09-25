@@ -66,6 +66,85 @@ func (s *RefResolver) ExitPrimary(ctx *parser.PrimaryContext) {
 	s.at.PutTypeOfNode(ctx, symbolType)
 }
 
+// 处理递归函数
+func (s *RefResolver) ExitBlockStms(ctx *parser.BlockStmsContext) {
+
+	var function2Scope *symbol.Func
+	parent := ctx.GetParent()
+	if parent != nil {
+		pParent := parent.GetParent()
+		if pParent != nil {
+			functionDeclarationContext, ok := pParent.GetParent().(*parser.FunctionDeclarationContext)
+			if ok {
+				function2Scope = s.at.GetFunction2Scope(functionDeclarationContext)
+			}
+		}
+
+	}
+
+	for _, context := range ctx.AllBlockStatement() {
+		stmCtx, ok := context.(*parser.BlockStmContext)
+		if ok {
+			statementContext, ok := stmCtx.Statement().(*parser.StmExprContext)
+			if ok {
+				for _, tree := range statementContext.GetChildren() {
+					exprContext, ok := tree.(*parser.ExprContext)
+					if !ok {
+						continue
+					}
+					call := exprContext.FunctionCall()
+					if call != nil {
+						callContext := call.(*parser.FunctionCallContext)
+						name := callContext.IDENTIFIER().GetText()
+						scope := s.at.FindEncloseScopeOfNode(callContext)
+						paramTypes := s.getParamTypes(callContext)
+						function := s.at.FindFunction(scope, name, paramTypes)
+						// 当前函数为递归函数
+						if function == function2Scope {
+							blockContext, ok := context.GetParent().GetParent().(*parser.BlockContext)
+							if ok {
+								s.at.SetRecursion(blockContext, function == function2Scope)
+							}
+						}
+					}
+				}
+			}
+		} else {
+			// 赋值语句的递归函数
+			declarContext, ok := context.(*parser.BlockVarDeclarContext)
+			if ok {
+				declaratorsContext := declarContext.VariableDeclarators().(*parser.VariableDeclaratorsContext)
+				for _, declaratorContext := range declaratorsContext.AllVariableDeclarator() {
+					variableDeclaratorContext, ok := declaratorContext.(*parser.VariableDeclaratorContext)
+					if !ok {
+						continue
+					}
+					initializerContext := variableDeclaratorContext.VariableInitializer().(*parser.VariableInitializerContext)
+					exprContext, ok := initializerContext.Expr().(*parser.ExprContext)
+					if !ok {
+						continue
+					}
+					call := exprContext.FunctionCall()
+					if call != nil {
+						callContext := call.(*parser.FunctionCallContext)
+						name := callContext.IDENTIFIER().GetText()
+						scope := s.at.FindEncloseScopeOfNode(callContext)
+						paramTypes := s.getParamTypes(callContext)
+						function := s.at.FindFunction(scope, name, paramTypes)
+						if function == function2Scope {
+							blockContext, ok := context.GetParent().GetParent().(*parser.BlockContext)
+							if ok {
+								s.at.SetRecursion(blockContext, function == function2Scope)
+							}
+						}
+					}
+				}
+			}
+		}
+
+	}
+}
+
 // ExitFunctionCall 设置当前 scope 中的函数以及函数返回值
 func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 
