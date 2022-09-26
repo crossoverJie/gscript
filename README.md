@@ -57,6 +57,7 @@ hello world
 		- [x] [LeetCode: Linked list cycle](https://github.com/crossoverJie/gscript/blob/main/example/linked_list_cycle141.gs)
 		- [x] [LeetCode: Two sum](https://github.com/crossoverJie/gscript/blob/main/example/leetcode/two_sum.gs)
 	- [x] [Print fibonacci](#print-fibonacci)
+	- [x] [Print YangHui triangle](#yanghui-triangle)
 	- [x] [HTTP Service](https://github.com/crossoverJie/gscript/blob/main/example/http_server.gs)
 - [ ] PKG manager
 - [ ] Unit Test command line
