@@ -97,6 +97,44 @@ for (int i = 0; i < 10; i++){
 源码地址：
 [https://github.com/crossoverjie/gscript-homepage](https://github.com/crossoverjie/gscript-homepage)
 
+## 杨辉三角
+
+```js
+int num(int x,int y){
+	if (y==1 || y ==x) {
+		return 1;
+	}
+    int v1 = num(x - 1, y - 1);
+    int v2 = num(x - 1, y);
+	int c = v1+v2;
+    // int c = num(x - 1, y - 1)+num(x - 1, y);
+	return c;
+}
+
+printTriangle(int row){
+	for (int i = 1; i <= row; i++) {
+        for (int j = 1; j <= row - i; j++) {
+           print(" ");
+        }
+        for (int j = 1; j <= i; j++) {
+            print(num(i, j) + " ");
+        }
+        println("");
+    }
+}
+
+printTriangle(7);
+
+// output:
+      1 
+     1 1 
+    1 2 1 
+   1 3 3 1 
+  1 4 6 4 1 
+ 1 5 10 10 5 1 
+1 6 15 20 15 6 1
+```
+
 ---
 
 更多例子：[https://github.com/crossoverJie/gscript/tree/main/example](https://github.com/crossoverJie/gscript/tree/main/example)
