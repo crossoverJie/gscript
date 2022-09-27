@@ -3,6 +3,7 @@ package gscript
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/crossoverJie/gscript/log"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/stack"
 	"github.com/crossoverJie/xjson"
@@ -63,10 +64,6 @@ func (v *Visitor) printArray(value []interface{}) []interface{} {
 
 func (v *Visitor) assertEqual(ctx *parser.FunctionCallContext) {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 2 {
-		// todo crossoverJie 编译器报错
-		panic("")
-	}
 	// todo crossoverJie 参数是个变量，需要取左值，也可以是个数组取值 a[0]
 	if paramValues[0] != paramValues[1] {
 		line := ctx.GetStart().GetLine()
@@ -88,7 +85,8 @@ func (v *Visitor) append(ctx *parser.FunctionCallContext) []interface{} {
 		left.SetValue(array)
 		return array
 	default:
-		// todo crossoverJie 运行时报错
+		l := log.NewLog(ctx, fmt.Sprintf("first argument to append must be array"))
+		panic(l)
 	}
 	return nil
 }
@@ -116,10 +114,6 @@ func (v *Visitor) len(ctx *parser.FunctionCallContext) int {
 }
 func (v *Visitor) hash(ctx *parser.FunctionCallContext) int {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 1 {
-		// todo crossoverJie 运行时报错
-		panic("")
-	}
 	return hash(paramValues[0])
 }
 
@@ -147,8 +141,8 @@ func (v *Visitor) JSON(ctx *parser.FunctionCallContext) string {
 		data := v.classObject2Map(classObject)
 		marshal, err := json.Marshal(data)
 		if err != nil {
-			// todo crossoverJie 运行时报错
-			panic("")
+			l := log.NewLog(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
+			panic(l)
 		}
 		return string(marshal)
 	case []interface{}:
@@ -171,24 +165,24 @@ func (v *Visitor) JSON(ctx *parser.FunctionCallContext) string {
 		if dataClass != nil {
 			marshal, err := json.Marshal(dataClass)
 			if err != nil {
-				// todo crossoverJie 运行时报错
-				panic("")
+				l := log.NewLog(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
+				panic(l)
 			}
 			return string(marshal)
 		}
 		// int[] a = {1,2,3}; json = JSON(a)
 		marshal, err := json.Marshal(dataList)
 		if err != nil {
-			// todo crossoverJie 运行时报错
-			panic("")
+			l := log.NewLog(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
+			panic(l)
 		}
 		// {1,2,3}
 		return string(marshal)
 	default:
 		marshal, err := json.Marshal(value)
 		if err != nil {
-			// todo crossoverJie 运行时报错
-			panic("")
+			l := log.NewLog(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
+			panic(l)
 		}
 		return string(marshal)
 	}
@@ -214,10 +208,6 @@ func (v *Visitor) classObject2Map(classObject *stack.ClassObject) map[string]int
 
 func (v *Visitor) JSONGet(ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 2 {
-		// todo crossoverJie 编译器报错
-		panic("")
-	}
 	p0 := paramValues[0]
 	p1 := paramValues[1]
 	var (

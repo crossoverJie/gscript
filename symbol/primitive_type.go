@@ -1,5 +1,9 @@
 package symbol
 
+import (
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+)
+
 const (
 	PrimitiveInt    = "int"
 	PrimitiveString = "string"
@@ -67,7 +71,7 @@ func (v *VoidType) IsType(t Type) bool {
 }
 
 // GetUpperType 根据两个参数类型，推导返回的类型
-func GetUpperType(t1, t2 Type) Type {
+func GetUpperType(ctx antlr.ParserRuleContext, t1, t2 Type) Type {
 	if t1 == String || t2 == String {
 		return String
 	} else if t1 == Nil || t2 == Nil {
@@ -92,19 +96,19 @@ func GetUpperType(t1, t2 Type) Type {
 	} else if t1 == Float && t2 == Int {
 		return Float
 	} else {
-		// todo crossoverJie 运行时异常
+		// todo crossoverJie ?
 		return nil
 	}
 }
 
 // GetUpperTypeWithValue 根据两个参数值，返回推到类型
-func GetUpperTypeWithValue(v1, v2 interface{}) Type {
+func GetUpperTypeWithValue(ctx antlr.ParserRuleContext, v1, v2 interface{}) Type {
 	var (
 		v1Type, v2Type Type
 	)
 	v1Type = getTypeWithValue(v1)
 	v2Type = getTypeWithValue(v2)
-	return GetUpperType(v1Type, v2Type)
+	return GetUpperType(ctx, v1Type, v2Type)
 }
 
 // 根据值返回类型

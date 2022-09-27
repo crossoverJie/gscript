@@ -3,6 +3,7 @@ package gscript
 import (
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/crossoverJie/gscript/log"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/resolver"
 	"github.com/crossoverJie/gscript/stack"
@@ -261,14 +262,36 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 			ret = arrayObject.GetIndexValue()
 		}
 		// 为变量赋值
-		// int e=10   int e = foo()
-		switch ret.(type) {
-		case int:
-			if leftValue.GetVariable().GetType() != sym.Int {
-				// string a=10; 校验这类错误
-				// todo crossoverJie 运行时错误，还有其他类型的校验，any 类型不需要校验
+		// int e=10   int e = foo() any 类型不需要校验
+		if leftValue.GetVariable().GetType() != sym.Any {
+			switch ret.(type) {
+			case int:
+				if leftValue.GetVariable().GetType() != sym.Int {
+					// string a=10; 校验这类错误
+					l := log.NewLog(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
+					panic(l)
+				}
+			case string:
+				if leftValue.GetVariable().GetType() != sym.String {
+					// int a="1"; 校验这类错误
+					l := log.NewLog(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
+					panic(l)
+				}
+			case float64:
+				if leftValue.GetVariable().GetType() != sym.Float {
+					// int a=10.1;
+					l := log.NewLog(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
+					panic(l)
+				}
+			case bool:
+				if leftValue.GetVariable().GetType() != sym.Bool {
+					// int a=10.1;
+					l := log.NewLog(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
+					panic(l)
+				}
 			}
 		}
+
 		leftValue.SetValue(ret)
 	}
 	return ret
@@ -366,10 +389,10 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 		type2 := v.at.GetTypeOfNode()[ctx.Expr(1)]
 		if deriveType == sym.Any {
 			// 两个值都是any类型，需要运行时通过值判断
-			deriveType = sym.GetUpperTypeWithValue(leftObject, rightObject)
+			deriveType = sym.GetUpperTypeWithValue(ctx, leftObject, rightObject)
 		} else if deriveType == nil {
 			// 处理：int x = n[0] + n[1];  这种情况deriveType为空，需要运行时重新推导
-			deriveType = sym.GetUpperTypeWithValue(leftObject, rightObject)
+			deriveType = sym.GetUpperTypeWithValue(ctx, leftObject, rightObject)
 
 			// 运行时计算 type
 			type1, type2 = sym.GetType(type1, type2, leftObject, rightObject)
@@ -383,20 +406,26 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return leftObject.(float64) * rightObject.(float64)
 			} else if type1.IsType(type2) {
 				// 两个参数类型相同，执行运算符重载
-				return v.callOpFunction(type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
+				return v.callOpFunction(ctx, type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				// todo crossoverJie 运行时错误
+				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v * %v", leftObject, rightObject))
+				panic(l)
 			}
 		case parser.GScriptParserDIV:
 			if deriveType == sym.Int {
+				if rightObject.(int) == 0 {
+					l := log.NewLog(ctx, "integer divide by zero")
+					panic(l)
+				}
 				return leftObject.(int) / rightObject.(int)
 			} else if deriveType == sym.Float {
 				return leftObject.(float64) / rightObject.(float64)
 			} else if type1.IsType(type2) {
 				// 两个参数类型相同，执行运算符重载
-				return v.callOpFunction(type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
+				return v.callOpFunction(ctx, type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				// todo crossoverJie 运行时错误
+				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v / %v", leftObject, rightObject))
+				panic(l)
 			}
 
 		case parser.GScriptParserPLUS:
@@ -408,9 +437,10 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return sym.Value2Float(leftObject) + sym.Value2Float(rightObject)
 			} else if type1.IsType(type2) {
 				// 两个参数类型相同，执行运算符重载
-				return v.callOpFunction(type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
+				return v.callOpFunction(ctx, type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				// todo crossoverJie 运行时错误
+				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v + %v", leftObject, rightObject))
+				panic(l)
 			}
 		case parser.GScriptParserSUB:
 			if deriveType == sym.Int {
@@ -419,71 +449,79 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return sym.Value2Float(leftObject) - sym.Value2Float(rightObject)
 			} else if type1.IsType(type2) {
 				// 两个参数类型相同，执行运算符重载
-				return v.callOpFunction(type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
+				return v.callOpFunction(ctx, type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				// todo crossoverJie 运行时错误
+				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v - %v", leftObject, rightObject))
+				panic(l)
 			}
 
 		case parser.GScriptParserMOD:
 			return leftObject.(int) % rightObject.(int)
 		case parser.GScriptParserGT:
-			deriveType = sym.GetUpperType(type1, type2)
+			deriveType = sym.GetUpperType(ctx, type1, type2)
 			if deriveType == sym.String {
-				// todo crossoverJie 运行时错误 字符串不能比较
+				// 字符串比较永远都是 false
+				return false
 			} else if deriveType == sym.Int {
 				return leftObject.(int) > rightObject.(int)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) > sym.Value2Float(rightObject)
 			} else if type1.IsType(type2) {
 				// 两个参数类型相同，执行运算符重载
-				return v.callOpFunction(sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
+				return v.callOpFunction(ctx, sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				// todo crossoverJie 运行时错误
+				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v > %v", leftObject, rightObject))
+				panic(l)
 			}
 		case parser.GScriptParserLT:
-			deriveType = sym.GetUpperType(type1, type2)
+			deriveType = sym.GetUpperType(ctx, type1, type2)
 			if deriveType == sym.String {
-				// todo crossoverJie 运行时错误 字符串不能比较
+				// 字符串比较永远都是 false
+				return false
 			} else if deriveType == sym.Int {
 				return leftObject.(int) < rightObject.(int)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) < sym.Value2Float(rightObject)
 			} else if type1.IsType(type2) {
 				// 两个参数类型相同，执行运算符重载
-				return v.callOpFunction(sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
+				return v.callOpFunction(ctx, sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
 				// todo crossoverJie 运行时错误
 			}
 		case parser.GScriptParserGE:
-			deriveType = sym.GetUpperType(type1, type2)
+			deriveType = sym.GetUpperType(ctx, type1, type2)
 			if deriveType == sym.String {
-				// todo crossoverJie 运行时错误 字符串不能比较
+				// 字符串比较永远都是 false
+				return false
 			} else if deriveType == sym.Int {
 				return leftObject.(int) >= rightObject.(int)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) >= sym.Value2Float(rightObject)
 			} else if type1.IsType(type2) {
 				// 两个参数类型相同，执行运算符重载
-				return v.callOpFunction(sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
+				return v.callOpFunction(ctx, sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				// todo crossoverJie 运行时错误
+				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v > %v", leftObject, rightObject))
+				panic(l)
 			}
 		case parser.GScriptParserLE:
-			deriveType = sym.GetUpperType(type1, type2)
+			deriveType = sym.GetUpperType(ctx, type1, type2)
 			if deriveType == sym.String {
-				// todo crossoverJie 运行时错误 字符串不能比较
+				// 字符串比较永远都是 false
+				return false
 			} else if deriveType == sym.Int {
 				return leftObject.(int) <= rightObject.(int)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) <= sym.Value2Float(rightObject)
 			} else if type1.IsType(type2) {
 				// 两个参数类型相同，执行运算符重载
-				return v.callOpFunction(sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
+				return v.callOpFunction(ctx, sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				// todo crossoverJie 运行时错误
+				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v > %v", leftObject, rightObject))
+				panic(l)
 			}
 		case parser.GScriptParserEQUAL:
-			deriveType = sym.GetUpperType(type1, type2)
+			deriveType = sym.GetUpperType(ctx, type1, type2)
 			if deriveType == sym.String {
 				return fmt.Sprintf("%v", leftObject) == fmt.Sprintf("%v", rightObject)
 			} else if deriveType == sym.Int {
@@ -501,12 +539,12 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return leftObject == rightObject
 			} else if type1.IsType(type2) {
 				// 两个参数类型相同，执行运算符重载
-				return v.callOpFunction(sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
+				return v.callOpFunction(ctx, sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
 				return leftObject == rightObject
 			}
 		case parser.GScriptParserNOTEQUAL:
-			deriveType = sym.GetUpperType(type1, type2)
+			deriveType = sym.GetUpperType(ctx, type1, type2)
 			if deriveType == sym.String {
 				return fmt.Sprintf("%v", leftObject) != fmt.Sprintf("%v", rightObject)
 			} else if deriveType == sym.Int {
@@ -524,9 +562,10 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return leftObject != rightObject
 			} else if type1.IsType(type2) {
 				// 两个参数类型相同，执行运算符重载
-				return v.callOpFunction(sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
+				return v.callOpFunction(ctx, sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				// todo crossoverJie 运行时错误
+				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v != %v", leftObject, rightObject))
+				panic(l)
 			}
 		case parser.GScriptParserASSIGN:
 			switch val1.(type) {
@@ -703,14 +742,15 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 }
 
 // 执行自定义的运算符重载函数
-func (v *Visitor) callOpFunction(returnType sym.Type, tokenType int, leftObject, rightObject interface{}) interface{} {
+func (v *Visitor) callOpFunction(ctx antlr.ParserRuleContext, returnType sym.Type, tokenType int, leftObject, rightObject interface{}) interface{} {
 	function := v.at.GetOpFunction(returnType, tokenType)
 	if function != nil {
 		funcObject := stack.NewFuncObject(function)
 		opParams := []interface{}{leftObject, rightObject}
 		return v.executeFunctionCall(funcObject, opParams)
 	} else {
-		// todo crossoverJie 运行时错误 没有实现运算符重载
+		l := log.NewLog(ctx, fmt.Sprintf("no match to operator overloading function"))
+		panic(l)
 	}
 	return nil
 }
@@ -844,11 +884,9 @@ func (v *Visitor) getFunctionObject(ctx *parser.FunctionCallContext) *stack.Func
 		}
 
 	default:
-		// todo crossoverJie 函数提示
 		name := ctx.IDENTIFIER().GetText()
-		line := ctx.GetStart().GetLine()
-		column := ctx.GetStart().GetColumn()
-		panic(fmt.Sprintf("unable find func %s in line:%d and column:%d", name, line, column))
+		l := log.NewLog(ctx, fmt.Sprintf("unable find function %s", name))
+		panic(l)
 
 	}
 
@@ -1078,12 +1116,14 @@ func (v *Visitor) VisitStmWhile(ctx *parser.StmWhileContext) interface{} {
 			if ok {
 				condition = c
 			} else {
-				// todo crossoverJie 运行报错
+				l := log.NewLog(ctx, fmt.Sprintf("non-bool %v used as for condition", value.(*LeftValue).GetValue()))
+				panic(l)
 			}
 		case bool:
 			condition = value.(bool)
 		default:
-			// todo crossoverJie 运行报错
+			l := log.NewLog(ctx, fmt.Sprintf("non-bool %v used as for condition", value))
+			panic(l)
 		}
 
 		if !condition {

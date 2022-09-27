@@ -319,20 +319,20 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 		type2 := s.at.GetTypeOfNode()[ctx.Expr(1)]
 		switch ctx.GetBop().GetTokenType() {
 		case parser.GScriptParserMULT:
-			deriveType := symbol.GetUpperType(type1, type2)
+			deriveType := symbol.GetUpperType(ctx, type1, type2)
 			s.at.PutTypeOfNode(ctx, deriveType)
 		case parser.GScriptParserDIV:
-			deriveType := symbol.GetUpperType(type1, type2)
+			deriveType := symbol.GetUpperType(ctx, type1, type2)
 			s.at.PutTypeOfNode(ctx, deriveType)
 		case parser.GScriptParserPLUS:
-			deriveType := symbol.GetUpperType(type1, type2)
+			deriveType := symbol.GetUpperType(ctx, type1, type2)
 			s.at.PutTypeOfNode(ctx, deriveType)
 		case parser.GScriptParserSUB:
 			if type1 == symbol.String || type2 == symbol.String {
 				s.at.Log(ctx, fmt.Sprintf("invalid operation: string - string"))
 				return
 			}
-			deriveType := symbol.GetUpperType(type1, type2)
+			deriveType := symbol.GetUpperType(ctx, type1, type2)
 			s.at.PutTypeOfNode(ctx, deriveType)
 		case parser.GScriptParserMOD:
 			if type1 == symbol.Int && type2 == symbol.Int {

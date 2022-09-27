@@ -3,10 +3,9 @@ package resolver
 import (
 	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
+	"github.com/crossoverJie/gscript/log"
 	"github.com/crossoverJie/gscript/symbol"
 )
-
-var NativeLine int
 
 type AnnotatedTree struct {
 	ast antlr.ParseTree
@@ -209,21 +208,8 @@ func (a *AnnotatedTree) GetHttpPathVariable() *symbol.Variable {
 	return a.httpPathVariable
 }
 
-type Log struct {
-	ctx antlr.ParserRuleContext
-	msg string
-}
-
-func (l *Log) String() string {
-	line := l.ctx.GetStart().GetLine() - NativeLine
-	return fmt.Sprintf("%d:%d: %s", line, l.ctx.GetStart().GetColumn(), l.msg)
-}
-
 func recordLog(ctx antlr.ParserRuleContext, msg string) {
-	l := &Log{
-		ctx: ctx,
-		msg: msg,
-	}
+	l := log.NewLog(ctx, msg)
 	fmt.Println(l)
 }
 
