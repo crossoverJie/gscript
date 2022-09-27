@@ -163,7 +163,7 @@ int a=10;
 string b,c;
 float e = 10.1;
 bool f = false;
-string x = `
+string x = ^
 {
     "name": "bob",
     "age": 20,
@@ -179,7 +179,7 @@ string x = `
             }
         ]
     }
-}
+}^
 ```
 
 ## Array
