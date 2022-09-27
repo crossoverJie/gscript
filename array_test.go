@@ -228,3 +228,14 @@ for(int i=0;i<len(a);i++){
 `
 	NewCompiler().Compiler(script)
 }
+func Test_array15(t *testing.T) {
+	script := `
+int[] a={1,2,3};
+int[] b = a;
+append(b,4);
+println(a);
+println(b);
+}
+`
+	NewCompiler().Compiler(script)
+}
