@@ -47,5 +47,6 @@ func TestPrint2(t *testing.T) {
 print("123" + " ");
 print("456" + " ");
 `
-	NewCompiler().Compiler(script)
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
 }

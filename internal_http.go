@@ -2,6 +2,7 @@ package gscript
 
 import (
 	"fmt"
+	"github.com/crossoverJie/gscript/log"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/stack"
 	"github.com/crossoverJie/gscript/symbol"
@@ -15,14 +16,11 @@ type httpTool struct {
 	r *http.Request
 }
 
+// path 与 http 工具的映射关系
 var path2HttpTool map[string]*httpTool
 
 func (v *Visitor) httpHandle(ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 3 {
-		// todo crossoverJie 运行时报错
-		panic("")
-	}
 	p := paramValues[0]
 	p0 := paramValues[1]
 	p1 := paramValues[2]
@@ -37,9 +35,6 @@ func (v *Visitor) httpHandle(ctx *parser.FunctionCallContext) interface{} {
 	switch p0.(type) {
 	case string:
 		path = fmt.Sprintf("%s", p0)
-	default:
-		// todo crossoverJie 运行时报错
-		panic("")
 	}
 	switch p1.(type) {
 	case *stack.FuncObject:
@@ -47,8 +42,8 @@ func (v *Visitor) httpHandle(ctx *parser.FunctionCallContext) interface{} {
 		function := funcObject.GetFunction()
 		var h = func(w http.ResponseWriter, r *http.Request) {
 			if r.Method != strings.ToUpper(method) {
-				// todo crossoverJie 运行时报错
-				panic("method not correct")
+				// todo crossoverJie http panic 单独 recovery
+				log.RuntimePanic(ctx, fmt.Sprintf("http method %s not correct", method))
 			}
 			// 保存 path 与 HTTPTool 映射关系
 			if path2HttpTool == nil {
@@ -73,10 +68,6 @@ func (v *Visitor) httpHandle(ctx *parser.FunctionCallContext) interface{} {
 
 func (v *Visitor) httpRun(ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 1 {
-		// todo crossoverJie 运行时报错
-		panic("")
-	}
 	p0 := paramValues[0]
 	var addr string
 	switch p0.(type) {
@@ -89,11 +80,10 @@ func (v *Visitor) httpRun(ctx *parser.FunctionCallContext) interface{} {
 		fmt.Println(fmt.Sprintf("http host %s on port%s", ip, addr))
 		err := http.ListenAndServe(addr, nil)
 		if err != nil {
-			// todo crossoverJie 运行时报错
-			panic(err)
+			log.RuntimePanic(ctx, fmt.Sprintf("httpRun function error occurred,error:%s", err))
 		}
 	} else {
-		// todo crossoverJie 运行时报错
+		log.RuntimePanic(ctx, fmt.Sprintf("addr cannot be empty"))
 	}
 
 	return nil
@@ -104,8 +94,7 @@ func (v *Visitor) fprintfJSON(ctx *parser.FunctionCallContext) {
 	code, path, json := v.getCodePathValue(paramValues)
 	tool, ok := path2HttpTool[path]
 	if !ok {
-		// todo crossoverJie 运行时报错
-		panic("")
+		log.RuntimePanic(ctx, fmt.Sprintf("http handle path not fount"))
 	}
 	tool.w.Header().Set("Content-Type", "application/json")
 	tool.w.WriteHeader(code)
@@ -118,8 +107,7 @@ func (v *Visitor) fprintfHTML(ctx *parser.FunctionCallContext) {
 	code, path, html := v.getCodePathValue(paramValues)
 	tool, ok := path2HttpTool[path]
 	if !ok {
-		// todo crossoverJie 运行时报错
-		panic("")
+		log.RuntimePanic(ctx, fmt.Sprintf("http handle path not fount"))
 	}
 	tool.w.Header().Set("Content-Type", "text/html")
 	tool.w.WriteHeader(code)
@@ -127,10 +115,6 @@ func (v *Visitor) fprintfHTML(ctx *parser.FunctionCallContext) {
 }
 
 func (v *Visitor) getCodePathValue(paramValues []interface{}) (int, string, string) {
-	if len(paramValues) != 3 {
-		// todo crossoverJie 运行时报错
-		panic("")
-	}
 	p0 := paramValues[0]
 	p1 := paramValues[1]
 	p2 := paramValues[2]
@@ -142,8 +126,6 @@ func (v *Visitor) getCodePathValue(paramValues []interface{}) (int, string, stri
 	switch p0.(type) {
 	case int:
 		code = p0.(int)
-	default:
-		// todo crossoverJie 运行时报错
 	}
 	switch p1.(type) {
 	case string:
@@ -159,10 +141,6 @@ func (v *Visitor) getCodePathValue(paramValues []interface{}) (int, string, stri
 
 func (v *Visitor) queryPath(ctx *parser.FunctionCallContext) string {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 1 {
-		// todo crossoverJie 运行时报错
-		panic("")
-	}
 	p0 := paramValues[0]
 	var path string
 	switch p0.(type) {
@@ -172,8 +150,7 @@ func (v *Visitor) queryPath(ctx *parser.FunctionCallContext) string {
 
 	tool, ok := path2HttpTool[path]
 	if !ok {
-		// todo crossoverJie 运行时报错
-		panic("")
+		log.RuntimePanic(ctx, fmt.Sprintf("http handle path not fount"))
 	}
 	return tool.r.URL.Path
 
@@ -181,10 +158,6 @@ func (v *Visitor) queryPath(ctx *parser.FunctionCallContext) string {
 
 func (v *Visitor) formValue(ctx *parser.FunctionCallContext) string {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 2 {
-		// todo crossoverJie 运行时报错
-		panic("")
-	}
 	p0 := paramValues[0]
 	p1 := paramValues[1]
 	var (
@@ -203,8 +176,7 @@ func (v *Visitor) formValue(ctx *parser.FunctionCallContext) string {
 
 	tool, ok := path2HttpTool[path]
 	if !ok {
-		// todo crossoverJie 运行时报错
-		panic("")
+		log.RuntimePanic(ctx, fmt.Sprintf("http handle path not fount"))
 	}
 
 	return tool.r.FormValue(key)

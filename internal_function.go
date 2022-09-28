@@ -8,6 +8,7 @@ import (
 	"github.com/crossoverJie/gscript/stack"
 	"github.com/crossoverJie/xjson"
 	"hash/fnv"
+	"reflect"
 	"time"
 )
 
@@ -74,10 +75,6 @@ func (v *Visitor) assertEqual(ctx *parser.FunctionCallContext) {
 
 func (v *Visitor) append(ctx *parser.FunctionCallContext) []interface{} {
 	paramValues, left := v.buildParamValuesReturnLeft(ctx)
-	if len(paramValues) != 2 {
-		// todo crossoverJie 运行时报错
-		panic("")
-	}
 	switch paramValues[0].(type) {
 	case []interface{}:
 		array := paramValues[0].([]interface{})
@@ -93,10 +90,6 @@ func (v *Visitor) append(ctx *parser.FunctionCallContext) []interface{} {
 
 func (v *Visitor) len(ctx *parser.FunctionCallContext) int {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 1 {
-		// todo crossoverJie 运行时报错
-		panic("")
-	}
 	p0 := paramValues[0]
 	switch p0.(type) {
 	case []interface{}:
@@ -130,10 +123,6 @@ func hash(v interface{}) int {
 
 func (v *Visitor) JSON(ctx *parser.FunctionCallContext) string {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 1 {
-		// todo crossoverJie 运行时报错
-		panic("")
-	}
 	value := paramValues[0]
 	switch value.(type) {
 	case *stack.ClassObject:
@@ -142,7 +131,6 @@ func (v *Visitor) JSON(ctx *parser.FunctionCallContext) string {
 		marshal, err := json.Marshal(data)
 		if err != nil {
 			log.RuntimePanic(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
-
 		}
 		return string(marshal)
 	case []interface{}:
@@ -220,8 +208,7 @@ func (v *Visitor) JSONGet(ctx *parser.FunctionCallContext) interface{} {
 		case string:
 			v1 = fmt.Sprintf("%s", value)
 		default:
-			// todo crossoverJie 编译器报错
-			panic("")
+			log.RuntimePanic(ctx, fmt.Sprintf("JSONGet JSON parameter are not a string: %v", reflect.TypeOf(value)))
 		}
 	case string:
 		v1 = fmt.Sprintf("%s", p0)
@@ -233,8 +220,7 @@ func (v *Visitor) JSONGet(ctx *parser.FunctionCallContext) interface{} {
 		case string:
 			v2 = fmt.Sprintf("%s", value)
 		default:
-			// todo crossoverJie 编译器报错
-			panic("")
+			log.RuntimePanic(ctx, fmt.Sprintf("JSONGet path parameter are not a string: %v", reflect.TypeOf(value)))
 		}
 	case string:
 		v2 = fmt.Sprintf("%s", p1)
@@ -245,10 +231,6 @@ func (v *Visitor) JSONGet(ctx *parser.FunctionCallContext) interface{} {
 
 func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 2 {
-		// todo crossoverJie 运行时报错
-		panic("")
-	}
 	p0 := paramValues[0]
 	p1 := paramValues[1]
 	var (
@@ -265,8 +247,7 @@ func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
 
 	location, err := time.LoadLocation(tz)
 	if err != nil {
-		// todo crossoverJie 运行时报错
-		panic(err)
+		log.RuntimePanic(ctx, fmt.Sprintf("getCurrentTime function error occurred,error:%s", err))
 	}
 	local := time.Now().In(location)
 	return local.Format(layout)
@@ -316,9 +297,6 @@ func (v *Visitor) getPrintfParams(ctx *parser.FunctionCallContext) (string, []in
 		switch value.(type) {
 		case string:
 			format = value.(string)
-		default:
-			// todo crossoverJie 运行时报错
-			panic("not string")
 		}
 	}
 

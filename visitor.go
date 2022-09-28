@@ -469,7 +469,6 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return v.callOpFunction(ctx, sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
 				log.RuntimePanic(ctx, fmt.Sprintf("invalid operation: %v > %v", leftObject, rightObject))
-
 			}
 		case parser.GScriptParserLT:
 			deriveType = sym.GetUpperType(ctx, type1, type2)
@@ -484,7 +483,7 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				// 两个参数类型相同，执行运算符重载
 				return v.callOpFunction(ctx, sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				// todo crossoverJie 运行时错误
+				log.RuntimePanic(ctx, fmt.Sprintf("invalid operation: %v < %v", leftObject, rightObject))
 			}
 		case parser.GScriptParserGE:
 			deriveType = sym.GetUpperType(ctx, type1, type2)

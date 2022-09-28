@@ -1,6 +1,7 @@
 package gscript
 
 import (
+	"fmt"
 	"os"
 	"testing"
 )
@@ -175,4 +176,21 @@ func TestRuntimeFail13(t *testing.T) {
 hash(12,1);
 `
 	NewCompiler().Compiler(script)
+}
+func TestRuntimeFail14(t *testing.T) {
+	os.Setenv(RuntimeError, "true")
+	script := `
+int[] a ={1,2,3};
+append(a,19,2);
+`
+	NewCompiler().Compiler(script)
+}
+func TestRuntimeFail15(t *testing.T) {
+	os.Setenv(RuntimeError, "true")
+	script := `
+string local = getCurrentTime("Asia/Shanghai","2006-01-02 15:04:05");
+printf("local:%s", local);
+`
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
 }

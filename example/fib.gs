@@ -13,5 +13,5 @@ void fib(){
 func int() f = fib();
 
 for (int i = 0; i < 10; i++){
-    println(f());
+    print(f()+" ");
 }
