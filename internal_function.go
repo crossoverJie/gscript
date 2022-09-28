@@ -85,8 +85,8 @@ func (v *Visitor) append(ctx *parser.FunctionCallContext) []interface{} {
 		left.SetValue(array)
 		return array
 	default:
-		l := log.NewLog(ctx, fmt.Sprintf("first argument to append must be array"))
-		panic(l)
+		log.RuntimePanic(ctx, fmt.Sprintf("first argument to append must be array"))
+
 	}
 	return nil
 }
@@ -141,8 +141,8 @@ func (v *Visitor) JSON(ctx *parser.FunctionCallContext) string {
 		data := v.classObject2Map(classObject)
 		marshal, err := json.Marshal(data)
 		if err != nil {
-			l := log.NewLog(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
-			panic(l)
+			log.RuntimePanic(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
+
 		}
 		return string(marshal)
 	case []interface{}:
@@ -165,24 +165,24 @@ func (v *Visitor) JSON(ctx *parser.FunctionCallContext) string {
 		if dataClass != nil {
 			marshal, err := json.Marshal(dataClass)
 			if err != nil {
-				l := log.NewLog(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
-				panic(l)
+				log.RuntimePanic(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
+
 			}
 			return string(marshal)
 		}
 		// int[] a = {1,2,3}; json = JSON(a)
 		marshal, err := json.Marshal(dataList)
 		if err != nil {
-			l := log.NewLog(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
-			panic(l)
+			log.RuntimePanic(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
+
 		}
 		// {1,2,3}
 		return string(marshal)
 	default:
 		marshal, err := json.Marshal(value)
 		if err != nil {
-			l := log.NewLog(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
-			panic(l)
+			log.RuntimePanic(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
+
 		}
 		return string(marshal)
 	}

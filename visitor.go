@@ -268,26 +268,26 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 			case int:
 				if leftValue.GetVariable().GetType() != sym.Int {
 					// string a=10; 校验这类错误
-					l := log.NewLog(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
-					panic(l)
+					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
+
 				}
 			case string:
 				if leftValue.GetVariable().GetType() != sym.String {
 					// int a="1"; 校验这类错误
-					l := log.NewLog(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
-					panic(l)
+					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
+
 				}
 			case float64:
 				if leftValue.GetVariable().GetType() != sym.Float {
 					// int a=10.1;
-					l := log.NewLog(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
-					panic(l)
+					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
+
 				}
 			case bool:
 				if leftValue.GetVariable().GetType() != sym.Bool {
 					// int a=10.1;
-					l := log.NewLog(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
-					panic(l)
+					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
+
 				}
 			}
 		}
@@ -408,14 +408,12 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				// 两个参数类型相同，执行运算符重载
 				return v.callOpFunction(ctx, type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v * %v", leftObject, rightObject))
-				panic(l)
+				log.RuntimePanic(ctx, fmt.Sprintf("invalid operation: %v * %v", leftObject, rightObject))
 			}
 		case parser.GScriptParserDIV:
 			if deriveType == sym.Int {
 				if rightObject.(int) == 0 {
-					l := log.NewLog(ctx, "integer divide by zero")
-					panic(l)
+					log.RuntimePanic(ctx, "integer divide by zero")
 				}
 				return leftObject.(int) / rightObject.(int)
 			} else if deriveType == sym.Float {
@@ -424,8 +422,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				// 两个参数类型相同，执行运算符重载
 				return v.callOpFunction(ctx, type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v / %v", leftObject, rightObject))
-				panic(l)
+				log.RuntimePanic(ctx, fmt.Sprintf("invalid operation: %v / %v", leftObject, rightObject))
+
 			}
 
 		case parser.GScriptParserPLUS:
@@ -439,8 +437,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				// 两个参数类型相同，执行运算符重载
 				return v.callOpFunction(ctx, type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v + %v", leftObject, rightObject))
-				panic(l)
+				log.RuntimePanic(ctx, fmt.Sprintf("invalid operation: %v + %v", leftObject, rightObject))
+
 			}
 		case parser.GScriptParserSUB:
 			if deriveType == sym.Int {
@@ -451,8 +449,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				// 两个参数类型相同，执行运算符重载
 				return v.callOpFunction(ctx, type1, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v - %v", leftObject, rightObject))
-				panic(l)
+				log.RuntimePanic(ctx, fmt.Sprintf("invalid operation: %v - %v", leftObject, rightObject))
+
 			}
 
 		case parser.GScriptParserMOD:
@@ -470,8 +468,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				// 两个参数类型相同，执行运算符重载
 				return v.callOpFunction(ctx, sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v > %v", leftObject, rightObject))
-				panic(l)
+				log.RuntimePanic(ctx, fmt.Sprintf("invalid operation: %v > %v", leftObject, rightObject))
+
 			}
 		case parser.GScriptParserLT:
 			deriveType = sym.GetUpperType(ctx, type1, type2)
@@ -501,8 +499,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				// 两个参数类型相同，执行运算符重载
 				return v.callOpFunction(ctx, sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v > %v", leftObject, rightObject))
-				panic(l)
+				log.RuntimePanic(ctx, fmt.Sprintf("invalid operation: %v > %v", leftObject, rightObject))
+
 			}
 		case parser.GScriptParserLE:
 			deriveType = sym.GetUpperType(ctx, type1, type2)
@@ -517,8 +515,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				// 两个参数类型相同，执行运算符重载
 				return v.callOpFunction(ctx, sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v > %v", leftObject, rightObject))
-				panic(l)
+				log.RuntimePanic(ctx, fmt.Sprintf("invalid operation: %v > %v", leftObject, rightObject))
+
 			}
 		case parser.GScriptParserEQUAL:
 			deriveType = sym.GetUpperType(ctx, type1, type2)
@@ -564,8 +562,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				// 两个参数类型相同，执行运算符重载
 				return v.callOpFunction(ctx, sym.Bool, ctx.GetBop().GetTokenType(), leftObject, rightObject)
 			} else {
-				l := log.NewLog(ctx, fmt.Sprintf("invalid operation: %v != %v", leftObject, rightObject))
-				panic(l)
+				log.RuntimePanic(ctx, fmt.Sprintf("invalid operation: %v != %v", leftObject, rightObject))
+
 			}
 		case parser.GScriptParserASSIGN:
 			switch val1.(type) {
@@ -749,8 +747,8 @@ func (v *Visitor) callOpFunction(ctx antlr.ParserRuleContext, returnType sym.Typ
 		opParams := []interface{}{leftObject, rightObject}
 		return v.executeFunctionCall(funcObject, opParams)
 	} else {
-		l := log.NewLog(ctx, fmt.Sprintf("no match to operator overloading function"))
-		panic(l)
+		log.RuntimePanic(ctx, fmt.Sprintf("no match to operator overloading function"))
+
 	}
 	return nil
 }
@@ -885,8 +883,7 @@ func (v *Visitor) getFunctionObject(ctx *parser.FunctionCallContext) *stack.Func
 
 	default:
 		name := ctx.IDENTIFIER().GetText()
-		l := log.NewLog(ctx, fmt.Sprintf("unable find function %s", name))
-		panic(l)
+		log.RuntimePanic(ctx, fmt.Sprintf("unable find function %s", name))
 
 	}
 
@@ -1116,14 +1113,14 @@ func (v *Visitor) VisitStmWhile(ctx *parser.StmWhileContext) interface{} {
 			if ok {
 				condition = c
 			} else {
-				l := log.NewLog(ctx, fmt.Sprintf("non-bool %v used as for condition", value.(*LeftValue).GetValue()))
-				panic(l)
+				log.RuntimePanic(ctx, fmt.Sprintf("non-bool %v used as for condition", value.(*LeftValue).GetValue()))
+
 			}
 		case bool:
 			condition = value.(bool)
 		default:
-			l := log.NewLog(ctx, fmt.Sprintf("non-bool %v used as for condition", value))
-			panic(l)
+			log.RuntimePanic(ctx, fmt.Sprintf("non-bool %v used as for condition", value))
+
 		}
 
 		if !condition {

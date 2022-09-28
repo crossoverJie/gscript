@@ -15,6 +15,10 @@ type Log struct {
 func NewLog(ctx antlr.ParserRuleContext, msg string) *Log {
 	return &Log{ctx: ctx, msg: msg}
 }
+func RuntimePanic(ctx antlr.ParserRuleContext, msg string) {
+	log := NewLog(ctx, msg)
+	panic(log)
+}
 
 func (l *Log) String() string {
 	line := l.ctx.GetStart().GetLine() - NativeLine
