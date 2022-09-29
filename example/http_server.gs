@@ -38,7 +38,8 @@ func (HttpContext) handle2 (HttpContext ctx){
 httpHandle("get", "/p", handle);
 httpHandle("get", "/p/1", handle1);
 httpHandle("get", "/p/2", handle2);
-string[] args = getOSArgs();
+System s = System();
+string[] args = s.getOSArgs();
 println(args);
 if (len(args) == 3){
     httpRun(":" + args[2]);

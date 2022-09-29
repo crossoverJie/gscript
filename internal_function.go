@@ -8,6 +8,9 @@ import (
 	"github.com/crossoverJie/gscript/stack"
 	"github.com/crossoverJie/xjson"
 	"hash/fnv"
+	"io/fs"
+	"os"
+	"os/exec"
 	"reflect"
 	"time"
 )
@@ -256,6 +259,51 @@ func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
 
 func (v *Visitor) getOSArgs(ctx *parser.FunctionCallContext) []string {
 	return Args
+}
+
+// 执行 command
+func (v *Visitor) command(ctx *parser.FunctionCallContext) string {
+	command, variableParams := v.getPrintfParams(ctx)
+	var args []string
+	if len(variableParams) > 0 {
+		params := variableParams[0]
+		strings, ok := params.([]interface{})
+		if ok {
+			for _, s := range strings {
+				args = append(args, s.(string))
+			}
+		}
+	}
+
+	cmd := exec.Command(command, args...)
+	stdoutStderr, err := cmd.CombinedOutput()
+	if err != nil {
+		log.RuntimePanic(ctx, fmt.Sprintf("system.command function error occurred,error:%s", err))
+	}
+	return string(stdoutStderr)
+}
+
+func (v *Visitor) writeFile(ctx *parser.FunctionCallContext) {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	p1 := paramValues[1]
+	p2 := paramValues[2]
+	fileName := p0.(string)
+	value := p1.(string)
+	perm := p2.(int)
+	err := os.WriteFile(fileName, []byte(value), fs.FileMode(perm))
+	if err != nil {
+		log.RuntimePanic(ctx, fmt.Sprintf("system.writeFile function error occurred,error:%s", err))
+	}
+}
+func (v *Visitor) remove(ctx *parser.FunctionCallContext) {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	fileName := p0.(string)
+	err := os.Remove(fileName)
+	if err != nil {
+		log.RuntimePanic(ctx, fmt.Sprintf("system.remove function error occurred,error:%s", err))
+	}
 }
 
 func (v *Visitor) buildParamValuesReturnLeft(ctx *parser.FunctionCallContext) ([]interface{}, *LeftValue) {

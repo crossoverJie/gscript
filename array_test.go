@@ -201,10 +201,12 @@ assertEqual(x,3);
 `
 	NewCompiler().Compiler(script)
 }
-func Test_OSArgs14(t *testing.T) {
+
+func Test_OSArgs15(t *testing.T) {
 	Args = os.Args
 	script := `
-string[] args = getOSArgs();
+System s = System();
+string[] args = s.getOSArgs();
 println(len(args));
 println(args);
 `

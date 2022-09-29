@@ -3,6 +3,7 @@ package gscript
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
 	"testing"
 	"time"
@@ -18,6 +19,10 @@ func handler(w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.URL.Path)
 	value := r.FormValue("id")
 	fmt.Println(value)
+	formValue := r.PostFormValue("id")
+	fmt.Println(formValue)
+	data, err := io.ReadAll(r.Body)
+	fmt.Println(string(data), err)
 	//fmt.Fprintf(w, "Hi there, I love %s!", r.URL.Path[1:])
 	fmt.Fprintf(w, string(marshal))
 }
@@ -31,7 +36,7 @@ func createHandle() []h {
 }
 
 func TestHttp(t *testing.T) {
-	http.HandleFunc("/", handler)
+	//http.HandleFunc("/p", handler)
 	//err := http.ListenAndServe(":8000", nil)
 	//if err != nil {
 	//	fmt.Printf("http server failed, err:%v\n", err)
@@ -76,9 +81,41 @@ func (HttpContext) handle2 (HttpContext ctx){
 	println("id="+id);
     ctx.HTML(200, html);
 }
+
+func (HttpContext) handle3 (HttpContext ctx){
+    Person p = Person();
+    p.name = "defg";
+    println("p.name=" + p.name);
+
+	string body = ctx.requestBody();
+	println(body);
+	
+	int id = JSONGet(body, "id");
+	printf("id=%d ",id);
+	
+	string script = JSONGet(body,"script");
+	printf("script=%s",script);
+
+	println("");
+	
+    ctx.JSON(200, p);
+}
+func (HttpContext) handle4 (HttpContext ctx){
+    Person p = Person();
+    p.name = "defg";
+    println("p.name=" + p.name);
+	
+	string script = ctx.postFormValue("script");
+
+	println(script);
+	
+    ctx.JSON(200, p);
+}
 httpHandle("get", "/p", handle);
 httpHandle("get", "/p/1", handle1);
 httpHandle("get", "/p/2", handle2);
+httpHandle("post", "/p/3", handle3);
+httpHandle("post", "/p/4", handle4);
 //httpRun(":8000");
 `
 	NewCompiler().Compiler(script)

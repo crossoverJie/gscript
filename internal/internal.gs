@@ -23,11 +23,9 @@ append(any[] a, any v){}
 // Date
 string getCurrentTime(string tz, string layout){}
 
-// Get os args.
-string[] getOSArgs(){}
-
 // return JSON string
 string JSON(any a){}
+
 // JSON query with path
 any JSONGet(string json, string path){}
 
@@ -41,7 +39,15 @@ FprintfHTML(int code, string path, string html){}
 // path (relative paths may omit leading slash)
 string QueryPath(string path){}
 
+// returns the first value for the named component of the query.
 string FormValue(string path, string key){}
+
+// returns the first value for the named component of the POST
+string PostFormValue(string path, string key){}
+
+// return request raw body
+string RequestBody(string path){}
+
 class HttpContext{
     string path;
     JSON(int code, any v){
@@ -61,6 +67,16 @@ class HttpContext{
         string v = FormValue(path, key);
         return v;
     }
+
+    string postFormValue(string key){
+        string v = PostFormValue(path, key);
+        return v;
+    }    
+
+    string requestBody(){
+        string body = RequestBody(path);
+        return body;
+    }
 }
 // Bind route
 httpHandle(string method, string path, func (HttpContext) handle){
@@ -70,6 +86,33 @@ httpHandle(string method, string path, func (HttpContext) handle){
 }
 // Run http server.
 httpRun(string addr){}
+
+// System os api
+string[] GetOSArgs(){}
+string Command(string name, string ...arg){}
+WriteFile(string fileName, string value, int perm){}
+Remove(string fileName){}
+
+
+// system os api
+class System{
+
+    // Get os args.
+    string[] getOSArgs(){
+        return GetOSArgs();
+    }
+    string command(string name, string ...arg){
+        return Command(name, arg);
+    }
+    // attention: perm is the decimal
+    writeFile(string fileName, string value, int perm){
+        WriteFile(fileName, value, perm);
+    }
+    // removes the named file
+    remove(string fileName){
+        Remove(fileName);
+    }
+}
 
 class Entry{
     any key,value;

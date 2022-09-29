@@ -6,6 +6,7 @@ import (
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/stack"
 	"github.com/crossoverJie/gscript/symbol"
+	"io"
 	"net"
 	"net/http"
 	"strings"
@@ -114,6 +115,28 @@ func (v *Visitor) fprintfHTML(ctx *parser.FunctionCallContext) {
 	fmt.Fprintf(tool.w, html)
 }
 
+func (v *Visitor) requestBody(ctx *parser.FunctionCallContext) string {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	var path string
+	switch p0.(type) {
+	case string:
+		path = fmt.Sprintf("%s", p0)
+	}
+
+	tool, ok := path2HttpTool[path]
+	if !ok {
+		log.RuntimePanic(ctx, fmt.Sprintf("http handle path not fount"))
+	}
+	data, err := io.ReadAll(tool.r.Body)
+	if err != nil {
+		log.RuntimePanic(ctx, fmt.Sprintf("read body error:%s", err))
+	}
+
+	return string(data)
+
+}
+
 func (v *Visitor) getCodePathValue(paramValues []interface{}) (int, string, string) {
 	p0 := paramValues[0]
 	p1 := paramValues[1]
@@ -180,6 +203,32 @@ func (v *Visitor) formValue(ctx *parser.FunctionCallContext) string {
 	}
 
 	return tool.r.FormValue(key)
+
+}
+func (v *Visitor) postFormValue(ctx *parser.FunctionCallContext) string {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	p1 := paramValues[1]
+	var (
+		path, key string
+	)
+
+	switch p0.(type) {
+	case string:
+		path = fmt.Sprintf("%s", p0)
+	}
+
+	switch p1.(type) {
+	case string:
+		key = fmt.Sprintf("%s", p1)
+	}
+
+	tool, ok := path2HttpTool[path]
+	if !ok {
+		log.RuntimePanic(ctx, fmt.Sprintf("http handle path not fount"))
+	}
+
+	return tool.r.PostFormValue(key)
 
 }
 

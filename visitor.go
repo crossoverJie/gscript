@@ -787,8 +787,18 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return v.queryPath(ctx)
 	} else if name == "FormValue" {
 		return v.formValue(ctx)
-	} else if name == "getOSArgs" {
+	} else if name == "PostFormValue" {
+		return v.postFormValue(ctx)
+	} else if name == "GetOSArgs" {
 		return v.getOSArgs(ctx)
+	} else if name == "Command" {
+		return v.command(ctx)
+	} else if name == "WriteFile" {
+		v.writeFile(ctx)
+		return nil
+	} else if name == "Remove" {
+		v.remove(ctx)
+		return nil
 	} else if name == "printf" {
 		v.printf(ctx)
 		return nil
@@ -797,6 +807,8 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 	} else if name == "print" {
 		v.print(ctx)
 		return nil
+	} else if name == "RequestBody" {
+		return v.requestBody(ctx)
 	}
 
 	// 默认构造函数
