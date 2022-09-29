@@ -233,6 +233,36 @@ func (v *Visitor) JSONGet(ctx *parser.FunctionCallContext) interface{} {
 }
 
 func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
+	tz, layout := v.getTzAndLayout(ctx)
+
+	location, err := time.LoadLocation(tz)
+	if err != nil {
+		log.RuntimePanic(ctx, fmt.Sprintf("getCurrentTime function error occurred,error:%s", err))
+	}
+	local := time.Now().In(location)
+	return local.Format(layout)
+
+}
+func (v *Visitor) unix(ctx *parser.FunctionCallContext) int64 {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	var (
+		tz string
+	)
+	switch p0.(type) {
+	case string:
+		tz = fmt.Sprintf("%s", p0)
+	}
+	location, err := time.LoadLocation(tz)
+	if err != nil {
+		log.RuntimePanic(ctx, fmt.Sprintf("unix function error occurred,error:%s", err))
+	}
+	local := time.Now().In(location)
+	return local.Unix()
+
+}
+
+func (v *Visitor) getTzAndLayout(ctx *parser.FunctionCallContext) (string, string) {
 	paramValues := v.buildParamValues(ctx)
 	p0 := paramValues[0]
 	p1 := paramValues[1]
@@ -247,14 +277,7 @@ func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
 	case string:
 		layout = fmt.Sprintf("%s", p1)
 	}
-
-	location, err := time.LoadLocation(tz)
-	if err != nil {
-		log.RuntimePanic(ctx, fmt.Sprintf("getCurrentTime function error occurred,error:%s", err))
-	}
-	local := time.Now().In(location)
-	return local.Format(layout)
-
+	return tz, layout
 }
 
 func (v *Visitor) getOSArgs(ctx *parser.FunctionCallContext) []string {

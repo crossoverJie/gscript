@@ -20,9 +20,6 @@ assertEqual(any a1, any a2){}
 // appends "v" to the end of a array "a"
 append(any[] a, any v){}
 
-// Date
-string getCurrentTime(string tz, string layout){}
-
 // return JSON string
 string JSON(any a){}
 
@@ -30,7 +27,7 @@ string JSON(any a){}
 any JSONGet(string json, string path){}
 
 
-// http lib
+// HTTP lib
 // Response json
 FprintfJSON(int code, string path, string json){}
 // Resonse html
@@ -111,6 +108,20 @@ class System{
     // removes the named file
     remove(string fileName){
         Remove(fileName);
+    }
+}
+
+// Date
+string GetCurrentTime(string tz, string layout){}
+
+int Unix(string tz){}
+
+class DateTime{
+    string getCurrentTime(string tz, string layout){
+        return GetCurrentTime(tz, layout);
+    }
+    int unix(string tz){
+        return Unix(tz);
     }
 }
 

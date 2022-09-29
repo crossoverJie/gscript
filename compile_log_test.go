@@ -188,8 +188,11 @@ append(a,19,2);
 func TestRuntimeFail15(t *testing.T) {
 	os.Setenv(RuntimeError, "true")
 	script := `
-string local = getCurrentTime("Asia/Shanghai","2006-01-02 15:04:05");
-printf("local:%s", local);
+DateTime d = DateTime();
+string local = d.getCurrentTime("Asia/Shanghai","2006-01-02 15:04:05");
+printf("local:%s ", local);
+int u = d.unix("Asia/Shanghai");
+println(u);
 `
 	compiler := NewCompiler().Compiler(script)
 	fmt.Println(compiler)

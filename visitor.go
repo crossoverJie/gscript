@@ -781,8 +781,10 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		v.fprintfJSON(ctx)
 	} else if name == "FprintfHTML" {
 		v.fprintfHTML(ctx)
-	} else if name == "getCurrentTime" {
+	} else if name == "GetCurrentTime" {
 		return v.getCurrentTime(ctx)
+	} else if name == "Unix" {
+		return v.unix(ctx)
 	} else if name == "QueryPath" {
 		return v.queryPath(ctx)
 	} else if name == "FormValue" {

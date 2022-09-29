@@ -50,3 +50,12 @@ print("456" + " ");
 	compiler := NewCompiler().Compiler(script)
 	fmt.Println(compiler)
 }
+func TestDate2(t *testing.T) {
+	script := `
+DateTime d = DateTime();
+string local = d.getCurrentTime("Asia/Shanghai","2006-01-02 15:04:05");
+printf("local:%s", local);
+`
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
+}

@@ -34,8 +34,9 @@ println(v);
 func Test_Write(t *testing.T) {
 	Args = os.Args
 	script := `
+DateTime d = DateTime();
 System s = System();
-string fileName = "test.gs";
+string fileName = d.unix("Asia/Shanghai") + "test.gs" ;
 s.writeFile(fileName,"println(^hello^);",438);
 string v = s.command("./gscript",fileName);
 println(v);
