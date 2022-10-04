@@ -1,4 +1,4 @@
-void fib(){
+func int() fib(){
     int a = 0;
     int b = 1;
     int fibonacci(){
