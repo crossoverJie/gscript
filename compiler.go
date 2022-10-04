@@ -1,14 +1,21 @@
 package gscript
 
 import (
+	"fmt"
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/crossoverJie/gscript/internal"
+	"github.com/crossoverJie/gscript/log"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/resolver"
+	"os"
 	"strings"
 )
 
 var Args []string
+
+const (
+	RuntimeError = "RuntimeError"
+)
 
 type Compiler struct {
 }
@@ -50,11 +57,19 @@ func (c *Compiler) compile(script string) interface{} {
 }
 
 func (c *Compiler) Compiler(script string) interface{} {
-	//defer func() {
-	//	if r := recover(); r != nil {
-	//		fmt.Println(r)
-	//	}
-	//}()
+	runtimeError := os.Getenv(RuntimeError)
+	if runtimeError != "" {
+		defer func() {
+			if r := recover(); r != nil {
+				switch x := r.(type) {
+				case *log.Log:
+					fmt.Printf("runtime error: %s \n", x.String())
+				default:
+					panic(x)
+				}
+			}
+		}()
+	}
 	native := c.loadInternal()
 	script = native + script
 	return c.compile(script)
@@ -67,7 +82,7 @@ func (c *Compiler) loadInternal() string {
 		panic(err)
 	}
 	v := string(bytes)
-	resolver.NativeLine = strings.Count(v, "\n") + 1
+	log.NativeLine = strings.Count(v, "\n") + 1
 	return v
 
 }

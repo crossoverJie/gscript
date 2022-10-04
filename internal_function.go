@@ -3,10 +3,15 @@ package gscript
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/crossoverJie/gscript/log"
 	"github.com/crossoverJie/gscript/parser"
 	"github.com/crossoverJie/gscript/stack"
 	"github.com/crossoverJie/xjson"
 	"hash/fnv"
+	"io/fs"
+	"os"
+	"os/exec"
+	"reflect"
 	"time"
 )
 
@@ -63,10 +68,6 @@ func (v *Visitor) printArray(value []interface{}) []interface{} {
 
 func (v *Visitor) assertEqual(ctx *parser.FunctionCallContext) {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 2 {
-		// todo crossoverJie 编译器报错
-		panic("")
-	}
 	// todo crossoverJie 参数是个变量，需要取左值，也可以是个数组取值 a[0]
 	if paramValues[0] != paramValues[1] {
 		line := ctx.GetStart().GetLine()
@@ -77,10 +78,6 @@ func (v *Visitor) assertEqual(ctx *parser.FunctionCallContext) {
 
 func (v *Visitor) append(ctx *parser.FunctionCallContext) []interface{} {
 	paramValues, left := v.buildParamValuesReturnLeft(ctx)
-	if len(paramValues) != 2 {
-		// todo crossoverJie 运行时报错
-		panic("")
-	}
 	switch paramValues[0].(type) {
 	case []interface{}:
 		array := paramValues[0].([]interface{})
@@ -88,17 +85,14 @@ func (v *Visitor) append(ctx *parser.FunctionCallContext) []interface{} {
 		left.SetValue(array)
 		return array
 	default:
-		// todo crossoverJie 运行时报错
+		log.RuntimePanic(ctx, fmt.Sprintf("first argument to append must be array"))
+
 	}
 	return nil
 }
 
 func (v *Visitor) len(ctx *parser.FunctionCallContext) int {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 1 {
-		// todo crossoverJie 运行时报错
-		panic("")
-	}
 	p0 := paramValues[0]
 	switch p0.(type) {
 	case []interface{}:
@@ -116,10 +110,6 @@ func (v *Visitor) len(ctx *parser.FunctionCallContext) int {
 }
 func (v *Visitor) hash(ctx *parser.FunctionCallContext) int {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 1 {
-		// todo crossoverJie 运行时报错
-		panic("")
-	}
 	return hash(paramValues[0])
 }
 
@@ -136,10 +126,6 @@ func hash(v interface{}) int {
 
 func (v *Visitor) JSON(ctx *parser.FunctionCallContext) string {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 1 {
-		// todo crossoverJie 运行时报错
-		panic("")
-	}
 	value := paramValues[0]
 	switch value.(type) {
 	case *stack.ClassObject:
@@ -147,8 +133,7 @@ func (v *Visitor) JSON(ctx *parser.FunctionCallContext) string {
 		data := v.classObject2Map(classObject)
 		marshal, err := json.Marshal(data)
 		if err != nil {
-			// todo crossoverJie 运行时报错
-			panic("")
+			log.RuntimePanic(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
 		}
 		return string(marshal)
 	case []interface{}:
@@ -171,24 +156,24 @@ func (v *Visitor) JSON(ctx *parser.FunctionCallContext) string {
 		if dataClass != nil {
 			marshal, err := json.Marshal(dataClass)
 			if err != nil {
-				// todo crossoverJie 运行时报错
-				panic("")
+				log.RuntimePanic(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
+
 			}
 			return string(marshal)
 		}
 		// int[] a = {1,2,3}; json = JSON(a)
 		marshal, err := json.Marshal(dataList)
 		if err != nil {
-			// todo crossoverJie 运行时报错
-			panic("")
+			log.RuntimePanic(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
+
 		}
 		// {1,2,3}
 		return string(marshal)
 	default:
 		marshal, err := json.Marshal(value)
 		if err != nil {
-			// todo crossoverJie 运行时报错
-			panic("")
+			log.RuntimePanic(ctx, fmt.Sprintf("JSON function error occurred,error:%s", err))
+
 		}
 		return string(marshal)
 	}
@@ -214,10 +199,6 @@ func (v *Visitor) classObject2Map(classObject *stack.ClassObject) map[string]int
 
 func (v *Visitor) JSONGet(ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 2 {
-		// todo crossoverJie 编译器报错
-		panic("")
-	}
 	p0 := paramValues[0]
 	p1 := paramValues[1]
 	var (
@@ -230,8 +211,7 @@ func (v *Visitor) JSONGet(ctx *parser.FunctionCallContext) interface{} {
 		case string:
 			v1 = fmt.Sprintf("%s", value)
 		default:
-			// todo crossoverJie 编译器报错
-			panic("")
+			log.RuntimePanic(ctx, fmt.Sprintf("JSONGet JSON parameter are not a string: %v", reflect.TypeOf(value)))
 		}
 	case string:
 		v1 = fmt.Sprintf("%s", p0)
@@ -243,8 +223,7 @@ func (v *Visitor) JSONGet(ctx *parser.FunctionCallContext) interface{} {
 		case string:
 			v2 = fmt.Sprintf("%s", value)
 		default:
-			// todo crossoverJie 编译器报错
-			panic("")
+			log.RuntimePanic(ctx, fmt.Sprintf("JSONGet path parameter are not a string: %v", reflect.TypeOf(value)))
 		}
 	case string:
 		v2 = fmt.Sprintf("%s", p1)
@@ -254,11 +233,37 @@ func (v *Visitor) JSONGet(ctx *parser.FunctionCallContext) interface{} {
 }
 
 func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
-	paramValues := v.buildParamValues(ctx)
-	if len(paramValues) != 2 {
-		// todo crossoverJie 运行时报错
-		panic("")
+	tz, layout := v.getTzAndLayout(ctx)
+
+	location, err := time.LoadLocation(tz)
+	if err != nil {
+		log.RuntimePanic(ctx, fmt.Sprintf("getCurrentTime function error occurred,error:%s", err))
 	}
+	local := time.Now().In(location)
+	return local.Format(layout)
+
+}
+func (v *Visitor) unix(ctx *parser.FunctionCallContext) int64 {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	var (
+		tz string
+	)
+	switch p0.(type) {
+	case string:
+		tz = fmt.Sprintf("%s", p0)
+	}
+	location, err := time.LoadLocation(tz)
+	if err != nil {
+		log.RuntimePanic(ctx, fmt.Sprintf("unix function error occurred,error:%s", err))
+	}
+	local := time.Now().In(location)
+	return local.Unix()
+
+}
+
+func (v *Visitor) getTzAndLayout(ctx *parser.FunctionCallContext) (string, string) {
+	paramValues := v.buildParamValues(ctx)
 	p0 := paramValues[0]
 	p1 := paramValues[1]
 	var (
@@ -272,19 +277,56 @@ func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
 	case string:
 		layout = fmt.Sprintf("%s", p1)
 	}
-
-	location, err := time.LoadLocation(tz)
-	if err != nil {
-		// todo crossoverJie 运行时报错
-		panic(err)
-	}
-	local := time.Now().In(location)
-	return local.Format(layout)
-
+	return tz, layout
 }
 
 func (v *Visitor) getOSArgs(ctx *parser.FunctionCallContext) []string {
 	return Args
+}
+
+// 执行 command
+func (v *Visitor) command(ctx *parser.FunctionCallContext) string {
+	command, variableParams := v.getPrintfParams(ctx)
+	var args []string
+	if len(variableParams) > 0 {
+		params := variableParams[0]
+		strings, ok := params.([]interface{})
+		if ok {
+			for _, s := range strings {
+				args = append(args, s.(string))
+			}
+		}
+	}
+
+	cmd := exec.Command(command, args...)
+	stdoutStderr, err := cmd.CombinedOutput()
+	if err != nil {
+		log.RuntimePanic(ctx, fmt.Sprintf("system.command function error occurred,error:%s", err))
+	}
+	return string(stdoutStderr)
+}
+
+func (v *Visitor) writeFile(ctx *parser.FunctionCallContext) {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	p1 := paramValues[1]
+	p2 := paramValues[2]
+	fileName := p0.(string)
+	value := p1.(string)
+	perm := p2.(int)
+	err := os.WriteFile(fileName, []byte(value), fs.FileMode(perm))
+	if err != nil {
+		log.RuntimePanic(ctx, fmt.Sprintf("system.writeFile function error occurred,error:%s", err))
+	}
+}
+func (v *Visitor) remove(ctx *parser.FunctionCallContext) {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	fileName := p0.(string)
+	err := os.Remove(fileName)
+	if err != nil {
+		log.RuntimePanic(ctx, fmt.Sprintf("system.remove function error occurred,error:%s", err))
+	}
 }
 
 func (v *Visitor) buildParamValuesReturnLeft(ctx *parser.FunctionCallContext) ([]interface{}, *LeftValue) {
@@ -326,9 +368,6 @@ func (v *Visitor) getPrintfParams(ctx *parser.FunctionCallContext) (string, []in
 		switch value.(type) {
 		case string:
 			format = value.(string)
-		default:
-			// todo crossoverJie 运行时报错
-			panic("not string")
 		}
 	}
 

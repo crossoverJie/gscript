@@ -572,7 +572,8 @@ println(name);
 assertEqual(name,"abc");
 
 // Get command-line arguments.
-string[] args = getOSArgs();
+System s = System();
+string[] args = s.getOSArgs();
 ```
 
 > Reference JSON query syntax: [xjson](https://github.com/crossoverJie/xjson#arithmetic-syntax)
@@ -672,7 +673,8 @@ func (HttpContext) handle1 (HttpContext ctx){
     ctx.JSON(200, p);
 }
 func (HttpContext) handle2 (HttpContext ctx){
-    string local = getCurrentTime("Asia/Shanghai","2006-01-02 15:04:05");
+    DateTime d = DateTime();
+    string local = d.getCurrentTime("Asia/Shanghai","2006-01-02 15:04:05");
     println(local);
     string html =^
     <html>

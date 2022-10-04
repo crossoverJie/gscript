@@ -573,7 +573,8 @@ println(name);
 assertEqual(name,"abc");
 
 // 获取启动参数
-string[] args = getOSArgs();
+System s = System();
+string[] args = s.getOSArgs();
 ```
 
 
@@ -674,7 +675,8 @@ func (HttpContext) handle1 (HttpContext ctx){
     ctx.JSON(200, p);
 }
 func (HttpContext) handle2 (HttpContext ctx){
-    string local = getCurrentTime("Asia/Shanghai","2006-01-02 15:04:05");
+    DateTime d = DateTime();
+    string local = d.getCurrentTime("Asia/Shanghai","2006-01-02 15:04:05");
     println(local);
     string html =^
     <html>

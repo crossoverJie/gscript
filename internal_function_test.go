@@ -47,5 +47,15 @@ func TestPrint2(t *testing.T) {
 print("123" + " ");
 print("456" + " ");
 `
-	NewCompiler().Compiler(script)
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
+}
+func TestDate2(t *testing.T) {
+	script := `
+DateTime d = DateTime();
+string local = d.getCurrentTime("Asia/Shanghai","2006-01-02 15:04:05");
+printf("local:%s", local);
+`
+	compiler := NewCompiler().Compiler(script)
+	fmt.Println(compiler)
 }
