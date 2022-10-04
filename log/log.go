@@ -21,6 +21,6 @@ func RuntimePanic(ctx antlr.ParserRuleContext, msg string) {
 }
 
 func (l *Log) String() string {
-	line := l.ctx.GetStart().GetLine() - NativeLine
+	line := l.ctx.GetStart().GetLine() - NativeLine + 1
 	return fmt.Sprintf("%d:%d: %s", line, l.ctx.GetStart().GetColumn(), l.msg)
 }
