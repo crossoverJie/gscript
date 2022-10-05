@@ -42,6 +42,16 @@ func (v *Visitor) httpHandle(ctx *parser.FunctionCallContext) interface{} {
 		funcObject := p1.(*stack.FuncObject)
 		function := funcObject.GetFunction()
 		var h = func(w http.ResponseWriter, r *http.Request) {
+			defer func() {
+				if r := recover(); r != nil {
+					switch x := r.(type) {
+					case *log.Log:
+						http.Error(w, x.String(), http.StatusInternalServerError)
+					default:
+						panic(x)
+					}
+				}
+			}()
 			if r.Method != strings.ToUpper(method) {
 				// todo crossoverJie http panic 单独 recovery
 				log.RuntimePanic(ctx, fmt.Sprintf("http method %s not correct", method))

@@ -373,3 +373,18 @@ assertEqual(ret,9);
 `
 	NewCompiler().Compiler(script)
 }
+func TestFor2(t *testing.T) {
+	script := `  
+for (float y= 1.5; y > -1.5; y = y - 0.15) {
+    for (float x = -1.5; x < 1.5; x = x + 0.07) {
+      float a = x*x + y*y - 1.0;
+      if (a*a*a < x*x*y*y*y) {
+        print("*");
+      } else {
+        print(" ");
+      }
+    }
+    println("");
+  }`
+	NewCompiler().Compiler(script)
+}

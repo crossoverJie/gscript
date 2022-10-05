@@ -301,7 +301,7 @@ func (v *Visitor) command(ctx *parser.FunctionCallContext) string {
 	cmd := exec.Command(command, args...)
 	stdoutStderr, err := cmd.CombinedOutput()
 	if err != nil {
-		log.RuntimePanic(ctx, fmt.Sprintf("system.command function error occurred,error:%s", err))
+		log.RuntimePanic(ctx, fmt.Sprintf("system.command function error occurred,error:%s, msg:%s", err, stdoutStderr))
 	}
 	return string(stdoutStderr)
 }
