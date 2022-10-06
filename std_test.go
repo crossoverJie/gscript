@@ -8,7 +8,7 @@ import (
 )
 
 func TestExec(t *testing.T) {
-	cmd := exec.Command("./gscript", "example/print_triangle.gs")
+	cmd := exec.Command("gscript", "example/print_triangle.gs")
 	stdoutStderr, err := cmd.CombinedOutput()
 	fmt.Println(string(stdoutStderr), err)
 
@@ -26,7 +26,7 @@ System s = System();
 string v = s.command("ls","-l","-h");
 println(v);
 
-v = s.command("./gscript", "example/print_triangle.gs");
+v = s.command("gscript", "example/print_triangle.gs");
 println(v);
 `
 	NewCompiler().Compiler(script)
@@ -38,7 +38,7 @@ DateTime d = DateTime();
 System s = System();
 string fileName = d.unix("Asia/Shanghai") + "test.gs" ;
 s.writeFile(fileName,"println(^hello^);",438);
-string v = s.command("./gscript",fileName);
+string v = s.command("gscript",fileName);
 println(v);
 s.remove(fileName);
 `

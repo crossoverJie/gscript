@@ -442,9 +442,19 @@ func TestCompiler_InitSub(t *testing.T) {
 int a = -1;
 println(a);
 println(-100);
-int b=-1.1;
+float b=-1.1;
 println(b+1.1);
 println(-100.1);
+`
+	NewCompiler().Compiler(script)
+}
+func TestDump(t *testing.T) {
+	script := `
+string code = ^int a(int xx){
+	return xx;
+}^;
+println(dumpSymbol(code));
+println(dumpAST(code));
 `
 	NewCompiler().Compiler(script)
 }

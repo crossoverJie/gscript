@@ -385,6 +385,8 @@ for (float y= 1.5; y > -1.5; y = y - 0.15) {
       }
     }
     println("");
-  }`
+  }
+//println(dumpSymbol());
+`
 	NewCompiler().Compiler(script)
 }

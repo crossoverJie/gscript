@@ -5,6 +5,7 @@ import (
 	"github.com/antlr/antlr4/runtime/Go/antlr"
 	"github.com/crossoverJie/gscript/log"
 	"github.com/crossoverJie/gscript/symbol"
+	"strings"
 )
 
 type AnnotatedTree struct {
@@ -35,9 +36,14 @@ type AnnotatedTree struct {
 
 	// 是否编译错误
 	isCompileFail bool
+
+	// print ast
+	r antlr.Recognizer
+
+	root symbol.Scope
 }
 
-func NewAnnotatedTree(ast antlr.ParseTree) *AnnotatedTree {
+func NewAnnotatedTree(ast antlr.ParseTree, r antlr.Recognizer) *AnnotatedTree {
 	return &AnnotatedTree{
 		ast:            ast,
 		symbolOfNode:   make(map[antlr.ParserRuleContext]symbol.Symbol),
@@ -47,6 +53,7 @@ func NewAnnotatedTree(ast antlr.ParseTree) *AnnotatedTree {
 		isRecursion:    make(map[antlr.ParserRuleContext]bool),
 		types:          make([]symbol.Type, 0),
 		opOverloads:    make([]*symbol.OpOverload, 0),
+		r:              r,
 	}
 }
 
@@ -222,4 +229,35 @@ func (a *AnnotatedTree) Log(ctx antlr.ParserRuleContext, msg string) {
 
 func (a *AnnotatedTree) IsCompileFail() bool {
 	return a.isCompileFail
+}
+
+func (a *AnnotatedTree) DumpAST() string {
+	str := a.ast.ToStringTree([]string{""}, a.r)
+	str = strings.ReplaceAll(str, " ", "\n")
+	return str
+}
+func (a *AnnotatedTree) SetRootScope(scope symbol.Scope) {
+	a.root = scope
+}
+func (a *AnnotatedTree) DumpSymbol() string {
+	var buf strings.Builder
+	Scope2String(&buf, a.root, "")
+	return buf.String()
+}
+
+func Scope2String(buf *strings.Builder, scope symbol.Scope, indent string) {
+	buf.WriteString(indent)
+	buf.WriteString(scope.String())
+	buf.WriteString("\n")
+	for _, s := range scope.GetSymbols() {
+		sc, ok := s.(symbol.Scope)
+		if ok {
+			Scope2String(buf, sc, indent+"\t")
+		} else {
+			buf.WriteString(indent)
+			buf.WriteString("\t")
+			buf.WriteString("symbol -> " + s.GetName())
+			buf.WriteString("\n")
+		}
+	}
 }

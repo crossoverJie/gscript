@@ -171,7 +171,7 @@ func GetClass(scope Scope, name string) *Class {
 }
 
 func (s *scope) String() string {
-	return "scope:" + s.GetName()
+	return "scope -> " + s.GetName()
 }
 
 // todo crossoverJie thread-safe?
@@ -203,6 +203,10 @@ func NewBlockScope(ctx antlr.ParserRuleContext, name string, s Scope) Scope {
 	return blockScope
 }
 
+func (v *BlockScope) String() string {
+	return "blockScope -> " + v.name
+}
+
 type Variable struct {
 	*symbol
 	t              Type
@@ -227,7 +231,7 @@ func (v *Variable) SetType(t Type) {
 	v.t = t
 }
 func (v *Variable) String() string {
-	return v.name
+	return "variable -> " + v.name
 }
 func (v *Variable) getVariableArgs() bool {
 	return v.isVariableArgs
@@ -382,6 +386,10 @@ func (f *Func) IsConstructor() bool {
 func (f *Func) IsMethod() bool {
 	_, ok := f.encloseScope.(*Class)
 	return ok
+}
+
+func (f *Func) String() string {
+	return "function -> " + f.GetName()
 }
 
 var functionTypeIndex int
