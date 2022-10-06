@@ -28,7 +28,7 @@ func (c *Class) IsType(t Type) bool {
 }
 
 func (c *Class) String() string {
-	return "Class" + c.GetName()
+	return "Class -> " + c.GetName()
 }
 
 // GetVariable 在 class 中查找变量
@@ -90,4 +90,7 @@ func NewDefaultConstructorFunc(name string, class *Class) *DefaultConstructorFun
 // GetClass 获取构造函数对应的 class
 func (d *DefaultConstructorFunc) GetClass() *Class {
 	return d.GetEncloseScope().(*Class)
+}
+func (d *DefaultConstructorFunc) String() string {
+	return "defaultConstructorFunc - >" + d.GetName()
 }

@@ -29,12 +29,36 @@ func (c *Compiler) CompilerWithoutNative(script string) interface{} {
 	return c.compile(script)
 }
 
+// GetCompileInfo 获取编译的 AST 以及符号表
+func (c *Compiler) GetCompileInfo(script string, isAST bool) string {
+	input := antlr.NewInputStream(script)
+	lexer := parser.NewGScriptLexer(input)
+	stream := antlr.NewCommonTokenStream(lexer, 0)
+	scriptParser := parser.NewGScriptParser(stream)
+	tree := scriptParser.Prog()
+	at := resolver.NewAnnotatedTree(tree, scriptParser)
+
+	walker := antlr.NewParseTreeWalker()
+	// 识别所有的类型、函数、scope
+	walker.Walk(resolver.NewTypeScopeResolver(at), tree)
+
+	// 变量、类型解析，所有使用到 typeType 的地方
+	walker.Walk(resolver.NewTypeResolver(at), tree)
+
+	if isAST {
+		return at.DumpAST()
+	} else {
+		return at.DumpSymbol()
+	}
+}
+
 func (c *Compiler) compile(script string) interface{} {
 	input := antlr.NewInputStream(script)
 	lexer := parser.NewGScriptLexer(input)
 	stream := antlr.NewCommonTokenStream(lexer, 0)
-	tree := parser.NewGScriptParser(stream).Prog()
-	at := resolver.NewAnnotatedTree(tree)
+	scriptParser := parser.NewGScriptParser(stream)
+	tree := scriptParser.Prog()
+	at := resolver.NewAnnotatedTree(tree, scriptParser)
 
 	walker := antlr.NewParseTreeWalker()
 	// 识别所有的类型、函数、scope

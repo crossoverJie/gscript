@@ -809,6 +809,10 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 	} else if name == "print" {
 		v.print(ctx)
 		return nil
+	} else if name == "dumpAST" {
+		return v.dumpAST(ctx)
+	} else if name == "dumpSymbol" {
+		return v.dumpSymbol(ctx)
 	} else if name == "RequestBody" {
 		return v.requestBody(ctx)
 	}

@@ -39,6 +39,7 @@ func (t *TypeScopeResolver) currentScope() symbol.Scope {
 func (t *TypeScopeResolver) EnterProg(ctx *parser.ProgContext) {
 	scope := symbol.NewBlockScope(ctx, "prog", t.currentScope())
 	t.pushScope(ctx, scope)
+	t.at.SetRootScope(scope)
 }
 
 func (t *TypeScopeResolver) ExitProg(ctx *parser.ProgContext) {

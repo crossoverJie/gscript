@@ -383,3 +383,22 @@ func (v *Visitor) print(ctx *parser.FunctionCallContext) {
 	paramValues := v.buildParamValues(ctx)
 	fmt.Print(paramValues...)
 }
+func (v *Visitor) dumpAST(ctx *parser.FunctionCallContext) string {
+	code := v.getCode(ctx)
+	return NewCompiler().GetCompileInfo(code, true)
+}
+func (v *Visitor) dumpSymbol(ctx *parser.FunctionCallContext) string {
+	code := v.getCode(ctx)
+	return NewCompiler().GetCompileInfo(code, false)
+}
+
+func (v *Visitor) getCode(ctx *parser.FunctionCallContext) string {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	var format string
+	switch p0.(type) {
+	case string:
+		format = p0.(string)
+	}
+	return format
+}

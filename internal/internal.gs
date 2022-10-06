@@ -125,6 +125,10 @@ class DateTime{
     }
 }
 
+// Compiler api
+string dumpAST(string code){}
+string dumpSymbol(string code){}
+
 class Entry{
     any key,value;
     Entry next;
