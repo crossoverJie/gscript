@@ -50,7 +50,7 @@ bindata:
 	go-bindata -pkg internal -o internal/internal.go internal/
 
 docker:
-	docker build -t gscript .
+	docker build -t crossoverjie/gscript .
 
 docker-version:
-	docker build -t gscript:$(VERSION) .
+	docker build -t crossoverjie/gscript:$(VERSION) .
