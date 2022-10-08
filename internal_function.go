@@ -402,3 +402,11 @@ func (v *Visitor) getCode(ctx *parser.FunctionCallContext) string {
 	}
 	return format
 }
+
+func (v *Visitor) getWd(ctx *parser.FunctionCallContext) string {
+	str, err := os.Getwd()
+	if err != nil {
+		log.RuntimePanic(ctx, fmt.Sprintf("system.getwd function error occurred,error:%s", err))
+	}
+	return str
+}

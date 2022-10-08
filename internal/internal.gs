@@ -89,6 +89,7 @@ string[] GetOSArgs(){}
 string Command(string name, string ...arg){}
 WriteFile(string fileName, string value, int perm){}
 Remove(string fileName){}
+string Getwd(){}
 
 
 // system os api
@@ -108,6 +109,10 @@ class System{
     // removes the named file
     remove(string fileName){
         Remove(fileName);
+    }
+    // returns a rooted path name corresponding to the current directory.
+    string getwd(){
+        return Getwd();
     }
 }
 

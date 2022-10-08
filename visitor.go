@@ -815,6 +815,8 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return v.dumpSymbol(ctx)
 	} else if name == "RequestBody" {
 		return v.requestBody(ctx)
+	} else if name == "Getwd" {
+		return v.getWd(ctx)
 	}
 
 	// 默认构造函数
