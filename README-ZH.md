@@ -10,7 +10,7 @@
 
 ```
 
-🎮[Play](https://gscript.crossoverjie.top/) | 📘[特性](#特性) | 🌰[例子](#例子) | 👾[REPL](#repl) | 🎉[语法](#语法) | 🎁[标准库](#标准库) | 🔧[安装](https://github.com/crossoverJie/gscript/releases) | 💡[联系作者](#联系作者) | 🇦🇺[英文文档](https://github.com/crossoverjie/gscript/blob/master/README.md)
+🎮[Play](https://gscript.crossoverjie.top/) | 📘[特性](#特性) | 🌰[例子](#例子) | 🔧[安装](#安装) | 👾[REPL](#repl) | 🎉[语法](#语法) | 🎁[标准库](#标准库) | 💡[联系作者](#联系作者) | 🇦🇺[英文文档](https://github.com/crossoverjie/gscript/blob/main/README.md)
 
 
 </div><br>
@@ -139,6 +139,37 @@ printTriangle(7);
 ---
 
 更多例子：[https://github.com/crossoverJie/gscript/tree/main/example](https://github.com/crossoverJie/gscript/tree/main/example)
+
+# 安装
+
+## 二进制文件
+
+在这里下载最新的二进制文件 [here](https://github.com/crossoverJie/gscript/releases)
+
+## 🐳Docker
+
+```shell
+docker pull crossoverjie/gscript
+```
+
+### REPL
+```shell
+docker run --rm -it  crossoverjie/gscript:latest gscript
+```
+
+### 运行脚本
+```shell
+docker run --rm -v $PWD:/usr/src/gscript -w /usr/src/gscript crossoverjie/gscript gscript {yourpath}/temp.gs
+```
+
+## 源码构建
+
+```shell
+git clone https://github.com/crossoverJie/gscript.git
+cd gscript
+make build-code
+./gscript
+```
 
 # REPL
 ```shell
