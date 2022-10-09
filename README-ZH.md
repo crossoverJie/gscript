@@ -10,7 +10,7 @@
 
 ```
 
-🎮[Play](https://gscript.crossoverjie.top/) | 📘[特性](#特性) | 🌰[例子](#例子) | 🔧[安装](#安装) | 👾[REPL](#repl) | 🎉[语法](#语法) | 🎁[标准库](#标准库) | 💡[联系作者](#联系作者) | 🇦🇺[英文文档](https://github.com/crossoverjie/gscript/blob/main/README.md)
+🎮[Play](#playground) | 📘[特性](#特性) | 🌰[例子](#例子) | 🔧[安装](#安装) | 👾[REPL](#repl) | 🎉[语法](#语法) | 🎁[标准库](#标准库) | 💡[联系作者](#联系作者) | 🇦🇺[英文文档](https://github.com/crossoverjie/gscript/blob/main/README.md)
 
 
 </div><br>
@@ -33,6 +33,12 @@ println("hello world");
 ❯ gscript hello_world.gs
 hello world
 ```
+
+# Playground
+
+在线地址: [https://gscript.crossoverjie.top/](https://gscript.crossoverjie.top/)
+
+![](doc/playground-min.gif)
 
 # 特性
 - [x] [class声明](#class)

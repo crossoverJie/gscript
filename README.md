@@ -12,7 +12,7 @@
 
 ```
 
-🎮[Play](https://gscript.crossoverjie.top/) | 📘[Features](#features) | 🌰[Demo](#demo) | 🔧[Install](#install) | 👾[REPL](#repl) | 🎉[Syntax](#syntax) | 🎁[Standard library](#standard-library)  | 💡[Contact Author](#contact-author) | 🇨🇳[中文](https://github.com/crossoverJie/gscript/blob/main/README-ZH.md)
+🎮[Play](#playground) | 📘[Features](#features) | 🌰[Demo](#demo) | 🔧[Install](#install) | 👾[REPL](#repl) | 🎉[Syntax](#syntax) | 🎁[Standard library](#standard-library)  | 💡[Contact Author](#contact-author) | 🇨🇳[中文](https://github.com/crossoverJie/gscript/blob/main/README-ZH.md)
 
 
 
@@ -34,6 +34,12 @@ println("hello world");
 ❯ gscript hello_world.gs
 hello world
 ```
+
+# Playground
+
+Online address: [https://gscript.crossoverjie.top/](https://gscript.crossoverjie.top/)
+
+![](doc/playground-min.gif)
 
 # Features
 
