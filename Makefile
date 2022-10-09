@@ -11,6 +11,10 @@ build:
 	$(GOCLEAN)
 	$(GOBUILD)
 
+build-code:
+	$(GOCLEAN)
+	$(GOBUILD)
+
 
 clean:
 	$(GOCLEAN)

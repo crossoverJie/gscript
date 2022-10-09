@@ -12,7 +12,7 @@
 
 ```
 
-🎮[Play](https://gscript.crossoverjie.top/) | 📘[Features](#features) | 🌰[Demo](#demo) | 👾[REPL](#repl) | 🎉[Syntax](#syntax) | 🎁[Standard library](#standard-library) | 🔧[Install](https://github.com/crossoverJie/gscript/releases) | 💡[Contact Author](#contact-author) | 🇨🇳[中文](https://github.com/crossoverJie/gscript/blob/main/README-ZH.md)
+🎮[Play](https://gscript.crossoverjie.top/) | 📘[Features](#features) | 🌰[Demo](#demo) | 🔧[Install](#install) | 👾[REPL](#repl) | 🎉[Syntax](#syntax) | 🎁[Standard library](#standard-library)  | 💡[Contact Author](#contact-author) | 🇨🇳[中文](https://github.com/crossoverJie/gscript/blob/main/README-ZH.md)
 
 
 
@@ -142,6 +142,37 @@ printTriangle(7);
 ---
 
 More examples:[https://github.com/crossoverJie/gscript/tree/main/example](https://github.com/crossoverJie/gscript/tree/main/example)
+
+# Install
+
+## Binary
+
+Download the latest binaries [here](https://github.com/crossoverJie/gscript/releases)
+
+## 🐳Docker
+
+```shell
+docker pull crossoverjie/gscript
+```
+
+### REPL
+```shell
+docker run --rm -it  crossoverjie/gscript:latest gscript
+```
+
+### Run script
+```shell
+docker run --rm -v $PWD:/usr/src/gscript -w /usr/src/gscript crossoverjie/gscript gscript {yourpath}/temp.gs
+```
+
+## Build from Source Code
+
+```shell
+git clone https://github.com/crossoverJie/gscript.git
+cd gscript
+make build-code
+./gscript
+```
 
 # REPL
 ```shell
