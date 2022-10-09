@@ -13,4 +13,6 @@ RUN --mount=type=ssh go mod download
 
 COPY . .
 RUN go build -ldflags "-s -w" cmd/gscript.go
-RUN cp gscript /usr/bin/
+
+FROM alpine:latest
+COPY --from=builder gscript /usr/bin/
