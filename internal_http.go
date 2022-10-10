@@ -108,7 +108,9 @@ func (v *Visitor) fprintfJSON(ctx *parser.FunctionCallContext) {
 		log.RuntimePanic(ctx, fmt.Sprintf("http handle path not fount"))
 	}
 	tool.w.Header().Set("Content-Type", "application/json")
-	tool.w.WriteHeader(code)
+	if code != http.StatusOK {
+		tool.w.WriteHeader(code)
+	}
 	fmt.Fprintf(tool.w, json)
 
 }
@@ -121,7 +123,9 @@ func (v *Visitor) fprintfHTML(ctx *parser.FunctionCallContext) {
 		log.RuntimePanic(ctx, fmt.Sprintf("http handle path not fount"))
 	}
 	tool.w.Header().Set("Content-Type", "text/html")
-	tool.w.WriteHeader(code)
+	if code != http.StatusOK {
+		tool.w.WriteHeader(code)
+	}
 	fmt.Fprintf(tool.w, html)
 }
 
