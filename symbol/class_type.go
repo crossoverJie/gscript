@@ -32,15 +32,12 @@ func (c *Class) IsType(t Type) bool {
 }
 
 func (c *Class) IsArray() bool {
-	if c == nil {
-		return false
-	}
+
 	return c.isArray
 }
 func (c *Class) SetArray(isArray bool) {
-	if c != nil {
-		c.isArray = isArray
-	}
+	c.isArray = isArray
+
 }
 
 func (c *Class) String() string {

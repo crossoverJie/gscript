@@ -169,14 +169,13 @@ func (t *TypeResolver) ExitTypeType(ctx *parser.TypeTypeContext) {
 		symbolType = t.at.GetTypeOfNode()[ctx.FunctionType()]
 		t.at.PutTypeOfNode(ctx, symbolType)
 	}
-	if symbolType == nil {
-		return
-	}
-	// 还原为默认值
-	symbolType.SetArray(false)
-	if len(ctx.AllLBRACK()) > 0 && len(ctx.AllRBRACK()) > 0 {
-		symbolType.SetArray(true)
+	if symbolType != nil {
+		// 还原为默认值，因为原始类型是常量，为了达到给变量赋值是否为数组，所以每次都要重新赋值，达到变量的效果
+		symbolType.SetArray(false)
+		if len(ctx.AllLBRACK()) > 0 && len(ctx.AllRBRACK()) > 0 {
+			symbolType.SetArray(true)
 
+		}
 	}
 }
 

@@ -5,13 +5,6 @@ import (
 	"testing"
 )
 
-func TestByte1(t *testing.T) {
-	script := `
-int[] a=10;
-`
-	os.Setenv(RuntimeError, "true")
-	NewCompiler().Compiler(script)
-}
 func TestByte(t *testing.T) {
 	script := `
 string v5="9898";
