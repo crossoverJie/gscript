@@ -296,6 +296,10 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
 
 				}
+			case byte:
+				if leftValue.GetVariable().GetType() != sym.Byte {
+					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
+				}
 			}
 		}
 
@@ -824,6 +828,10 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return v.requestBody(ctx)
 	} else if name == "Getwd" {
 		return v.getWd(ctx)
+	} else if name == "toByteArray" {
+		return v.toByteArray(ctx)
+	} else if name == "toString" {
+		return v.toString(ctx)
 	}
 
 	// 默认构造函数

@@ -17,6 +17,9 @@ print(any ...a){}
 
 assertEqual(any a1, any a2){}
 
+byte[] toByteArray(string s){}
+string toString(byte[] b){}
+
 // appends "v" to the end of a array "a"
 append(any[] a, any v){}
 

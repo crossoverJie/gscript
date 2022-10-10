@@ -403,6 +403,22 @@ func (v *Visitor) getCode(ctx *parser.FunctionCallContext) string {
 	return format
 }
 
+func (v *Visitor) toByteArray(ctx *parser.FunctionCallContext) []byte {
+	code := v.getCode(ctx)
+	return []byte(code)
+}
+
+func (v *Visitor) toString(ctx *parser.FunctionCallContext) string {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	switch p0.(type) {
+	case []byte:
+		b := p0.([]byte)
+		return string(b)
+	}
+	return ""
+}
+
 func (v *Visitor) getWd(ctx *parser.FunctionCallContext) string {
 	str, err := os.Getwd()
 	if err != nil {
