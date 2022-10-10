@@ -80,7 +80,7 @@ println(weight);
 assertEqual(weight,99.99);
 
 string j=^{"age":10, "abc":{"def":"def"},"list":[1,2,3]}^;
-String def = JSONGet(j, "abc.def");
+string def = JSONGet(j, "abc.def");
 println(def);
 assertEqual(def,"def");
 int l1 = JSONGet(j, "list[0]");
@@ -108,7 +108,7 @@ string str=^
     }
 }
 ^;
-String g = JSONGet(str, "skill.lang[0].go.feature[0]");
+string g = JSONGet(str, "skill.lang[0].go.feature[0]");
 println(g);
 assertEqual(g,"goroutine");
 `
