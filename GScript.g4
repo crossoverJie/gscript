@@ -260,6 +260,7 @@ primitiveType
     | STRING
     | FLOAT
     | BOOLEAN
+    | BYTE
     | ANY
     ;
 
@@ -295,6 +296,7 @@ INT:                'int';
 STRING:             'string';
 FLOAT:              'float';
 BOOLEAN:            'bool';
+BYTE:               'byte';
 SUPER:              'super';
 SWITCH:             'switch';
 THIS:               'this';

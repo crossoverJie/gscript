@@ -1,11 +1,14 @@
 package symbol
 
-import "github.com/antlr/antlr4/runtime/Go/antlr"
+import (
+	"github.com/antlr/antlr4/runtime/Go/antlr"
+)
 
 type Class struct {
 	// todo crossoverJie 父类
 	*scope
 	defaultConstructorFunc *DefaultConstructorFunc
+	isArray                bool
 }
 
 func NewClass(ctx antlr.ParserRuleContext, name string) *Class {
@@ -16,6 +19,7 @@ func NewClass(ctx antlr.ParserRuleContext, name string) *Class {
 				ctx:  ctx,
 			},
 		},
+		isArray: false,
 	}
 }
 
@@ -25,6 +29,18 @@ func (c *Class) IsType(t Type) bool {
 		return true
 	}
 	return c == t
+}
+
+func (c *Class) IsArray() bool {
+	if c == nil {
+		return false
+	}
+	return c.isArray
+}
+func (c *Class) SetArray(isArray bool) {
+	if c != nil {
+		c.isArray = isArray
+	}
 }
 
 func (c *Class) String() string {

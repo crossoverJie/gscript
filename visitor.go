@@ -8,6 +8,7 @@ import (
 	"github.com/crossoverJie/gscript/resolver"
 	"github.com/crossoverJie/gscript/stack"
 	sym "github.com/crossoverJie/gscript/symbol"
+	"reflect"
 	"strconv"
 )
 
@@ -261,6 +262,14 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 			arrayObject := ret.(*ArrayObject)
 			ret = arrayObject.GetIndexValue()
 		}
+		// 数组赋值校验
+		if leftValue.GetVariable().IsArray() && leftValue.GetVariable().GetType() != sym.Any {
+			if reflect.TypeOf(ret).Kind() != reflect.Slice {
+				// int[] a=10;
+				log.RuntimePanic(ctx, fmt.Sprintf("cannot use %v as type %s[]", ret, leftValue.GetVariable().GetType().GetName()))
+			}
+		}
+
 		// 为变量赋值
 		// int e=10   int e = foo() any 类型不需要校验
 		if leftValue.GetVariable().GetType() != sym.Any {
@@ -269,13 +278,11 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 				if leftValue.GetVariable().GetType() != sym.Int {
 					// string a=10; 校验这类错误
 					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
-
 				}
 			case string:
 				if leftValue.GetVariable().GetType() != sym.String {
 					// int a="1"; 校验这类错误
 					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
-
 				}
 			case float64:
 				if leftValue.GetVariable().GetType() != sym.Float {
@@ -285,7 +292,7 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 				}
 			case bool:
 				if leftValue.GetVariable().GetType() != sym.Bool {
-					// int a=10.1;
+					// bool a=10.1;
 					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
 
 				}
