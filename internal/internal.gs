@@ -17,8 +17,31 @@ print(any ...a){}
 
 assertEqual(any a1, any a2){}
 
+// covert string to byte array.
 byte[] toByteArray(string s){}
+// covert byte array to string.
 string toString(byte[] b){}
+class StringBuilder{
+    byte[] buf = [0]{};
+
+    // append contens to buf, it returns the length of s
+    int writeString(string s){
+        byte[] temp = toByteArray(s);
+        append(buf, temp);
+        return len(temp);
+    }
+    
+    // append b to buf, it returns the length of b.
+    int WriteBytes(byte[] b){
+        append(buf, b);
+        return len(b);
+    }
+
+
+    string String(){
+        return toString(buf);
+    }
+}
 
 // appends "v" to the end of a array "a"
 append(any[] a, any v){}
