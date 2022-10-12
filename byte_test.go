@@ -2,7 +2,6 @@ package gscript
 
 import (
 	"fmt"
-	"os"
 	"strings"
 	"testing"
 )
@@ -19,7 +18,6 @@ func TestByte2(t *testing.T) {
 int[] a={1,2};
 println(a);
 `
-	os.Setenv(RuntimeError, "true")
 	NewCompiler().Compiler(script)
 }
 func TestByte3(t *testing.T) {
@@ -32,7 +30,6 @@ printf("s1=%s",s1);
 assertEqual(s1,s);
 println("");
 `
-	os.Setenv(RuntimeError, "true")
 	NewCompiler().Compiler(script)
 }
 func TestStringBuilder(t *testing.T) {
@@ -50,7 +47,34 @@ s = b.String();
 assertEqual(s,"10203040");
 println(s);
 `
-	os.Setenv(RuntimeError, "true")
+	NewCompiler().Compiler(script)
+}
+func TestStringBuilder3(t *testing.T) {
+	script := `
+Strings s = Strings();
+string[] elems = {"name=xxx","age=xx"};
+string ret = s.join(elems, "&");
+println(ret);
+`
+	//os.Setenv(RuntimeError, "true")
+	NewCompiler().Compiler(script)
+}
+func TestStringBuilder4(t *testing.T) {
+	script := `
+int[] a = [0]{1,2};
+println(len(a));
+println(cap(a));
+append(a,3);
+println(cap(a));
+assertEqual(cap(a),4);
+`
+	NewCompiler().Compiler(script)
+}
+func TestStringBuilder5(t *testing.T) {
+	script := `
+StringBuilder sb = StringBuilder();
+sb.grow(15);
+`
 	NewCompiler().Compiler(script)
 }
 func TestStringBuilder2(t *testing.T) {
@@ -60,6 +84,13 @@ func TestStringBuilder2(t *testing.T) {
 	x.WriteString("20")
 	l, _ := x.WriteString("30")
 	fmt.Println(l)
+	//fmt.Println(strings.Join([]string{"name=xxx", "age=xx"}, "&"))
+
+	a := []int{1, 2}
+	fmt.Println(len(a))
+	fmt.Println(cap(a))
+	a = append(a, 3)
+	fmt.Println(cap(a))
 }
 
 func TestNil2(t *testing.T) {

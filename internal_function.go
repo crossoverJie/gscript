@@ -115,6 +115,32 @@ func (v *Visitor) len(ctx *parser.FunctionCallContext) int {
 	}
 	return 0
 }
+func (v *Visitor) cap(ctx *parser.FunctionCallContext) int {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	switch p0.(type) {
+	case []interface{}:
+		return cap(p0.([]interface{}))
+	case []string:
+		return cap(p0.([]string))
+	case []float64:
+		return cap(p0.([]float64))
+	case []bool:
+		return cap(p0.([]bool))
+	case []int:
+		return cap(p0.([]int))
+	case []byte:
+		return cap(p0.([]byte))
+	}
+	return 0
+}
+
+func (v *Visitor) copy(ctx *parser.FunctionCallContext) int {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	p1 := paramValues[1]
+	return copy(p0.([]interface{}), p1.([]interface{}))
+}
 func (v *Visitor) hash(ctx *parser.FunctionCallContext) int {
 	paramValues := v.buildParamValues(ctx)
 	return hash(paramValues[0])
@@ -432,7 +458,10 @@ func (v *Visitor) toString(ctx *parser.FunctionCallContext) string {
 		}
 		var byteArray []byte
 		for _, a := range b {
-			byteArray = append(byteArray, a.([]byte)...)
+			if a != nil {
+				// todo crossoverJie 需要一个设置 cap 的语法，这里就不需要判断 nil 了
+				byteArray = append(byteArray, a.([]byte)...)
+			}
 		}
 		return string(byteArray)
 	}

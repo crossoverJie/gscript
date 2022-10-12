@@ -117,7 +117,7 @@ variableInitializer
     ;
 
 arrayInitializer
-    : ('[' DECIMAL_LITERAL ']')? '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
+    : ('[' expr ']')? '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
     ;
 
 

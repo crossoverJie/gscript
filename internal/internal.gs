@@ -1,6 +1,12 @@
 // return array length
 int len(any[] a){}
 
+// return array cap
+int cap(any[] a){}
+
+// 
+int copy(byte[] dst, byte[] src){}
+
 // return hashcode
 int hash(any s){}
 
@@ -37,9 +43,46 @@ class StringBuilder{
         return len(b);
     }
 
+    grow(int n){
+        if (n > 0) {
+            // when there is not enough space left.
+            if (cap(buf) - len(buf) < n) {
+                byte[] newBuf = [2*cap(buf)+n]{};
+                copy(newBuf, buf);
+                buf = newBuf;
+            }
+        }   
+    }
 
     string String(){
         return toString(buf);
+    }
+}
+
+class Strings{
+    string join(string[] elems, string sep){
+        if (len(elems) == 0) {
+            return "";
+        }
+        if (len(elems) == 1) {
+            return elems[0];
+        }
+        
+        byte[] bs = toByteArray(sep);
+        int n = len(bs) * (len(elems) -1);
+        for (int i=0; i < len(elems); i++) {
+            string s = elems[i];
+            byte[] bs = toByteArray(s);
+            n = n + len(bs);
+        }
+        
+        StringBuilder sb = StringBuilder();
+        sb.grow(n);
+        string first = elems[0];
+        sb.writeString(first);
+        string ret = sb.String();
+        return ret;
+
     }
 }
 

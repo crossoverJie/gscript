@@ -323,9 +323,23 @@ func (v *Visitor) VisitVariableInitializer(ctx *parser.VariableInitializerContex
 		length := v.VisitArrayInitializer(ctx.ArrayInitializer().(*parser.ArrayInitializerContext))
 		//var array []interface{}
 		array := make([]interface{}, length.(int))
-		for _, context := range allContext.AllVariableInitializer() {
-			val := v.VisitVariableInitializer(context.(*parser.VariableInitializerContext))
-			array = append(array, val)
+		if length.(int) == 0 {
+			//any[] a = {1,2,3};或者是没有指定数组大小时
+			for _, context := range allContext.AllVariableInitializer() {
+				val := v.VisitVariableInitializer(context.(*parser.VariableInitializerContext))
+				array = append(array, val)
+			}
+		} else {
+			if length.(int) < len(allContext.AllVariableInitializer()) {
+				// int[] a =[1]{1,2,3};
+				log.RuntimePanic(ctx, fmt.Sprintf("array index out of bounds"))
+			}
+			// int[] a = [3]{1,2}; 这类初始化
+			for i, context := range allContext.AllVariableInitializer() {
+				val := v.VisitVariableInitializer(context.(*parser.VariableInitializerContext))
+				array[i] = val
+			}
+
 		}
 		return array
 	}
@@ -334,8 +348,21 @@ func (v *Visitor) VisitVariableInitializer(ctx *parser.VariableInitializerContex
 
 func (v *Visitor) VisitArrayInitializer(ctx *parser.ArrayInitializerContext) interface{} {
 	if ctx.LBRACK() != nil && ctx.RBRACK() != nil {
-		val, _ := strconv.Atoi(ctx.DECIMAL_LITERAL().GetText())
-		return val
+		val := v.Visit(ctx.Expr())
+		switch val.(type) {
+		case int:
+			return val.(int)
+		case *LeftValue:
+			value := val.(*LeftValue).GetValue()
+			switch value.(type) {
+			case int:
+				return value.(int)
+			default:
+				log.RuntimePanic(ctx, fmt.Sprintf("non-int len argument in Initialization function"))
+			}
+		default:
+			log.RuntimePanic(ctx, fmt.Sprintf("non-int len argument in Initialization function"))
+		}
 	}
 	return 0
 }
@@ -778,6 +805,10 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return v.append(ctx)
 	} else if name == "len" {
 		return v.len(ctx)
+	} else if name == "cap" {
+		return v.cap(ctx)
+	} else if name == "copy" {
+		return v.copy(ctx)
 	} else if name == "hash" {
 		return v.hash(ctx)
 	} else if name == "JSON" {
