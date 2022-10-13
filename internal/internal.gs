@@ -80,6 +80,14 @@ class Strings{
         sb.grow(n);
         string first = elems[0];
         sb.writeString(first);
+
+        string[] remain = elems[1:len(elems)];
+        for(int i=0; i < len(remain); i++){
+            sb.writeString(sep);
+            string r = remain[i];
+            sb.writeString(r);
+        }
+        
         string ret = sb.String();
         return ret;
 

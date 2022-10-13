@@ -106,6 +106,7 @@ func (t *TypeResolver) ExitFormalParameter(ctx *parser.FormalParameterContext) {
 		// 为变量设置类型
 		v := variable.(*symbol.Variable)
 		v.SetType(symbolType)
+		v.SetArray(symbolType.IsArray())
 
 		scope := t.at.FindEncloseScopeOfNode(ctx)
 		switch scope.(type) {

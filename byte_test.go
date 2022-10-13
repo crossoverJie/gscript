@@ -55,6 +55,7 @@ Strings s = Strings();
 string[] elems = {"name=xxx","age=xx"};
 string ret = s.join(elems, "&");
 println(ret);
+assertEqual(ret, "name=xxx&age=xx");
 `
 	//os.Setenv(RuntimeError, "true")
 	NewCompiler().Compiler(script)
@@ -74,6 +75,38 @@ func TestStringBuilder5(t *testing.T) {
 	script := `
 StringBuilder sb = StringBuilder();
 sb.grow(15);
+`
+	NewCompiler().Compiler(script)
+}
+func TestStringBuilder6(t *testing.T) {
+	script := `
+
+string join(string[] elems, string sep){
+	string[] remain = elems[1:2];
+	return "";
+}
+
+string[] list ={"1","2"};
+join(list,"&");
+//println(s);
+`
+	NewCompiler().CompilerWithoutNative(script)
+}
+func TestArraySlice(t *testing.T) {
+	script := `
+int[] a = {1,2,3};
+int s=1;
+int[] b = a[0:len(a)];
+println(b);
+`
+	NewCompiler().Compiler(script)
+}
+func TestArraySlice2(t *testing.T) {
+	script := `
+string[] a = {"1","2","3"};
+string s="";
+string[] b = a[1:len(a)];
+println(b);
 `
 	NewCompiler().Compiler(script)
 }

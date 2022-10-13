@@ -438,6 +438,52 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 
 	}
 
+	// 数组切片
+	if ctx.IDENTIFIER() != nil && ctx.LBRACK() != nil && ctx.RBRACK() != nil {
+		symbol := v.at.GetSymbolOfNode()[ctx]
+		variable := v.getLeftValue(symbol.(*sym.Variable))
+		if !variable.GetVariable().IsArray() {
+			log.RuntimePanic(ctx, fmt.Sprintf("cannot slice %s (type %s)", variable.GetVariable().GetName(), variable.GetVariable().GetType().GetName()))
+		}
+
+		var (
+			startIndex, endIndex int
+		)
+
+		start := v.Visit(ctx.Expr(0))
+		switch start.(type) {
+		case int:
+			startIndex = start.(int)
+		case *LeftValue:
+			startLeft := start.(*LeftValue)
+			startIndexLeft, ok := startLeft.GetValue().(int)
+			if !ok {
+				log.RuntimePanic(ctx, fmt.Sprintf("invalid slice index %s (type %s)", startLeft.GetVariable().GetName(), startLeft.GetVariable().GetType().GetName()))
+			}
+			startIndex = startIndexLeft
+		}
+
+		end := v.Visit(ctx.Expr(1))
+		switch end.(type) {
+		case int:
+			endIndex = end.(int)
+		case *LeftValue:
+			endLeft := end.(*LeftValue)
+			endIndexLeft, ok := endLeft.GetValue().(int)
+			if !ok {
+				log.RuntimePanic(ctx, fmt.Sprintf("invalid slice index %s (type %s)", endLeft.GetVariable().GetName(), endLeft.GetVariable().GetType().GetName()))
+			}
+			endIndex = endIndexLeft
+		}
+		switch variable.GetValue().(type) {
+		case []interface{}:
+			list := variable.GetValue().([]interface{})
+			return list[startIndex:endIndex]
+		}
+
+		return nil
+	}
+
 	if ctx.GetBop() != nil && len(ctx.AllExpr()) >= 2 {
 		val1 := v.Visit(ctx.GetLhs())
 		val2 := v.Visit(ctx.GetRhs())
