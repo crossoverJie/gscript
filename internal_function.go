@@ -458,10 +458,7 @@ func (v *Visitor) toString(ctx *parser.FunctionCallContext) string {
 		}
 		var byteArray []byte
 		for _, a := range b {
-			if a != nil {
-				// todo crossoverJie 需要一个设置 cap 的语法，这里就不需要判断 nil 了
-				byteArray = append(byteArray, a.([]byte)...)
-			}
+			byteArray = append(byteArray, a.([]byte)...)
 		}
 		return string(byteArray)
 	}

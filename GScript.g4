@@ -117,7 +117,7 @@ variableInitializer
     ;
 
 arrayInitializer
-    : ('[' expr ']')? '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
+    : ('[' expr (',' expr)? ']')? '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
     ;
 
 

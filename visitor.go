@@ -320,17 +320,24 @@ func (v *Visitor) VisitVariableInitializer(ctx *parser.VariableInitializerContex
 	// array init
 	if ctx.ArrayInitializer() != nil {
 		allContext := ctx.ArrayInitializer().(*parser.ArrayInitializerContext)
-		length := v.VisitArrayInitializer(ctx.ArrayInitializer().(*parser.ArrayInitializerContext))
+		lenAndCap := v.VisitArrayInitializer(ctx.ArrayInitializer().(*parser.ArrayInitializerContext))
+		length := lenAndCap.([]int)[0]
+		cap := lenAndCap.([]int)[1]
 		//var array []interface{}
-		array := make([]interface{}, length.(int))
-		if length.(int) == 0 {
+		var array []interface{}
+		if cap > 0 {
+			array = make([]interface{}, length, cap)
+		} else {
+			array = make([]interface{}, length)
+		}
+		if length == 0 {
 			//any[] a = {1,2,3};或者是没有指定数组大小时
 			for _, context := range allContext.AllVariableInitializer() {
 				val := v.VisitVariableInitializer(context.(*parser.VariableInitializerContext))
 				array = append(array, val)
 			}
 		} else {
-			if length.(int) < len(allContext.AllVariableInitializer()) {
+			if length < len(allContext.AllVariableInitializer()) {
 				// int[] a =[1]{1,2,3};
 				log.RuntimePanic(ctx, fmt.Sprintf("array index out of bounds"))
 			}
@@ -347,24 +354,53 @@ func (v *Visitor) VisitVariableInitializer(ctx *parser.VariableInitializerContex
 }
 
 func (v *Visitor) VisitArrayInitializer(ctx *parser.ArrayInitializerContext) interface{} {
+	lenAndCap := make([]int, 2)
+	var (
+		len, cap int
+	)
+
 	if ctx.LBRACK() != nil && ctx.RBRACK() != nil {
-		val := v.Visit(ctx.Expr())
-		switch val.(type) {
+		length := v.Visit(ctx.Expr(0))
+		switch length.(type) {
 		case int:
-			return val.(int)
+			//return length.(int)
+			len = length.(int)
 		case *LeftValue:
-			value := val.(*LeftValue).GetValue()
+			value := length.(*LeftValue).GetValue()
 			switch value.(type) {
 			case int:
-				return value.(int)
+				//return value.(int)
+				len = value.(int)
 			default:
 				log.RuntimePanic(ctx, fmt.Sprintf("non-int len argument in Initialization function"))
 			}
 		default:
 			log.RuntimePanic(ctx, fmt.Sprintf("non-int len argument in Initialization function"))
 		}
+
+		if ctx.Expr(1) != nil {
+			capacity := v.Visit(ctx.Expr(0))
+			switch capacity.(type) {
+			case int:
+				//return length.(int)
+				cap = capacity.(int)
+			case *LeftValue:
+				value := capacity.(*LeftValue).GetValue()
+				switch value.(type) {
+				case int:
+					//return value.(int)
+					cap = value.(int)
+				default:
+					log.RuntimePanic(ctx, fmt.Sprintf("non-int cap argument in Initialization function"))
+				}
+			default:
+				log.RuntimePanic(ctx, fmt.Sprintf("non-int cap argument in Initialization function"))
+			}
+		}
 	}
-	return 0
+	lenAndCap[0] = len
+	lenAndCap[1] = cap
+	return lenAndCap
 }
 
 func (v *Visitor) VisitBlockStm(ctx *parser.BlockStmContext) interface{} {

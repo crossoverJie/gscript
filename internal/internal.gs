@@ -47,7 +47,7 @@ class StringBuilder{
         if (n > 0) {
             // when there is not enough space left.
             if (cap(buf) - len(buf) < n) {
-                byte[] newBuf = [2*cap(buf)+n]{};
+                byte[] newBuf = [len(buf), 2*cap(buf)+n]{};
                 copy(newBuf, buf);
                 buf = newBuf;
             }
