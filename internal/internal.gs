@@ -87,9 +87,7 @@ class Strings{
             string r = remain[i];
             sb.writeString(r);
         }
-        
-        string ret = sb.String();
-        return ret;
+        return sb.String();
 
     }
 }
