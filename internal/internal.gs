@@ -4,7 +4,7 @@ int len(any[] a){}
 // return array cap
 int cap(any[] a){}
 
-// 
+// copies elements from a source array into a destination array.
 int copy(byte[] dst, byte[] src){}
 
 // return hashcode
