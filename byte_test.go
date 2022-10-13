@@ -80,17 +80,15 @@ sb.grow(15);
 }
 func TestStringBuilder6(t *testing.T) {
 	script := `
-
-string join(string[] elems, string sep){
-	string[] remain = elems[1:2];
-	return "";
-}
-
-string[] list ={"1","2"};
-join(list,"&");
-//println(s);
+Strings s = Strings();
+bool b = s.hasPrefix("http://www.xx.com", "http");
+println(b);
+assertEqual(b,true);
+b = s.hasPrefix("http://www.xx.com", "https");
+println(b);
+assertEqual(b,false);
 `
-	NewCompiler().CompilerWithoutNative(script)
+	NewCompiler().Compiler(script)
 }
 func TestArraySlice(t *testing.T) {
 	script := `

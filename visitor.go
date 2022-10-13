@@ -264,7 +264,7 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 		}
 		// 数组赋值校验
 		if leftValue.GetVariable().IsArray() && leftValue.GetVariable().GetType() != sym.Any {
-			if reflect.TypeOf(ret).Kind() != reflect.Slice {
+			if ret != nil && reflect.TypeOf(ret).Kind() != reflect.Slice {
 				// int[] a=10;
 				log.RuntimePanic(ctx, fmt.Sprintf("cannot use %v as type %s[]", ret, leftValue.GetVariable().GetType().GetName()))
 			}
@@ -478,6 +478,9 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 		switch variable.GetValue().(type) {
 		case []interface{}:
 			list := variable.GetValue().([]interface{})
+			return list[startIndex:endIndex]
+		case []byte:
+			list := variable.GetValue().([]byte)
 			return list[startIndex:endIndex]
 		}
 

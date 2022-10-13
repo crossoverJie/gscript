@@ -60,6 +60,8 @@ class StringBuilder{
 }
 
 class Strings{
+    // concatenates the elements of its first argument to create a single string. The separator
+    // string sep is placed between elements in the resulting string.
     string join(string[] elems, string sep){
         if (len(elems) == 0) {
             return "";
@@ -89,6 +91,13 @@ class Strings{
         }
         return sb.String();
 
+    }
+    
+    // tests whether the string s begins with prefix.
+    bool hasPrefix(string s, string prefix){
+        byte[] bs = toByteArray(s);
+        byte[] bp = toByteArray(prefix);    
+        return len(bs) >= len(bp) && toString(bs[0:len(bp)]) == prefix;
     }
 }
 
