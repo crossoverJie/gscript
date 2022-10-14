@@ -37,6 +37,7 @@ func (t *TypeResolver) ExitVariableDeclarators(ctx *parser.VariableDeclaratorsCo
 			switch s.(type) {
 			case *symbol.Variable:
 				s.(*symbol.Variable).SetType(symbolType)
+				s.(*symbol.Variable).SetArray(symbolType.IsArray())
 			}
 		}
 	}
@@ -105,6 +106,7 @@ func (t *TypeResolver) ExitFormalParameter(ctx *parser.FormalParameterContext) {
 		// 为变量设置类型
 		v := variable.(*symbol.Variable)
 		v.SetType(symbolType)
+		v.SetArray(symbolType.IsArray())
 
 		scope := t.at.FindEncloseScopeOfNode(ctx)
 		switch scope.(type) {
@@ -157,15 +159,24 @@ func (t *TypeResolver) ExitTypeTypeOrVoid(ctx *parser.TypeTypeOrVoidContext) {
 // ExitTypeType 在 ExitPrimitiveType 之后记录当前 ctx 的基本类型
 func (t *TypeResolver) ExitTypeType(ctx *parser.TypeTypeContext) {
 	// todo crossoverJie class 的 type 还未处理
+	var symbolType symbol.Type
 	if ctx.PrimitiveType() != nil {
-		symbolType := t.at.GetTypeOfNode()[ctx.PrimitiveType()]
+		symbolType = t.at.GetTypeOfNode()[ctx.PrimitiveType()]
 		t.at.PutTypeOfNode(ctx, symbolType)
 	} else if ctx.ClassOrInterfaceType() != nil {
-		symbolType := t.at.GetTypeOfNode()[ctx.ClassOrInterfaceType()]
+		symbolType = t.at.GetTypeOfNode()[ctx.ClassOrInterfaceType()]
 		t.at.PutTypeOfNode(ctx, symbolType)
 	} else if ctx.FunctionType() != nil {
-		symbolType := t.at.GetTypeOfNode()[ctx.FunctionType()]
+		symbolType = t.at.GetTypeOfNode()[ctx.FunctionType()]
 		t.at.PutTypeOfNode(ctx, symbolType)
+	}
+	if symbolType != nil {
+		// 还原为默认值，因为原始类型是常量，为了达到给变量赋值是否为数组，所以每次都要重新赋值，达到变量的效果
+		symbolType.SetArray(false)
+		if len(ctx.AllLBRACK()) > 0 && len(ctx.AllRBRACK()) > 0 {
+			symbolType.SetArray(true)
+
+		}
 	}
 }
 
@@ -192,6 +203,9 @@ func (t *TypeResolver) ExitPrimitiveType(ctx *parser.PrimitiveTypeContext) {
 	}
 	if ctx.ANY() != nil {
 		symbolType = symbol.Any
+	}
+	if ctx.BYTE() != nil {
+		symbolType = symbol.Byte
 	}
 	t.at.PutTypeOfNode(ctx, symbolType)
 }

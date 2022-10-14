@@ -306,6 +306,17 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 		sym := s.at.GetSymbolOfNode()[ctx.Primary()]
 		s.at.PutSymbolOfNode(ctx, sym)
 	}
+
+	// 数组切片 int[] b = a[1:2];
+	if ctx.IDENTIFIER() != nil && ctx.LBRACK() != nil && ctx.RBRACK() != nil {
+		scope := s.at.FindEncloseScopeOfNode(ctx)
+		idName := ctx.IDENTIFIER().GetText()
+		variable := s.at.FindVariable(scope, idName)
+		s.at.PutSymbolOfNode(ctx, variable)
+		symbolType := variable.GetType()
+		s.at.PutTypeOfNode(ctx, symbolType)
+	}
+
 	if ctx.Primary() != nil {
 		symbolType := s.at.GetTypeOfNode()[ctx.Primary()]
 		s.at.PutTypeOfNode(ctx, symbolType)

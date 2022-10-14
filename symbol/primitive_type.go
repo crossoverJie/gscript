@@ -11,6 +11,7 @@ const (
 	PrimitiveBool   = "bool"
 	PrimitiveNil    = "nil"
 	PrimitiveAny    = "any"
+	PrimitiveByte   = "byte"
 )
 
 var (
@@ -18,6 +19,7 @@ var (
 	String = &PrimitiveType{name: PrimitiveString}
 	Float  = &PrimitiveType{name: PrimitiveFloat}
 	Bool   = &PrimitiveType{name: PrimitiveBool}
+	Byte   = &PrimitiveType{name: PrimitiveByte}
 	Void   = &VoidType{}
 	Nil    = &PrimitiveType{name: PrimitiveNil}
 	Any    = &PrimitiveType{name: PrimitiveAny}
@@ -49,7 +51,10 @@ func (b *PrimitiveType) String() string {
 
 func (b *PrimitiveType) IsArray() bool {
 	// todo crossoverJie 数组校验
-	return false
+	return b.isArray
+}
+func (b *PrimitiveType) SetArray(isArray bool) {
+	b.isArray = isArray
 }
 
 type VoidType struct {
@@ -68,6 +73,12 @@ func (v *VoidType) IsType(t Type) bool {
 		return true
 	}
 	return v == t
+}
+
+func (v *VoidType) IsArray() bool {
+	return false
+}
+func (v *VoidType) SetArray(isArray bool) {
 }
 
 // GetUpperType 根据两个参数类型，推导返回的类型

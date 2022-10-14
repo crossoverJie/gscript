@@ -67,7 +67,7 @@ int age = JSONGet(json, "age");
 println(age);
 assertEqual(age,10);
 
-string man = JSONGet(json, "man");
+bool man = JSONGet(json, "man");
 println(man);
 assertEqual(man,true);
 

@@ -117,7 +117,7 @@ variableInitializer
     ;
 
 arrayInitializer
-    : ('[' DECIMAL_LITERAL ']')? '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
+    : ('[' expr (',' expr)? ']')? '{' (variableInitializer (',' variableInitializer)* (',')? )? '}'
     ;
 
 
@@ -220,6 +220,7 @@ expr
     | lhs=expr bop=(EQUAL | NOTEQUAL) rhs=expr
     | lhs=expr bop='&&' rhs=expr
     | lhs=expr bop='||' rhs=expr
+    | IDENTIFIER'[' (expr) ':' (expr) ']'
     // 表明结合性是右结合的，内部原理使用循环代替递归。
     | <assoc=right> lhs=expr
       bop=('=' | '+=' | '-=' | '*=')
@@ -260,6 +261,7 @@ primitiveType
     | STRING
     | FLOAT
     | BOOLEAN
+    | BYTE
     | ANY
     ;
 
@@ -295,6 +297,7 @@ INT:                'int';
 STRING:             'string';
 FLOAT:              'float';
 BOOLEAN:            'bool';
+BYTE:               'byte';
 SUPER:              'super';
 SWITCH:             'switch';
 THIS:               'this';
@@ -311,6 +314,7 @@ RBRACE:             '}';
 LBRACK:             '[';
 RBRACK:             ']';
 DOT:                '.';
+COLON:              ':';
 
 ASSIGN:             '=';
 GT:                 '>';

@@ -1,6 +1,12 @@
 // return array length
 int len(any[] a){}
 
+// return array cap
+int cap(any[] a){}
+
+// copies elements from a source array into a destination array.
+int copy(byte[] dst, byte[] src){}
+
 // return hashcode
 int hash(any s){}
 
@@ -16,6 +22,85 @@ string sprintf(string format, any ...a){}
 print(any ...a){}
 
 assertEqual(any a1, any a2){}
+
+// covert string to byte array.
+byte[] toByteArray(string s){}
+// covert byte array to string.
+string toString(byte[] b){}
+class StringBuilder{
+    byte[] buf = [0]{};
+
+    // append contens to buf, it returns the length of s
+    int writeString(string s){
+        byte[] temp = toByteArray(s);
+        append(buf, temp);
+        return len(temp);
+    }
+    
+    // append b to buf, it returns the length of b.
+    int WriteBytes(byte[] b){
+        append(buf, b);
+        return len(b);
+    }
+
+    // copies the buffer to a new.
+    grow(int n){
+        if (n > 0) {
+            // when there is not enough space left.
+            if (cap(buf) - len(buf) < n) {
+                byte[] newBuf = [len(buf), 2*cap(buf)+n]{};
+                copy(newBuf, buf);
+                buf = newBuf;
+            }
+        }   
+    }
+
+    string String(){
+        return toString(buf);
+    }
+}
+
+class Strings{
+    // concatenates the elements of its first argument to create a single string. The separator
+    // string sep is placed between elements in the resulting string.
+    string join(string[] elems, string sep){
+        if (len(elems) == 0) {
+            return "";
+        }
+        if (len(elems) == 1) {
+            return elems[0];
+        }
+        
+        byte[] bs = toByteArray(sep);
+        int n = len(bs) * (len(elems) -1);
+        for (int i=0; i < len(elems); i++) {
+            string s = elems[i];
+            byte[] bs = toByteArray(s);
+            n = n + len(bs);
+        }
+        
+        StringBuilder sb = StringBuilder();
+        sb.grow(n);
+        string first = elems[0];
+        sb.writeString(first);
+
+        string[] remain = elems[1:len(elems)];
+        for(int i=0; i < len(remain); i++){
+            sb.writeString(sep);
+            string r = remain[i];
+            sb.writeString(r);
+        }
+        return sb.String();
+
+    }
+    
+    // tests whether the string s begins with prefix.
+    bool hasPrefix(string s, string prefix){
+        byte[] bs = toByteArray(s);
+        byte[] bp = toByteArray(prefix);    
+        return len(bs) >= len(bp) && toString(bs[0:len(bp)]) == prefix;
+    }
+}
 
 // appends "v" to the end of a array "a"
 append(any[] a, any v){}

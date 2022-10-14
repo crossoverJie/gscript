@@ -77,13 +77,18 @@ func (v *Visitor) assertEqual(ctx *parser.FunctionCallContext) {
 }
 
 func (v *Visitor) append(ctx *parser.FunctionCallContext) []interface{} {
-	paramValues, left := v.buildParamValuesReturnLeft(ctx)
+	paramValues, left := v.buildAppendParamValuesReturnLeft(ctx)
 	switch paramValues[0].(type) {
 	case []interface{}:
 		array := paramValues[0].([]interface{})
 		array = append(array, paramValues[1])
 		left.SetValue(array)
 		return array
+	case []byte:
+		array := paramValues[0].([]byte)
+		value := paramValues[1].([]byte)
+		array = append(array, value...)
+		left.SetValue(array)
 	default:
 		log.RuntimePanic(ctx, fmt.Sprintf("first argument to append must be array"))
 
@@ -105,8 +110,36 @@ func (v *Visitor) len(ctx *parser.FunctionCallContext) int {
 		return len(p0.([]bool))
 	case []int:
 		return len(p0.([]int))
+	case []byte:
+		return len(p0.([]byte))
 	}
 	return 0
+}
+func (v *Visitor) cap(ctx *parser.FunctionCallContext) int {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	switch p0.(type) {
+	case []interface{}:
+		return cap(p0.([]interface{}))
+	case []string:
+		return cap(p0.([]string))
+	case []float64:
+		return cap(p0.([]float64))
+	case []bool:
+		return cap(p0.([]bool))
+	case []int:
+		return cap(p0.([]int))
+	case []byte:
+		return cap(p0.([]byte))
+	}
+	return 0
+}
+
+func (v *Visitor) copy(ctx *parser.FunctionCallContext) int {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	p1 := paramValues[1]
+	return copy(p0.([]interface{}), p1.([]interface{}))
 }
 func (v *Visitor) hash(ctx *parser.FunctionCallContext) int {
 	paramValues := v.buildParamValues(ctx)
@@ -329,7 +362,7 @@ func (v *Visitor) remove(ctx *parser.FunctionCallContext) {
 	}
 }
 
-func (v *Visitor) buildParamValuesReturnLeft(ctx *parser.FunctionCallContext) ([]interface{}, *LeftValue) {
+func (v *Visitor) buildAppendParamValuesReturnLeft(ctx *parser.FunctionCallContext) ([]interface{}, *LeftValue) {
 	ret := make([]interface{}, 0)
 	if ctx.ExpressionList() == nil {
 		return ret, nil
@@ -340,7 +373,10 @@ func (v *Visitor) buildParamValuesReturnLeft(ctx *parser.FunctionCallContext) ([
 		switch value.(type) {
 		case *LeftValue:
 			leftValue := value.(*LeftValue)
-			left = leftValue
+			if left == nil {
+				// 只需要赋值一次左值即可，避免 append(buf, temp); temp 也是变量时，第二次遍历时会把 temp 赋值给 left
+				left = leftValue
+			}
 			ret = append(ret, leftValue.GetValue())
 		default:
 			ret = append(ret, value)
@@ -401,6 +437,32 @@ func (v *Visitor) getCode(ctx *parser.FunctionCallContext) string {
 		format = p0.(string)
 	}
 	return format
+}
+
+func (v *Visitor) toByteArray(ctx *parser.FunctionCallContext) []byte {
+	code := v.getCode(ctx)
+	return []byte(code)
+}
+
+func (v *Visitor) toString(ctx *parser.FunctionCallContext) string {
+	paramValues := v.buildParamValues(ctx)
+	p0 := paramValues[0]
+	switch p0.(type) {
+	case []byte:
+		b := p0.([]byte)
+		return string(b)
+	case []interface{}:
+		b, ok := p0.([]interface{})
+		if !ok {
+			return ""
+		}
+		var byteArray []byte
+		for _, a := range b {
+			byteArray = append(byteArray, a.([]byte)...)
+		}
+		return string(byteArray)
+	}
+	return ""
 }
 
 func (v *Visitor) getWd(ctx *parser.FunctionCallContext) string {

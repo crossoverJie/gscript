@@ -44,6 +44,9 @@ type Type interface {
 
 	// IsType 判断类型是否相同，或者是不是 is-a ，是否为子类
 	IsType(t Type) bool
+
+	IsArray() bool
+	SetArray(isArray bool)
 }
 
 // MatchNil nil 可以满足所有类型，除了基本类型
@@ -211,6 +214,7 @@ type Variable struct {
 	*symbol
 	t              Type
 	isVariableArgs bool
+	isArray        bool
 }
 
 func NewVariable(ctx antlr.ParserRuleContext, name string, enclose Scope, isVariableArgs bool) *Variable {
@@ -237,6 +241,13 @@ func (v *Variable) getVariableArgs() bool {
 	return v.isVariableArgs
 }
 
+func (v *Variable) SetArray(isArray bool) {
+	v.isArray = isArray
+}
+func (v *Variable) IsArray() bool {
+	return v.isArray
+}
+
 // function
 
 type FuncType interface {
@@ -259,6 +270,7 @@ type Func struct {
 
 	//闭包变量，用于存放外部变量
 	closureVar container.Set
+	isArray    bool
 }
 
 func NewFunc(ctx antlr.ParserRuleContext, name string, encloseScope Scope) *Func {
@@ -291,6 +303,13 @@ func (f *Func) IsType(t Type) bool {
 		return isFuncType(f, funcType)
 	}
 	return f == t
+}
+
+func (f *Func) IsArray() bool {
+	return f.isArray
+}
+func (f *Func) SetArray(isArray bool) {
+	f.isArray = isArray
 }
 
 func (f *Func) GetReturnType() Type {
@@ -399,6 +418,7 @@ type DeclareFunctionType struct {
 	encloseScope  Scope
 	returnType    Type   // 返回值类型
 	parameterType []Type // 参数类型
+	isArray       bool
 }
 
 // NewDeclareFunctionType 函数类型的变量
@@ -425,6 +445,13 @@ func (d *DeclareFunctionType) IsType(t Type) bool {
 		return isFuncType(d, funcType)
 	}
 	return false
+}
+
+func (d *DeclareFunctionType) IsArray() bool {
+	return d.isArray
+}
+func (d *DeclareFunctionType) SetArray(isArray bool) {
+	d.isArray = isArray
 }
 
 func (d *DeclareFunctionType) GetReturnType() Type {

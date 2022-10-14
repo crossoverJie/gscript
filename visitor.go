@@ -8,6 +8,7 @@ import (
 	"github.com/crossoverJie/gscript/resolver"
 	"github.com/crossoverJie/gscript/stack"
 	sym "github.com/crossoverJie/gscript/symbol"
+	"reflect"
 	"strconv"
 )
 
@@ -261,6 +262,14 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 			arrayObject := ret.(*ArrayObject)
 			ret = arrayObject.GetIndexValue()
 		}
+		// 数组赋值校验
+		if leftValue.GetVariable().IsArray() && leftValue.GetVariable().GetType() != sym.Any {
+			if ret != nil && reflect.TypeOf(ret).Kind() != reflect.Slice {
+				// int[] a=10;
+				log.RuntimePanic(ctx, fmt.Sprintf("cannot use %v as type %s[]", ret, leftValue.GetVariable().GetType().GetName()))
+			}
+		}
+
 		// 为变量赋值
 		// int e=10   int e = foo() any 类型不需要校验
 		if leftValue.GetVariable().GetType() != sym.Any {
@@ -269,13 +278,11 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 				if leftValue.GetVariable().GetType() != sym.Int {
 					// string a=10; 校验这类错误
 					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
-
 				}
 			case string:
 				if leftValue.GetVariable().GetType() != sym.String {
 					// int a="1"; 校验这类错误
 					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
-
 				}
 			case float64:
 				if leftValue.GetVariable().GetType() != sym.Float {
@@ -285,9 +292,13 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 				}
 			case bool:
 				if leftValue.GetVariable().GetType() != sym.Bool {
-					// int a=10.1;
+					// bool a=10.1;
 					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
 
+				}
+			case byte:
+				if leftValue.GetVariable().GetType() != sym.Byte {
+					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
 				}
 			}
 		}
@@ -309,12 +320,33 @@ func (v *Visitor) VisitVariableInitializer(ctx *parser.VariableInitializerContex
 	// array init
 	if ctx.ArrayInitializer() != nil {
 		allContext := ctx.ArrayInitializer().(*parser.ArrayInitializerContext)
-		length := v.VisitArrayInitializer(ctx.ArrayInitializer().(*parser.ArrayInitializerContext))
+		lenAndCap := v.VisitArrayInitializer(ctx.ArrayInitializer().(*parser.ArrayInitializerContext))
+		length := lenAndCap.([]int)[0]
+		cap := lenAndCap.([]int)[1]
 		//var array []interface{}
-		array := make([]interface{}, length.(int))
-		for _, context := range allContext.AllVariableInitializer() {
-			val := v.VisitVariableInitializer(context.(*parser.VariableInitializerContext))
-			array = append(array, val)
+		var array []interface{}
+		if cap > 0 {
+			array = make([]interface{}, length, cap)
+		} else {
+			array = make([]interface{}, length)
+		}
+		if length == 0 {
+			//any[] a = {1,2,3};或者是没有指定数组大小时
+			for _, context := range allContext.AllVariableInitializer() {
+				val := v.VisitVariableInitializer(context.(*parser.VariableInitializerContext))
+				array = append(array, val)
+			}
+		} else {
+			if length < len(allContext.AllVariableInitializer()) {
+				// int[] a =[1]{1,2,3};
+				log.RuntimePanic(ctx, fmt.Sprintf("array index out of bounds"))
+			}
+			// int[] a = [3]{1,2}; 这类初始化
+			for i, context := range allContext.AllVariableInitializer() {
+				val := v.VisitVariableInitializer(context.(*parser.VariableInitializerContext))
+				array[i] = val
+			}
+
 		}
 		return array
 	}
@@ -322,11 +354,53 @@ func (v *Visitor) VisitVariableInitializer(ctx *parser.VariableInitializerContex
 }
 
 func (v *Visitor) VisitArrayInitializer(ctx *parser.ArrayInitializerContext) interface{} {
+	lenAndCap := make([]int, 2)
+	var (
+		len, cap int
+	)
+
 	if ctx.LBRACK() != nil && ctx.RBRACK() != nil {
-		val, _ := strconv.Atoi(ctx.DECIMAL_LITERAL().GetText())
-		return val
+		length := v.Visit(ctx.Expr(0))
+		switch length.(type) {
+		case int:
+			//return length.(int)
+			len = length.(int)
+		case *LeftValue:
+			value := length.(*LeftValue).GetValue()
+			switch value.(type) {
+			case int:
+				//return value.(int)
+				len = value.(int)
+			default:
+				log.RuntimePanic(ctx, fmt.Sprintf("non-int len argument in Initialization function"))
+			}
+		default:
+			log.RuntimePanic(ctx, fmt.Sprintf("non-int len argument in Initialization function"))
+		}
+
+		if ctx.Expr(1) != nil {
+			capacity := v.Visit(ctx.Expr(0))
+			switch capacity.(type) {
+			case int:
+				//return length.(int)
+				cap = capacity.(int)
+			case *LeftValue:
+				value := capacity.(*LeftValue).GetValue()
+				switch value.(type) {
+				case int:
+					//return value.(int)
+					cap = value.(int)
+				default:
+					log.RuntimePanic(ctx, fmt.Sprintf("non-int cap argument in Initialization function"))
+				}
+			default:
+				log.RuntimePanic(ctx, fmt.Sprintf("non-int cap argument in Initialization function"))
+			}
+		}
 	}
-	return 0
+	lenAndCap[0] = len
+	lenAndCap[1] = cap
+	return lenAndCap
 }
 
 func (v *Visitor) VisitBlockStm(ctx *parser.BlockStmContext) interface{} {
@@ -362,6 +436,55 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 			ret = NewArrayObject(left.(*LeftValue), leftValue.GetValue().(int))
 		}
 
+	}
+
+	// 数组切片
+	if ctx.IDENTIFIER() != nil && ctx.LBRACK() != nil && ctx.RBRACK() != nil {
+		symbol := v.at.GetSymbolOfNode()[ctx]
+		variable := v.getLeftValue(symbol.(*sym.Variable))
+		if !variable.GetVariable().IsArray() {
+			log.RuntimePanic(ctx, fmt.Sprintf("cannot slice %s (type %s)", variable.GetVariable().GetName(), variable.GetVariable().GetType().GetName()))
+		}
+
+		var (
+			startIndex, endIndex int
+		)
+
+		start := v.Visit(ctx.Expr(0))
+		switch start.(type) {
+		case int:
+			startIndex = start.(int)
+		case *LeftValue:
+			startLeft := start.(*LeftValue)
+			startIndexLeft, ok := startLeft.GetValue().(int)
+			if !ok {
+				log.RuntimePanic(ctx, fmt.Sprintf("invalid slice index %s (type %s)", startLeft.GetVariable().GetName(), startLeft.GetVariable().GetType().GetName()))
+			}
+			startIndex = startIndexLeft
+		}
+
+		end := v.Visit(ctx.Expr(1))
+		switch end.(type) {
+		case int:
+			endIndex = end.(int)
+		case *LeftValue:
+			endLeft := end.(*LeftValue)
+			endIndexLeft, ok := endLeft.GetValue().(int)
+			if !ok {
+				log.RuntimePanic(ctx, fmt.Sprintf("invalid slice index %s (type %s)", endLeft.GetVariable().GetName(), endLeft.GetVariable().GetType().GetName()))
+			}
+			endIndex = endIndexLeft
+		}
+		switch variable.GetValue().(type) {
+		case []interface{}:
+			list := variable.GetValue().([]interface{})
+			return list[startIndex:endIndex]
+		case []byte:
+			list := variable.GetValue().([]byte)
+			return list[startIndex:endIndex]
+		}
+
+		return nil
 	}
 
 	if ctx.GetBop() != nil && len(ctx.AllExpr()) >= 2 {
@@ -767,6 +890,10 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return v.append(ctx)
 	} else if name == "len" {
 		return v.len(ctx)
+	} else if name == "cap" {
+		return v.cap(ctx)
+	} else if name == "copy" {
+		return v.copy(ctx)
 	} else if name == "hash" {
 		return v.hash(ctx)
 	} else if name == "JSON" {
@@ -817,6 +944,10 @@ func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{}
 		return v.requestBody(ctx)
 	} else if name == "Getwd" {
 		return v.getWd(ctx)
+	} else if name == "toByteArray" {
+		return v.toByteArray(ctx)
+	} else if name == "toString" {
+		return v.toString(ctx)
 	}
 
 	// 默认构造函数

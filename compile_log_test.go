@@ -14,6 +14,21 @@ b+c;
 	NewCompiler().Compiler(script)
 
 }
+func TestByteFail(t *testing.T) {
+	script := `
+int[] a=10;
+`
+	os.Setenv(RuntimeError, "true")
+	NewCompiler().Compiler(script)
+}
+func TestByteFail2(t *testing.T) {
+	script := `
+byte[] a=10;
+println(a);
+`
+	os.Setenv(RuntimeError, "true")
+	NewCompiler().Compiler(script)
+}
 func TestCompileFail2(t *testing.T) {
 	script := `
 class T{
