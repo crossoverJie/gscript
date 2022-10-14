@@ -43,6 +43,7 @@ class StringBuilder{
         return len(b);
     }
 
+    // copies the buffer to a new.
     grow(int n){
         if (n > 0) {
             // when there is not enough space left.
