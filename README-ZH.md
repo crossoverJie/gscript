@@ -43,13 +43,13 @@ hello world
 # 特性
 - [x] [class声明](#class)
 - [x] [函数声明与调用](#函数)
-- [x] [基本类型](#基本类型): `int/string/float/bool`
+- [x] [基本类型](#基本类型): `int/string/float/bool/byte`
 - [x] [array数组类型](#数组)
 - [x] `any` [通用类型](#any)
 - [x] 特殊类型 `nil`
 - [x] 函数类型
 - [x] [闭包：函数一等公民](#闭包)
-- [x] [内置函数](#内置函数): `len()/hash()/assertEqual()/JSON()/JSONGet()`
+- [x] [内置函数](#内置函数)
 - [x] [标准库](#标准库)
 	- [x] [Map](#map)
 - [x] [可变参数](#可变参数)
@@ -197,6 +197,7 @@ int a=10;
 string b,c;
 float e = 10.1;
 bool f = false;
+byte by = 1;
 string x = ^
 {
     "name": "bob",
@@ -237,6 +238,15 @@ for(int i=0;i<len(a);i++){
 // 通过下标获取数组数据
 int b=a[2];
 println(b);
+
+
+// byte array
+string s = "10";
+byte[] a= toByteArray(s);
+printf("a=%v ",a);
+string s1 = toString(a);
+printf("s1=%s",s1);
+assertEqual(s1,s);
 ```
 
 ## any

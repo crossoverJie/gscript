@@ -275,7 +275,7 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 		if leftValue.GetVariable().GetType() != sym.Any {
 			switch ret.(type) {
 			case int:
-				if leftValue.GetVariable().GetType() != sym.Int {
+				if leftValue.GetVariable().GetType() != sym.Int && leftValue.GetVariable().GetType() != sym.Byte {
 					// string a=10; 校验这类错误
 					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
 				}

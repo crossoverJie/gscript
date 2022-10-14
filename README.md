@@ -45,14 +45,14 @@ Online address: [https://gscript.crossoverjie.top/](https://gscript.crossoverjie
 
 - [x] [Class declaration](#class)
 - [x] [Function declaration and call](#function)
-- [x] [Primitive type](#primitive): `int/string/float/bool`
+- [x] [Primitive type](#primitive): `int/string/float/bool/byte`
 - [x] [Array type](#array)
 - [x] `nil` type
 - [x] [`any` type](#any-type)
 - [x] [Function type](#closure)
 - [x] [Closure：Functions as First-Class Objects](#closure)
-- [x] [Native function](#native-function): `len()/hash()/assertEqual()/JSON()/JSONGet()`
-- [x] [Standard library](#standard-library)：`Map/LinkedList/Array`
+- [x] [Native function](#native-function)
+- [x] [Standard library](#standard-library)
 	- [x] [Map](#map)
 - [x] [Variable arguments](#variable-arguments)
 - [x] [Operator overloading](#operator-overloading)
@@ -200,6 +200,7 @@ int a=10;
 string b,c;
 float e = 10.1;
 bool f = false;
+byte by = 1;
 string x = ^
 {
     "name": "bob",
@@ -241,6 +242,14 @@ for(int i=0;i<len(a);i++){
 // Access to data by index.
 int b=a[2];
 println(b);
+
+// byte array
+string s = "10";
+byte[] a= toByteArray(s);
+printf("a=%v ",a);
+string s1 = toString(a);
+printf("s1=%s",s1);
+assertEqual(s1,s);
 ```
 
 ## any type

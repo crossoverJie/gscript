@@ -9,6 +9,8 @@ import (
 func TestByte(t *testing.T) {
 	script := `
 string v5="9898";
+byte b=1;
+println(b);
 `
 	//os.Setenv(RuntimeError, "true")
 	NewCompiler().Compiler(script)
