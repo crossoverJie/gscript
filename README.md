@@ -44,6 +44,8 @@ Online address: [https://gscript.crossoverjie.top/](https://gscript.crossoverjie
 
 ![](doc/playground-min.gif)
 
+Source code:[https://github.com/crossoverJie/gscript-homepage](https://github.com/crossoverJie/gscript-homepage)
+
 # Features
 
 - [x] [Class declaration](#class)

@@ -41,6 +41,8 @@ hello world
 
 在线地址: [https://gscript.crossoverjie.top/](https://gscript.crossoverjie.top/)
 
+源码地址: [https://github.com/crossoverJie/gscript-homepage](https://github.com/crossoverJie/gscript-homepage)
+
 ![](doc/playground-min.gif)
 
 # 特性
