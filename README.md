@@ -250,6 +250,13 @@ printf("a=%v ",a);
 string s1 = toString(a);
 printf("s1=%s",s1);
 assertEqual(s1,s);
+
+// slice an array into a new array.
+int[] a = {1,2,3};
+int s=1;
+int[] b = a[s:len(a)];
+println(b);
+// output: [2 3]
 ```
 
 ## any type
@@ -625,13 +632,14 @@ string[] args = s.getOSArgs();
 > Reference JSON query syntax: [xjson](https://github.com/crossoverJie/xjson#arithmetic-syntax)
 ## Map
 
-Function Definition:
+## Function Definition
 ```js
 class Map{
 	put(any key, any value){}
 	any get(any key){}
 }
 ```
+## Usage
 
 ```js
 int count =100;
@@ -652,6 +660,72 @@ for (int i=0;i<count;i++){
 }
 ```
 
+# StringBuilder
+## Function Definition
+
+```java
+class StringBuilder{
+	byte[] buf = [0]{};
+
+	// append contents to buf, it returns the length of s
+	int writeString(string s){}
+
+	// append b to buf, it returns the length of b.
+	int WriteBytes(byte[] b){}
+
+	// copies the buffer to a new.
+	grow(int n){}
+
+	string String(){}
+}
+```
+
+## Usage
+```java
+StringBuilder b = StringBuilder();
+b.writeString("10");
+b.writeString("20");
+int l = b.writeString("30");
+string s = b.String();
+printf("s:%s, len=%d ",s,l);
+assertEqual(s,"102030");
+byte[] b2 = toByteArray("40");
+b.WriteBytes(b2);
+s = b.String();
+assertEqual(s,"10203040");
+println(s);
+```
+
+# Strings
+## Function Definition
+
+```java
+class Strings{
+	// concatenates the elements of its first argument to create a single string. The separator
+	// string sep is placed between elements in the resulting string.
+	string join(string[] elems, string sep){}
+
+	// tests whether the string s begins with prefix.
+	bool hasPrefix(string s, string prefix){}
+}
+```
+
+## Usage
+
+```java
+Strings s = Strings();
+string[] elems = {"name=xxx","age=xx"};
+string ret = s.join(elems, "&");
+println(ret);
+assertEqual(ret, "name=xxx&age=xx");
+
+bool b = s.hasPrefix("http://www.xx.com", "http");
+println(b);
+assertEqual(b,true);
+b = s.hasPrefix("http://www.xx.com", "https");
+println(b);
+assertEqual(b,false);
+```
 
 # http
 Standard library:

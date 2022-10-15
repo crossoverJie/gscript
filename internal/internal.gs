@@ -30,7 +30,7 @@ string toString(byte[] b){}
 class StringBuilder{
     byte[] buf = [0]{};
 
-    // append contens to buf, it returns the length of s
+    // append contents to buf, it returns the length of s
     int writeString(string s){
         byte[] temp = toByteArray(s);
         append(buf, temp);

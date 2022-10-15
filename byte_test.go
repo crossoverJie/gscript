@@ -96,7 +96,7 @@ func TestArraySlice(t *testing.T) {
 	script := `
 int[] a = {1,2,3};
 int s=1;
-int[] b = a[0:len(a)];
+int[] b = a[s:len(a)];
 println(b);
 `
 	NewCompiler().Compiler(script)
