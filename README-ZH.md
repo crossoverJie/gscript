@@ -636,7 +636,7 @@ string[] args = s.getOSArgs();
 
 > 更多 JSON 查询语法请参考：[xjson](https://github.com/crossoverJie/xjson#arithmetic-syntax)
 
-## Map
+# Map
 ## 函数定义
 ```js
 class Map{

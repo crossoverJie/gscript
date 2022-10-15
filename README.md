@@ -630,7 +630,7 @@ string[] args = s.getOSArgs();
 ```
 
 > Reference JSON query syntax: [xjson](https://github.com/crossoverJie/xjson#arithmetic-syntax)
-## Map
+# Map
 
 ## Function Definition
 ```js
@@ -639,6 +639,7 @@ class Map{
 	any get(any key){}
 }
 ```
+
 ## Usage
 
 ```js
