@@ -22,7 +22,10 @@
 
 This is a **statically and strongly** typed language written in Go, the syntax of Java and Go is referenced.
 
-> The current version is for study and experimentation only.
+## Target
+Provides the ability to write Go language in script form, retains the advantages of Go language (goroutine, etc.), and adds more syntactic sugar for ease of use.
+
+> The current Alpha version is for study and experimentation only.
 
 hello_world.gs:
 
