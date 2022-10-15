@@ -110,6 +110,41 @@ println(b);
 `
 	NewCompiler().Compiler(script)
 }
+func TestArraySlice3(t *testing.T) {
+	script := `
+string S = "abcdefx";
+string T = "def";
+int myIndex(string S,string T,int pos) {
+  int i = pos;
+  int j = 0;
+  byte[] s = toByteArray(S);
+  byte[] t = toByteArray(T);
+
+  int slen = len(s);
+  int tlen = len(t);
+  for(i <= slen && j <= tlen) {
+	byte si = s[i];
+	byte sj = s[j];
+    if (si == sj) {
+      i = i+1;
+      j = j+1;
+    }else{
+      i = i - j + 1;
+      j = 0;
+    }
+  }
+  if (j == tlen) {
+    return i - tlen;
+  } else {
+    return slen-i;
+  }
+}
+
+int res = myIndex(S,T,0);
+println(res);
+`
+	NewCompiler().Compiler(script)
+}
 func TestStringBuilder2(t *testing.T) {
 
 	var x strings.Builder

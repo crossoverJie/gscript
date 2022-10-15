@@ -106,6 +106,8 @@ func GetUpperType(ctx antlr.ParserRuleContext, t1, t2 Type) Type {
 		return Float
 	} else if t1 == Float && t2 == Int {
 		return Float
+	} else if t1 == Byte && t2 == Byte {
+		return Byte
 	} else {
 		// todo crossoverJie ?
 		return nil

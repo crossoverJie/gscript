@@ -525,6 +525,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 		case parser.GScriptParserMULT:
 			if deriveType == sym.Int {
 				return leftObject.(int) * rightObject.(int)
+			} else if deriveType == sym.Byte {
+				return leftObject.(byte) * rightObject.(byte)
 			} else if deriveType == sym.Float {
 				return leftObject.(float64) * rightObject.(float64)
 			} else if type1.IsType(type2) {
@@ -539,6 +541,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 					log.RuntimePanic(ctx, "integer divide by zero")
 				}
 				return leftObject.(int) / rightObject.(int)
+			} else if deriveType == sym.Byte {
+				return leftObject.(byte) / rightObject.(byte)
 			} else if deriveType == sym.Float {
 				return leftObject.(float64) / rightObject.(float64)
 			} else if type1.IsType(type2) {
@@ -554,6 +558,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return fmt.Sprintf("%v", leftObject) + fmt.Sprintf("%v", rightObject)
 			} else if deriveType == sym.Int {
 				return leftObject.(int) + rightObject.(int)
+			} else if deriveType == sym.Byte {
+				return leftObject.(byte) + rightObject.(byte)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) + sym.Value2Float(rightObject)
 			} else if type1.IsType(type2) {
@@ -566,6 +572,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 		case parser.GScriptParserSUB:
 			if deriveType == sym.Int {
 				return leftObject.(int) - rightObject.(int)
+			} else if deriveType == sym.Byte {
+				return leftObject.(byte) - rightObject.(byte)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) - sym.Value2Float(rightObject)
 			} else if type1.IsType(type2) {
@@ -585,6 +593,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return false
 			} else if deriveType == sym.Int {
 				return leftObject.(int) > rightObject.(int)
+			} else if deriveType == sym.Byte {
+				return leftObject.(byte) > rightObject.(byte)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) > sym.Value2Float(rightObject)
 			} else if type1.IsType(type2) {
@@ -600,6 +610,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return false
 			} else if deriveType == sym.Int {
 				return leftObject.(int) < rightObject.(int)
+			} else if deriveType == sym.Byte {
+				return leftObject.(byte) < rightObject.(byte)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) < sym.Value2Float(rightObject)
 			} else if type1.IsType(type2) {
@@ -615,6 +627,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return false
 			} else if deriveType == sym.Int {
 				return leftObject.(int) >= rightObject.(int)
+			} else if deriveType == sym.Byte {
+				return leftObject.(byte) >= rightObject.(byte)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) >= sym.Value2Float(rightObject)
 			} else if type1.IsType(type2) {
@@ -631,6 +645,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return false
 			} else if deriveType == sym.Int {
 				return leftObject.(int) <= rightObject.(int)
+			} else if deriveType == sym.Byte {
+				return leftObject.(byte) <= rightObject.(byte)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) <= sym.Value2Float(rightObject)
 			} else if type1.IsType(type2) {
@@ -646,6 +662,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return fmt.Sprintf("%v", leftObject) == fmt.Sprintf("%v", rightObject)
 			} else if deriveType == sym.Int {
 				return leftObject.(int) == rightObject.(int)
+			} else if deriveType == sym.Byte {
+				return leftObject.(byte) == rightObject.(byte)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) == sym.Value2Float(rightObject)
 			} else if deriveType == sym.Nil {
@@ -669,6 +687,8 @@ func (v *Visitor) VisitExpr(ctx *parser.ExprContext) interface{} {
 				return fmt.Sprintf("%v", leftObject) != fmt.Sprintf("%v", rightObject)
 			} else if deriveType == sym.Int {
 				return leftObject.(int) != rightObject.(int)
+			} else if deriveType == sym.Byte {
+				return leftObject.(byte) != rightObject.(byte)
 			} else if deriveType == sym.Float {
 				return sym.Value2Float(leftObject) != sym.Value2Float(rightObject)
 			} else if deriveType == sym.Nil {

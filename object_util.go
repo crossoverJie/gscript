@@ -31,6 +31,9 @@ func (a *ArrayObject) GetIndexValue() interface{} {
 	case []string:
 		strings := value.([]string)
 		return strings[a.index]
+	case []byte:
+		bytes := value.([]byte)
+		return bytes[a.index]
 	case []interface{}:
 		array := value.([]interface{})
 		i := array[a.index]
