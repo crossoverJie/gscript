@@ -28,6 +28,30 @@ func (c *ClosureResolver) Analyze() {
 		}
 	}
 }
+func (c *ClosureResolver) AnalyzeSpeed() {
+	for _, t := range c.at.GetTypes() {
+		function, ok := t.(*symbol.Func)
+		if ok && !function.IsMethod() {
+			var (
+				allVariable, scopeVariable container.Set
+			)
+			allCh := make(chan container.Set, 1)
+			scopeCh := make(chan container.Set, 1)
+			go func() {
+				allCh <- c.allVariable(function)
+			}()
+			go func() {
+				scopeCh <- c.currentScopeVariable(function)
+			}()
+
+			allVariable = <-allCh
+			scopeVariable = <-scopeCh
+
+			allVariable.RemoveAll(scopeVariable)
+			function.SetClosureVar(allVariable)
+		}
+	}
+}
 
 // 所有声明的变量，函数中存在内部函数的情况，内部函数也算
 func (c *ClosureResolver) allVariable(scope symbol.Scope) container.Set {
