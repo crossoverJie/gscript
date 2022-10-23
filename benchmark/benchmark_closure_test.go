@@ -6,40 +6,69 @@ import (
 )
 
 func BenchmarkClosure(b *testing.B) {
-	script := `
-class Test{
-	int value=0;
-	Test(int v){
-		value=v;
-	}
+	script := `class ListNode{
+    int value;
+    ListNode next;
+    ListNode(int v, ListNode n){
+        value =v;
+        next = n;
+    }
+}
 
-	int map(func int(int) f){
-		return f(value);
-	}
+// 两个对象比较需要实现运算符重载
+bool operator == (ListNode p1, ListNode p2){
+    return p1.value == p2.value;
 }
-int square(int v){
-	return v*v; 
-}
-int add(int v){
-	return v++; 
-}
-int add2(int v){
-	v=v+2;
-	return v; 
-}
-Test t =Test(100);
-func int(int) s=square;
-func int(int) a=add;
-func int(int) a2=add2;
-//println(t.map(s));
-assertEqual(t.map(s),10000);
 
-//println(t.map(a));
-assertEqual(t.map(a),101);
+bool hasCycle(ListNode head){
+    if (head == nil){
+        return false;
+    }
+    if (head.next == nil){
+        return false;
+    }
 
-//println(t.map(a2));
-assertEqual(t.map(a2),102);
-`
+    ListNode fast = head.next;
+    ListNode slow = head;
+    // bool ret = false;
+    for (fast.next != nil){
+
+        if (fast == slow){
+            return true;
+        }
+
+        if (fast.next == nil){
+            return false;
+        }
+        if (fast.next.next == nil){
+            return false;
+        }
+        if (slow.next == nil){
+            return false;
+        }
+
+        fast = fast.next.next;
+        slow = slow.next;
+    }
+    return false;
+}
+
+ListNode l1 = ListNode(1, nil);
+bool b1 =hasCycle(l1);
+println(b1);
+assertEqual(b1, false);
+
+ListNode l4 = ListNode(4, nil);
+ListNode l3 = ListNode(3, l4);
+ListNode l2 = ListNode(2, l3);
+bool b2 = hasCycle(l2);
+println(b2);
+assertEqual(b2, false);
+
+l4.next = l2;
+bool b3 = hasCycle(l2);
+println(b3);
+assertEqual(b3, true);`
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		gscript.NewCompiler().Compiler(script)

@@ -3,69 +3,31 @@ package gscript
 import "testing"
 
 func TestClosure(t *testing.T) {
-	script := `class ListNode{
-    int value;
-    ListNode next;
-    ListNode(int v, ListNode n){
-        value =v;
-        next = n;
-    }
+	script := `
+int varExternal =10;
+func int(int) f1(){
+	int varInner = 20;
+	int innerFun(int a){
+		println(a);
+		int c=100;
+		varExternal++;
+		varInner++;
+		return varInner;
+	}
+	return innerFun;
 }
 
-// 两个对象比较需要实现运算符重载
-bool operator == (ListNode p1, ListNode p2){
-    return p1.value == p2.value;
+func int(int) f2 = f1();
+for(int i=0;i<2;i++){
+	println("varInner=" + f2(i) + ", varExternal=" + varExternal);
+}
+println("=======");
+func int(int) f3 = f1();
+for(int i=0;i<2;i++){
+	println("varInner=" + f3(i) + ", varExternal=" + varExternal);
 }
 
-bool hasCycle(ListNode head){
-    if (head == nil){
-        return false;
-    }
-    if (head.next == nil){
-        return false;
-    }
-
-    ListNode fast = head.next;
-    ListNode slow = head;
-    // bool ret = false;
-    for (fast.next != nil){
-
-        if (fast == slow){
-            return true;
-        }
-
-        if (fast.next == nil){
-            return false;
-        }
-        if (fast.next.next == nil){
-            return false;
-        }
-        if (slow.next == nil){
-            return false;
-        }
-
-        fast = fast.next.next;
-        slow = slow.next;
-    }
-    return false;
-}
-
-ListNode l1 = ListNode(1, nil);
-bool b1 =hasCycle(l1);
-println(b1);
-assertEqual(b1, false);
-
-ListNode l4 = ListNode(4, nil);
-ListNode l3 = ListNode(3, l4);
-ListNode l2 = ListNode(2, l3);
-bool b2 = hasCycle(l2);
-println(b2);
-assertEqual(b2, false);
-
-l4.next = l2;
-bool b3 = hasCycle(l2);
-println(b3);
-assertEqual(b3, true);`
+`
 	NewCompiler().Compiler(script)
 }
 func TestClosure2(t *testing.T) {
