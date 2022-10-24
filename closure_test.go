@@ -130,9 +130,9 @@ int add2(int v){
 	return v; 
 }
 Test t =Test(100);
-func int(int) s=square;
-func int(int) a=add;
-func int(int) a2=add2;
+func int(int) s= square;
+func int(int) a= add;
+func int(int) a2= add2;
 println(t.map(s));
 assertEqual(t.map(s),10000);
 
