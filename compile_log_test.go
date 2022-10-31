@@ -74,8 +74,8 @@ println("1"%"2");
 }
 func TestCompileFail7(t *testing.T) {
 	script := `
-int run(){}
-int run(){}
+int run(){return 0;}
+int run(){return 0;}
 `
 	NewCompiler().Compiler(script)
 }

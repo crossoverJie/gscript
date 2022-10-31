@@ -15,7 +15,48 @@ import (
 	"time"
 )
 
-func (v *Visitor) println(ctx *parser.FunctionCallContext) {
+var internalFunction map[string]func(v *Visitor, ctx *parser.FunctionCallContext) interface{}
+
+func GetInternalFunction(name string) func(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
+	if internalFunction == nil {
+		internalFunction = map[string]func(v *Visitor, ctx *parser.FunctionCallContext) interface{}{
+			"println":        gPrintln,
+			"assertEqual":    assertEqual,
+			"append":         gAppend,
+			"len":            gLen,
+			"cap":            gCap,
+			"copy":           gCopy,
+			"hash":           gHash,
+			"JSON":           JSON,
+			"JSONGet":        JSONGet,
+			"httpHandle":     httpHandle,
+			"httpRun":        httpRun,
+			"FprintfJSON":    fprintfJSON,
+			"FprintfHTML":    fprintfHTML,
+			"GetCurrentTime": getCurrentTime,
+			"Unix":           unix,
+			"QueryPath":      queryPath,
+			"FormValue":      formValue,
+			"PostFormValue":  postFormValue,
+			"GetOSArgs":      getOSArgs,
+			"Command":        command,
+			"WriteFile":      writeFile,
+			"Remove":         remove,
+			"printf":         printf,
+			"sprintf":        sprintf,
+			"print":          gPrint,
+			"dumpAST":        dumpAST,
+			"dumpSymbol":     dumpSymbol,
+			"RequestBody":    requestBody,
+			"Getwd":          getWd,
+			"toByteArray":    toByteArray,
+			"toString":       toString,
+		}
+	}
+	return internalFunction[name]
+}
+
+func gPrintln(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	if ctx.ExpressionList() != nil {
 		ret := v.VisitExpressionList(ctx.ExpressionList().(*parser.ExpressionListContext))
 		switch ret.(type) {
@@ -36,6 +77,7 @@ func (v *Visitor) println(ctx *parser.FunctionCallContext) {
 	} else {
 		fmt.Println("")
 	}
+	return nil
 }
 
 // 打印数组对象 Person[] p
@@ -66,7 +108,7 @@ func (v *Visitor) printArray(value []interface{}) []interface{} {
 	return value
 }
 
-func (v *Visitor) assertEqual(ctx *parser.FunctionCallContext) {
+func assertEqual(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	// todo crossoverJie 参数是个变量，需要取左值，也可以是个数组取值 a[0]
 	if paramValues[0] != paramValues[1] {
@@ -74,9 +116,10 @@ func (v *Visitor) assertEqual(ctx *parser.FunctionCallContext) {
 		column := ctx.GetStart().GetColumn()
 		panic(fmt.Sprintf("assertEqual fail [%v,%v] in line:%d and column:%d", paramValues[0], paramValues[1], line, column))
 	}
+	return nil
 }
 
-func (v *Visitor) append(ctx *parser.FunctionCallContext) []interface{} {
+func gAppend(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues, left := v.buildAppendParamValuesReturnLeft(ctx)
 	switch paramValues[0].(type) {
 	case []interface{}:
@@ -96,7 +139,7 @@ func (v *Visitor) append(ctx *parser.FunctionCallContext) []interface{} {
 	return nil
 }
 
-func (v *Visitor) len(ctx *parser.FunctionCallContext) int {
+func gLen(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	p0 := paramValues[0]
 	switch p0.(type) {
@@ -115,7 +158,7 @@ func (v *Visitor) len(ctx *parser.FunctionCallContext) int {
 	}
 	return 0
 }
-func (v *Visitor) cap(ctx *parser.FunctionCallContext) int {
+func gCap(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	p0 := paramValues[0]
 	switch p0.(type) {
@@ -135,13 +178,13 @@ func (v *Visitor) cap(ctx *parser.FunctionCallContext) int {
 	return 0
 }
 
-func (v *Visitor) copy(ctx *parser.FunctionCallContext) int {
+func gCopy(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	p0 := paramValues[0]
 	p1 := paramValues[1]
 	return copy(p0.([]interface{}), p1.([]interface{}))
 }
-func (v *Visitor) hash(ctx *parser.FunctionCallContext) int {
+func gHash(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	return hash(paramValues[0])
 }
@@ -157,7 +200,7 @@ func hash(v interface{}) int {
 	//return fmt.Sprintf("%x", hash.Sum(nil))
 }
 
-func (v *Visitor) JSON(ctx *parser.FunctionCallContext) string {
+func JSON(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	value := paramValues[0]
 	switch value.(type) {
@@ -230,7 +273,7 @@ func (v *Visitor) classObject2Map(classObject *stack.ClassObject) map[string]int
 	return data
 }
 
-func (v *Visitor) JSONGet(ctx *parser.FunctionCallContext) interface{} {
+func JSONGet(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	p0 := paramValues[0]
 	p1 := paramValues[1]
@@ -265,7 +308,7 @@ func (v *Visitor) JSONGet(ctx *parser.FunctionCallContext) interface{} {
 
 }
 
-func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
+func getCurrentTime(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	tz, layout := v.getTzAndLayout(ctx)
 
 	location, err := time.LoadLocation(tz)
@@ -276,7 +319,7 @@ func (v *Visitor) getCurrentTime(ctx *parser.FunctionCallContext) string {
 	return local.Format(layout)
 
 }
-func (v *Visitor) unix(ctx *parser.FunctionCallContext) int64 {
+func unix(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	p0 := paramValues[0]
 	var (
@@ -313,12 +356,12 @@ func (v *Visitor) getTzAndLayout(ctx *parser.FunctionCallContext) (string, strin
 	return tz, layout
 }
 
-func (v *Visitor) getOSArgs(ctx *parser.FunctionCallContext) []string {
+func getOSArgs(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	return Args
 }
 
 // 执行 command
-func (v *Visitor) command(ctx *parser.FunctionCallContext) string {
+func command(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	command, variableParams := v.getPrintfParams(ctx)
 	var args []string
 	if len(variableParams) > 0 {
@@ -339,7 +382,7 @@ func (v *Visitor) command(ctx *parser.FunctionCallContext) string {
 	return string(stdoutStderr)
 }
 
-func (v *Visitor) writeFile(ctx *parser.FunctionCallContext) {
+func writeFile(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	p0 := paramValues[0]
 	p1 := paramValues[1]
@@ -351,8 +394,9 @@ func (v *Visitor) writeFile(ctx *parser.FunctionCallContext) {
 	if err != nil {
 		log.RuntimePanic(ctx, fmt.Sprintf("system.writeFile function error occurred,error:%s", err))
 	}
+	return nil
 }
-func (v *Visitor) remove(ctx *parser.FunctionCallContext) {
+func remove(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	p0 := paramValues[0]
 	fileName := p0.(string)
@@ -360,6 +404,7 @@ func (v *Visitor) remove(ctx *parser.FunctionCallContext) {
 	if err != nil {
 		log.RuntimePanic(ctx, fmt.Sprintf("system.remove function error occurred,error:%s", err))
 	}
+	return nil
 }
 
 func (v *Visitor) buildAppendParamValuesReturnLeft(ctx *parser.FunctionCallContext) ([]interface{}, *LeftValue) {
@@ -385,10 +430,11 @@ func (v *Visitor) buildAppendParamValuesReturnLeft(ctx *parser.FunctionCallConte
 	return ret, left
 }
 
-func (v *Visitor) printf(ctx *parser.FunctionCallContext) {
+func printf(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	format, variableParams := v.getPrintfParams(ctx)
 
 	fmt.Printf(format, variableParams...)
+	return nil
 }
 
 // 获取格式化字符串参数
@@ -411,19 +457,20 @@ func (v *Visitor) getPrintfParams(ctx *parser.FunctionCallContext) (string, []in
 	return format, variableParams
 }
 
-func (v *Visitor) sprintf(ctx *parser.FunctionCallContext) string {
+func sprintf(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	format, variableParams := v.getPrintfParams(ctx)
 	return fmt.Sprintf(format, variableParams...)
 }
-func (v *Visitor) print(ctx *parser.FunctionCallContext) {
+func gPrint(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	fmt.Print(paramValues...)
+	return nil
 }
-func (v *Visitor) dumpAST(ctx *parser.FunctionCallContext) string {
+func dumpAST(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	code := v.getCode(ctx)
 	return NewCompiler().GetCompileInfo(code, true)
 }
-func (v *Visitor) dumpSymbol(ctx *parser.FunctionCallContext) string {
+func dumpSymbol(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	code := v.getCode(ctx)
 	return NewCompiler().GetCompileInfo(code, false)
 }
@@ -439,12 +486,12 @@ func (v *Visitor) getCode(ctx *parser.FunctionCallContext) string {
 	return format
 }
 
-func (v *Visitor) toByteArray(ctx *parser.FunctionCallContext) []byte {
+func toByteArray(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	code := v.getCode(ctx)
 	return []byte(code)
 }
 
-func (v *Visitor) toString(ctx *parser.FunctionCallContext) string {
+func toString(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	p0 := paramValues[0]
 	switch p0.(type) {
@@ -465,7 +512,7 @@ func (v *Visitor) toString(ctx *parser.FunctionCallContext) string {
 	return ""
 }
 
-func (v *Visitor) getWd(ctx *parser.FunctionCallContext) string {
+func getWd(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	str, err := os.Getwd()
 	if err != nil {
 		log.RuntimePanic(ctx, fmt.Sprintf("system.getwd function error occurred,error:%s", err))

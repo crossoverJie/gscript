@@ -138,6 +138,7 @@ int myIndex(string S,string T,int pos) {
   } else {
     return slen-i;
   }
+  return 0;
 }
 
 int res = myIndex(S,T,0);

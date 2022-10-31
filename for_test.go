@@ -109,7 +109,8 @@ func TestCompiler_Return6(t *testing.T) {
 			return ret;
 			println("return 之后不打印");
 		}
-		println("!!最终a="+ a);		
+		println("!!最终a="+ a);
+		return 0;
 	}
 	int ret = run(100);
 	println("run 之后 ret="+ ret);
@@ -220,6 +221,7 @@ func TestFor98(t *testing.T) {
 	script := `
 int f1(int x){
 	f1(1);
+	return 0;
 }
 `
 	NewCompiler().CompilerWithoutNative(script)
