@@ -899,6 +899,7 @@ func (v *Visitor) callOpFunction(ctx antlr.ParserRuleContext, returnType sym.Typ
 func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{} {
 	var ret interface{}
 	name := ctx.IDENTIFIER().GetText()
+	// internal function
 	function := GetInternalFunction(name)
 	if function != nil {
 		return function(v, ctx)
