@@ -899,75 +899,9 @@ func (v *Visitor) callOpFunction(ctx antlr.ParserRuleContext, returnType sym.Typ
 func (v *Visitor) VisitFunctionCall(ctx *parser.FunctionCallContext) interface{} {
 	var ret interface{}
 	name := ctx.IDENTIFIER().GetText()
-	// todo crossoverJie 内置函数校验
-	if name == "println" {
-		v.println(ctx)
-		return ret
-	} else if name == "assertEqual" {
-		v.assertEqual(ctx)
-		return ret
-	} else if name == "append" {
-		return v.append(ctx)
-	} else if name == "len" {
-		return v.len(ctx)
-	} else if name == "cap" {
-		return v.cap(ctx)
-	} else if name == "copy" {
-		return v.copy(ctx)
-	} else if name == "hash" {
-		return v.hash(ctx)
-	} else if name == "JSON" {
-		return v.JSON(ctx)
-	} else if name == "JSONGet" {
-		return v.JSONGet(ctx)
-	} else if name == "httpHandle" {
-		return v.httpHandle(ctx)
-	} else if name == "httpRun" {
-		return v.httpRun(ctx)
-	} else if name == "FprintfJSON" {
-		v.fprintfJSON(ctx)
-	} else if name == "FprintfHTML" {
-		v.fprintfHTML(ctx)
-	} else if name == "GetCurrentTime" {
-		return v.getCurrentTime(ctx)
-	} else if name == "Unix" {
-		return v.unix(ctx)
-	} else if name == "QueryPath" {
-		return v.queryPath(ctx)
-	} else if name == "FormValue" {
-		return v.formValue(ctx)
-	} else if name == "PostFormValue" {
-		return v.postFormValue(ctx)
-	} else if name == "GetOSArgs" {
-		return v.getOSArgs(ctx)
-	} else if name == "Command" {
-		return v.command(ctx)
-	} else if name == "WriteFile" {
-		v.writeFile(ctx)
-		return nil
-	} else if name == "Remove" {
-		v.remove(ctx)
-		return nil
-	} else if name == "printf" {
-		v.printf(ctx)
-		return nil
-	} else if name == "sprintf" {
-		return v.sprintf(ctx)
-	} else if name == "print" {
-		v.print(ctx)
-		return nil
-	} else if name == "dumpAST" {
-		return v.dumpAST(ctx)
-	} else if name == "dumpSymbol" {
-		return v.dumpSymbol(ctx)
-	} else if name == "RequestBody" {
-		return v.requestBody(ctx)
-	} else if name == "Getwd" {
-		return v.getWd(ctx)
-	} else if name == "toByteArray" {
-		return v.toByteArray(ctx)
-	} else if name == "toString" {
-		return v.toString(ctx)
+	function := GetInternalFunction(name)
+	if function != nil {
+		return function(v, ctx)
 	}
 
 	// 默认构造函数

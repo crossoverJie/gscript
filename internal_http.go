@@ -20,7 +20,7 @@ type httpTool struct {
 // path 与 http 工具的映射关系
 var path2HttpTool map[string]*httpTool
 
-func (v *Visitor) httpHandle(ctx *parser.FunctionCallContext) interface{} {
+func httpHandle(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	p := paramValues[0]
 	p0 := paramValues[1]
@@ -77,7 +77,7 @@ func (v *Visitor) httpHandle(ctx *parser.FunctionCallContext) interface{} {
 
 }
 
-func (v *Visitor) httpRun(ctx *parser.FunctionCallContext) interface{} {
+func httpRun(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	p0 := paramValues[0]
 	var addr string
@@ -100,7 +100,7 @@ func (v *Visitor) httpRun(ctx *parser.FunctionCallContext) interface{} {
 	return nil
 }
 
-func (v *Visitor) fprintfJSON(ctx *parser.FunctionCallContext) {
+func fprintfJSON(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	code, path, json := v.getCodePathValue(paramValues)
 	tool, ok := path2HttpTool[path]
@@ -112,10 +112,10 @@ func (v *Visitor) fprintfJSON(ctx *parser.FunctionCallContext) {
 		tool.w.WriteHeader(code)
 	}
 	fmt.Fprintf(tool.w, json)
-
+	return nil
 }
 
-func (v *Visitor) fprintfHTML(ctx *parser.FunctionCallContext) {
+func fprintfHTML(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	code, path, html := v.getCodePathValue(paramValues)
 	tool, ok := path2HttpTool[path]
@@ -127,9 +127,10 @@ func (v *Visitor) fprintfHTML(ctx *parser.FunctionCallContext) {
 		tool.w.WriteHeader(code)
 	}
 	fmt.Fprintf(tool.w, html)
+	return nil
 }
 
-func (v *Visitor) requestBody(ctx *parser.FunctionCallContext) string {
+func requestBody(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	p0 := paramValues[0]
 	var path string
@@ -176,7 +177,7 @@ func (v *Visitor) getCodePathValue(paramValues []interface{}) (int, string, stri
 	return code, path, value
 }
 
-func (v *Visitor) queryPath(ctx *parser.FunctionCallContext) string {
+func queryPath(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	p0 := paramValues[0]
 	var path string
@@ -193,7 +194,7 @@ func (v *Visitor) queryPath(ctx *parser.FunctionCallContext) string {
 
 }
 
-func (v *Visitor) formValue(ctx *parser.FunctionCallContext) string {
+func formValue(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	p0 := paramValues[0]
 	p1 := paramValues[1]
@@ -219,7 +220,7 @@ func (v *Visitor) formValue(ctx *parser.FunctionCallContext) string {
 	return tool.r.FormValue(key)
 
 }
-func (v *Visitor) postFormValue(ctx *parser.FunctionCallContext) string {
+func postFormValue(v *Visitor, ctx *parser.FunctionCallContext) interface{} {
 	paramValues := v.buildParamValues(ctx)
 	p0 := paramValues[0]
 	p1 := paramValues[1]

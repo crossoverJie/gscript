@@ -70,6 +70,9 @@ func (c *Compiler) compile(script string) interface{} {
 	// 消解变量、函数的引用
 	walker.Walk(resolver.NewRefResolver(at), tree)
 
+	// 语义检查
+	walker.Walk(NewSemanticResolver(at), tree)
+
 	// 闭包分析
 	resolver.NewClosureResolver(at).Analyze()
 

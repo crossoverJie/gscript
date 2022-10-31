@@ -262,7 +262,7 @@ class Map{
     }
 
     any get(any key){
-        if(key==""){
+        if(key == ""){
             return;
         }
         int hashcode = hash(key);
@@ -280,6 +280,7 @@ class Map{
         }else {
             return nil;
         }
+        return nil;
     }
 
     int getSize(){
