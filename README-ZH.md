@@ -104,7 +104,7 @@ for (int i = 0; i < 10; i++){
 
 这是用 `GScript` 编写的动态网页：
 
-[https://gscript.crossoverjie.top/index](https://gscript.crossoverjie.top/index)
+[https://gscript.crossoverjie.top/api/index](https://gscript.crossoverjie.top/api/index)
 
 源码地址：
 [https://github.com/crossoverjie/gscript-homepage](https://github.com/crossoverjie/gscript-homepage)

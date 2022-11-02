@@ -108,7 +108,7 @@ for (int i = 0; i < 10; i++){
 
 This is a dynamic web application written in `GScript`.
 
-[https://gscript.crossoverjie.top/index](https://gscript.crossoverjie.top/index)
+[https://gscript.crossoverjie.top/api/index](https://gscript.crossoverjie.top/api/index)
 
 Source code：
 [https://github.com/crossoverjie/gscript-homepage](https://github.com/crossoverjie/gscript-homepage)
