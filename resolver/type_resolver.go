@@ -171,10 +171,11 @@ func (t *TypeResolver) ExitTypeType(ctx *parser.TypeTypeContext) {
 		t.at.PutTypeOfNode(ctx, symbolType)
 	}
 	if symbolType != nil {
-		// 还原为默认值，因为原始类型是常量，为了达到给变量赋值是否为数组，所以每次都要重新赋值，达到变量的效果
-		symbolType.SetArray(false)
+		// 当有声明数组返回时，单独新建，不能用全局变量，会被修改 int[] get(int ...a){}
 		if len(ctx.AllLBRACK()) > 0 && len(ctx.AllRBRACK()) > 0 {
-			symbolType.SetArray(true)
+			newPrimitiveType := symbol.NewPrimitiveType(symbolType.GetName(), symbolType.IsArray())
+			newPrimitiveType.SetArray(true)
+			t.at.PutTypeOfNode(ctx, newPrimitiveType)
 
 		}
 	}

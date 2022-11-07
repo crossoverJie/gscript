@@ -12,7 +12,7 @@ T getNumber(){
 `
 	NewCompiler().Compiler(script)
 }
-func TestReturn2(t *testing.T) {
+func TestReturn2Fail(t *testing.T) {
 	script := `
 class T{}
 int getNumber(){
@@ -22,7 +22,7 @@ int getNumber(){
 `
 	NewCompiler().Compiler(script)
 }
-func TestReturn3(t *testing.T) {
+func TestReturn3Fail(t *testing.T) {
 	script := `
 int getNumber(){
   return true;  // 返回值应该是一个整型而不是布尔

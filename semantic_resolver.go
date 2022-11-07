@@ -15,6 +15,9 @@ import (
 	1.2 返回值类型必须和声明相同
 2. break
 	2.1 break 只能出现在循环中
+3. type check
+	3.1 赋值类型匹配
+	3.2 四则运算表达式类型匹配
 */
 type SemanticResolver struct {
 	parser.BaseGScriptListener
@@ -104,6 +107,7 @@ func (s *SemanticResolver) ExitStmReturn(ctx *parser.StmReturnContext) {
 	}
 }
 
+// 查询函数声明 ctx
 func (s *SemanticResolver) findFunctionDeclarationCtx(ctx antlr.Tree) *parser.FunctionDeclarationContext {
 	if ctx == nil || ctx.GetParent() == nil {
 		return nil
@@ -114,5 +118,67 @@ func (s *SemanticResolver) findFunctionDeclarationCtx(ctx antlr.Tree) *parser.Fu
 		return functionDeclareCtx
 	}
 	return s.findFunctionDeclarationCtx(parent.GetParent())
+
+}
+
+// ExitVariableDeclarator 赋值类型校验
+func (s *SemanticResolver) ExitVariableDeclarator(ctx *parser.VariableDeclaratorContext) {
+	if ctx.VariableDeclaratorId() == nil {
+		return
+	}
+	sym := s.at.GetSymbolOfNode()[ctx.VariableDeclaratorId().(*parser.VariableDeclaratorIdContext)]
+	variable, ok := sym.(*symbol.Variable)
+	if !ok {
+		return
+	}
+
+	if ctx.VariableInitializer() == nil || ctx.VariableInitializer().(*parser.VariableInitializerContext).Expr() == nil {
+		return
+	}
+	exprContext := ctx.VariableInitializer().(*parser.VariableInitializerContext).Expr().(*parser.ExprContext)
+	exprType := s.at.GetTypeOfNode()[exprContext]
+	if exprType == nil {
+		return
+	}
+
+	// 数组赋值校验
+	if variable.IsArray() && variable.GetType() != symbol.Any {
+		if !exprType.IsArray() {
+			s.at.Log(ctx, fmt.Sprintf("cannot use %s as type %s[]", variable.GetName(), variable.GetType().GetName()))
+			return
+		}
+	}
+
+	declareFunctionType, ok := exprType.(*symbol.DeclareFunctionType)
+	if ok {
+		// 变量为闭包变量 func int(int) f2 = f1();
+		declareFuncType, ok := variable.GetType().(*symbol.DeclareFunctionType)
+		if ok {
+			if declareFuncType.GetReturnType() != nil && !declareFuncType.GetReturnType().IsType(declareFunctionType.GetReturnType()) {
+				s.at.Log(ctx, fmt.Sprintf("cannot use type %s as type %s in assignment closure statment", declareFunctionType.GetReturnType().GetName(), declareFuncType.GetName()))
+				return
+			}
+		} else {
+			// = 闭包：
+			if !variable.GetType().IsType(declareFunctionType.GetReturnType()) {
+				s.at.Log(ctx, fmt.Sprintf("cannot use type %s as type %s in assignment closure statment", declareFunctionType.GetReturnType().GetName(), variable.GetType().GetName()))
+				return
+			}
+		}
+
+		return
+	}
+
+	functionType, ok := variable.GetType().(*symbol.DeclareFunctionType)
+	if ok {
+		// 	func int(int) f2 = f1(); f2 作为变量
+		if functionType.GetReturnType() != nil && !functionType.GetReturnType().IsType(exprType) {
+			s.at.Log(ctx, fmt.Sprintf("variable %s type error, %s not match %s in assignment closure statment", variable.GetName(), variable.GetType().GetName(), exprType.GetName()))
+		}
+	} else {
+		if !variable.GetType().IsType(exprType) {
+			s.at.Log(ctx, fmt.Sprintf("variable %s type error, %s not match %s", variable.GetName(), variable.GetType().GetName(), exprType.GetName()))
+		}
+	}
 
 }
