@@ -391,6 +391,21 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 			}
 		}
 	}
+	// n[0] 写入类型
+	if ctx.LBRACK() != nil && ctx.RBRACK() != nil && len(ctx.AllExpr()) == 2 {
+		exprContext := ctx.Expr(0).(*parser.ExprContext)
+		primaryContext := exprContext.Primary().(*parser.PrimaryContext)
+		if primaryContext.IDENTIFIER() != nil {
+			// 查出变量 n 的类型
+			scope := s.at.FindEncloseScopeOfNode(ctx)
+			variable := s.at.FindVariable(scope, primaryContext.IDENTIFIER().GetText())
+			getType := variable.GetType()
+			primitiveType := symbol.NewPrimitiveType(getType.GetName(), getType.IsArray())
+			primitiveType.SetArray(true)
+			s.at.PutTypeOfNode(ctx, primitiveType)
+
+		}
+	}
 }
 
 // 查询函数的参数列表

@@ -28,6 +28,10 @@ func (c *Class) IsType(t Type) bool {
 	if MatchNil(t) {
 		return true
 	}
+	// class 类型检查 Entry e = table[i];
+	if c.GetName() == t.GetName() {
+		return true
+	}
 	return c == t
 }
 

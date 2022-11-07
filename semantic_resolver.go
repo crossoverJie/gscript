@@ -18,6 +18,7 @@ import (
 3. type check
 	3.1 赋值类型匹配
 	3.2 四则运算表达式类型匹配
+4. 表达式运行类型检查
 */
 type SemanticResolver struct {
 	parser.BaseGScriptListener
@@ -181,4 +182,164 @@ func (s *SemanticResolver) ExitVariableDeclarator(ctx *parser.VariableDeclarator
 		}
 	}
 
+}
+
+// ExitExpr 表达式运算类型检查
+func (s *SemanticResolver) ExitExpr(ctx *parser.ExprContext) {
+	if ctx.GetBop() != nil && len(ctx.AllExpr()) >= 2 {
+		//推导出来的该节点类型
+		deriveType := s.at.GetTypeOfNode()[ctx]
+		type1 := s.at.GetTypeOfNode()[ctx.Expr(0)]
+		type2 := s.at.GetTypeOfNode()[ctx.Expr(1)]
+		if type1 == nil || type2 == nil {
+			// 没有定义变量的情况 a+2;
+			return
+		}
+		switch ctx.GetBop().GetTokenType() {
+		case parser.GScriptParserMULT:
+			//deriveType := symbol.GetUpperType(ctx, type1, type2)
+			if deriveType == symbol.Int {
+			} else if deriveType == symbol.Byte {
+			} else if deriveType == symbol.Float {
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				s.checkOpFunction(ctx, type1, ctx.GetBop().GetTokenType(), "*")
+			} else {
+				s.at.Log(ctx, fmt.Sprintf("invalid operation: %v * %v", type1.GetName(), type2.GetName()))
+			}
+
+		case parser.GScriptParserDIV:
+			if deriveType == symbol.Int {
+			} else if deriveType == symbol.Byte {
+			} else if deriveType == symbol.Float {
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				s.checkOpFunction(ctx, type1, ctx.GetBop().GetTokenType(), "/")
+			} else {
+				s.at.Log(ctx, fmt.Sprintf("invalid operation: %v / %v", type1.GetName(), type2.GetName()))
+			}
+
+		case parser.GScriptParserPLUS:
+			if deriveType == symbol.String {
+			} else if deriveType == symbol.Int {
+			} else if deriveType == symbol.Byte {
+			} else if deriveType == symbol.Float {
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				s.checkOpFunction(ctx, type1, ctx.GetBop().GetTokenType(), "+")
+			} else {
+				s.at.Log(ctx, fmt.Sprintf("invalid operation: %v + %v", type1.GetName(), type2.GetName()))
+
+			}
+		case parser.GScriptParserSUB:
+			if deriveType == symbol.Int {
+			} else if deriveType == symbol.Byte {
+			} else if deriveType == symbol.Float {
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				s.checkOpFunction(ctx, type1, ctx.GetBop().GetTokenType(), "-")
+			} else {
+				s.at.Log(ctx, fmt.Sprintf("invalid operation: %v - %v", type1.GetName(), type2.GetName()))
+
+			}
+
+		case parser.GScriptParserMOD:
+			if deriveType == symbol.Int {
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				s.checkOpFunction(ctx, type1, ctx.GetBop().GetTokenType(), "%")
+			} else {
+				s.at.Log(ctx, fmt.Sprintf("invalid operation: %v mod %v", type1.GetName(), type2.GetName()))
+
+			}
+		case parser.GScriptParserGT:
+			deriveType = symbol.GetUpperType(ctx, type1, type2)
+			if deriveType == symbol.String {
+				// 字符串比较永远都是 false
+			} else if deriveType == symbol.Int {
+			} else if deriveType == symbol.Byte {
+			} else if deriveType == symbol.Float {
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				s.checkOpFunction(ctx, symbol.Bool, ctx.GetBop().GetTokenType(), ">")
+			} else {
+				s.at.Log(ctx, fmt.Sprintf("invalid operation: %v > %v", type1.GetName(), type2.GetName()))
+			}
+		case parser.GScriptParserLT:
+			deriveType = symbol.GetUpperType(ctx, type1, type2)
+			if deriveType == symbol.String {
+			} else if deriveType == symbol.Int {
+			} else if deriveType == symbol.Byte {
+			} else if deriveType == symbol.Float {
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				s.checkOpFunction(ctx, symbol.Bool, ctx.GetBop().GetTokenType(), "<")
+			} else {
+				s.at.Log(ctx, fmt.Sprintf("invalid operation: %v < %v", type1.GetName(), type2.GetName()))
+			}
+		case parser.GScriptParserGE:
+			deriveType = symbol.GetUpperType(ctx, type1, type2)
+			if deriveType == symbol.String {
+			} else if deriveType == symbol.Int {
+			} else if deriveType == symbol.Byte {
+			} else if deriveType == symbol.Float {
+			} else if type1.IsType(type2) {
+				s.checkOpFunction(ctx, symbol.Bool, ctx.GetBop().GetTokenType(), ">=")
+			} else {
+				s.at.Log(ctx, fmt.Sprintf("invalid operation: %v >= %v", type1.GetName(), type2.GetName()))
+
+			}
+		case parser.GScriptParserLE:
+			deriveType = symbol.GetUpperType(ctx, type1, type2)
+			if deriveType == symbol.String {
+			} else if deriveType == symbol.Int {
+			} else if deriveType == symbol.Byte {
+			} else if deriveType == symbol.Float {
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				s.checkOpFunction(ctx, symbol.Bool, ctx.GetBop().GetTokenType(), "<=")
+			} else {
+				s.at.Log(ctx, fmt.Sprintf("invalid operation: %v <= %v", type1.GetName(), type2.GetName()))
+			}
+		case parser.GScriptParserEQUAL:
+			deriveType = symbol.GetUpperType(ctx, type1, type2)
+			if deriveType == symbol.String {
+			} else if deriveType == symbol.Int {
+			} else if deriveType == symbol.Byte {
+			} else if deriveType == symbol.Float {
+			} else if deriveType == symbol.Nil {
+			} else if deriveType == symbol.Any {
+				// 两个 any 值进行比较
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				s.checkOpFunction(ctx, symbol.Bool, ctx.GetBop().GetTokenType(), "==")
+			}
+		case parser.GScriptParserNOTEQUAL:
+			deriveType = symbol.GetUpperType(ctx, type1, type2)
+			if deriveType == symbol.String {
+			} else if deriveType == symbol.Int {
+			} else if deriveType == symbol.Byte {
+			} else if deriveType == symbol.Float {
+			} else if deriveType == symbol.Nil {
+			} else if deriveType == symbol.Any {
+			} else if type1.IsType(type2) {
+				// 两个参数类型相同，执行运算符重载
+				s.checkOpFunction(ctx, symbol.Bool, ctx.GetBop().GetTokenType(), "!=")
+			} else {
+				s.at.Log(ctx, fmt.Sprintf("invalid operation: %v != %v", type1.GetName(), type2.GetName()))
+
+			}
+		}
+	}
+}
+
+func (s *SemanticResolver) checkOpFunction(ctx antlr.ParserRuleContext, returnType symbol.Type, tokenType int, op string) {
+	// 基本类型不需要查询运算符重载函数
+	if returnType == symbol.Any || returnType.IsType(symbol.Int) || returnType.IsType(symbol.String) || returnType.IsType(symbol.Float) || returnType.IsType(symbol.Bool) || returnType.IsType(symbol.Byte) || returnType.IsType(symbol.Nil) {
+		return
+	}
+	function := s.at.GetOpFunction(returnType, tokenType)
+	if function == nil {
+		s.at.Log(ctx, fmt.Sprintf("no match to operator overloading %s function, return type: %s", op, returnType.GetName()))
+	}
 }
