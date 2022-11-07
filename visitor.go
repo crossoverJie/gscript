@@ -8,7 +8,6 @@ import (
 	"github.com/crossoverJie/gscript/resolver"
 	"github.com/crossoverJie/gscript/stack"
 	sym "github.com/crossoverJie/gscript/symbol"
-	"reflect"
 	"strconv"
 )
 
@@ -263,45 +262,45 @@ func (v *Visitor) VisitVariableDeclarator(ctx *parser.VariableDeclaratorContext)
 			ret = arrayObject.GetIndexValue()
 		}
 		// 数组赋值校验
-		if leftValue.GetVariable().IsArray() && leftValue.GetVariable().GetType() != sym.Any {
-			if ret != nil && reflect.TypeOf(ret).Kind() != reflect.Slice {
-				// int[] a=10;
-				log.RuntimePanic(ctx, fmt.Sprintf("cannot use %v as type %s[]", ret, leftValue.GetVariable().GetType().GetName()))
-			}
-		}
-
+		//if leftValue.GetVariable().IsArray() && leftValue.GetVariable().GetType() != sym.Any {
+		//	if ret != nil && reflect.TypeOf(ret).Kind() != reflect.Slice {
+		//		// int[] a=10;
+		//		log.RuntimePanic(ctx, fmt.Sprintf("cannot use %v as type %s[]", ret, leftValue.GetVariable().GetType().GetName()))
+		//	}
+		//}
+		// todo crossoverJie 可以删掉，全部改为了编译期校验
 		// 为变量赋值
 		// int e=10   int e = foo() any 类型不需要校验
-		if leftValue.GetVariable().GetType() != sym.Any {
-			switch ret.(type) {
-			case int:
-				if leftValue.GetVariable().GetType() != sym.Int && leftValue.GetVariable().GetType() != sym.Byte {
-					// string a=10; 校验这类错误
-					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
-				}
-			case string:
-				if leftValue.GetVariable().GetType() != sym.String {
-					// int a="1"; 校验这类错误
-					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
-				}
-			case float64:
-				if leftValue.GetVariable().GetType() != sym.Float {
-					// int a=10.1;
-					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
-
-				}
-			case bool:
-				if leftValue.GetVariable().GetType() != sym.Bool {
-					// bool a=10.1;
-					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
-
-				}
-			case byte:
-				if leftValue.GetVariable().GetType() != sym.Byte {
-					log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
-				}
-			}
-		}
+		//if leftValue.GetVariable().GetType() != sym.Any {
+		//	switch ret.(type) {
+		//	case int:
+		//		if leftValue.GetVariable().GetType() != sym.Int && leftValue.GetVariable().GetType() != sym.Byte {
+		//			// string a=10; 校验这类错误
+		//			log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
+		//		}
+		//	case string:
+		//		if leftValue.GetVariable().GetType() != sym.String {
+		//			// int a="1"; 校验这类错误
+		//			log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
+		//		}
+		//	case float64:
+		//		if leftValue.GetVariable().GetType() != sym.Float {
+		//			// int a=10.1;
+		//			log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
+		//
+		//		}
+		//	case bool:
+		//		if leftValue.GetVariable().GetType() != sym.Bool {
+		//			// bool a=10.1;
+		//			log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
+		//
+		//		}
+		//	case byte:
+		//		if leftValue.GetVariable().GetType() != sym.Byte {
+		//			log.RuntimePanic(ctx, fmt.Sprintf("variable %s type error", leftValue.GetVariable().GetName()))
+		//		}
+		//	}
+		//}
 
 		leftValue.SetValue(ret)
 	}
