@@ -458,6 +458,13 @@ println(dumpAST(code));
 `
 	NewCompiler().Compiler(script)
 }
+func TestInit(t *testing.T) {
+	script := `
+int a;
+println(a);
+`
+	NewCompiler().Compiler(script)
+}
 
 func TestNativeReturn(t *testing.T) {
 	s := testReturn()

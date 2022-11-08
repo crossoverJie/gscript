@@ -121,6 +121,9 @@ func (s *RefResolver) ExitBlockStms(ctx *parser.BlockStmsContext) {
 					if !ok {
 						continue
 					}
+					if variableDeclaratorContext.VariableInitializer() == nil {
+						continue
+					}
 					initializerContext := variableDeclaratorContext.VariableInitializer().(*parser.VariableInitializerContext)
 					exprContext, ok := initializerContext.Expr().(*parser.ExprContext)
 					if !ok {
