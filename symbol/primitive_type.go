@@ -30,6 +30,24 @@ type PrimitiveType struct {
 	isArray bool
 }
 
+func NewPrimitiveType(name string, isArray bool) Type {
+	return &PrimitiveType{name: name, isArray: isArray}
+}
+
+func NewPrimitiveTypeWithType(t Type) Type {
+	declareFunctionType, ok := t.(*DeclareFunctionType)
+	if ok {
+		returnType := declareFunctionType.GetReturnType()
+		if returnType != nil {
+			return NewPrimitiveType(returnType.GetName(), returnType.IsArray())
+		} else {
+			return NewPrimitiveType(t.GetName(), t.IsArray())
+		}
+	} else {
+		return t
+	}
+}
+
 func (b *PrimitiveType) GetName() string {
 	return b.name
 }
@@ -40,6 +58,22 @@ func (b *PrimitiveType) GetEncloseScope() Scope {
 
 func (b *PrimitiveType) IsType(t Type) bool {
 	if b.name == PrimitiveAny || t.GetName() == PrimitiveAny {
+		return true
+	}
+	f, ok := t.(*Func)
+	if ok {
+		// 基本类型与函数类型比较
+		return b.IsType(f.GetReturnType())
+	}
+	// 兼容 byte b=1;
+	if b.name == PrimitiveInt && t.GetName() == PrimitiveByte {
+		return true
+	}
+	if b.name == PrimitiveByte && t.GetName() == PrimitiveInt {
+		return true
+	}
+	// 类型名称相同也认为类型相同，兼容 resolver/ref_resolver.go:336
+	if b.name == t.GetName() {
 		return true
 	}
 	return b == t
@@ -98,7 +132,11 @@ func GetUpperType(ctx antlr.ParserRuleContext, t1, t2 Type) Type {
 		return Any
 	} else if t1 == String && t2 == String {
 		return String
+	} else if t1 == Byte && t2 == Byte {
+		return Byte
 	} else if t1 == Int && t2 == Int {
+		return Int
+	} else if t1 != nil && t2 != nil && t1.IsType(Int) && t2.IsType(Int) {
 		return Int
 	} else if t1 == Float && t2 == Float {
 		return Float
@@ -106,8 +144,6 @@ func GetUpperType(ctx antlr.ParserRuleContext, t1, t2 Type) Type {
 		return Float
 	} else if t1 == Float && t2 == Int {
 		return Float
-	} else if t1 == Byte && t2 == Byte {
-		return Byte
 	} else {
 		// todo crossoverJie ?
 		return nil

@@ -21,6 +21,34 @@ int[] a=10;
 	os.Setenv(RuntimeError, "true")
 	NewCompiler().Compiler(script)
 }
+func TestTypeFail(t *testing.T) {
+	script := `
+int  a="10";
+`
+	os.Setenv(RuntimeError, "true")
+	NewCompiler().Compiler(script)
+}
+func TestTypeFail2(t *testing.T) {
+	script := `
+int[] a=10;
+`
+	os.Setenv(RuntimeError, "true")
+	NewCompiler().CompilerWithoutNative(script)
+}
+func TestTypeFail3(t *testing.T) {
+	script := `
+int[] a={1,2,"1"};
+`
+	os.Setenv(RuntimeError, "true")
+	NewCompiler().Compiler(script)
+}
+func TestTypeFail4(t *testing.T) {
+	script := `
+int[] a={1,2};	
+`
+	os.Setenv(RuntimeError, "true")
+	NewCompiler().Compiler(script)
+}
 func TestByteFail2(t *testing.T) {
 	script := `
 byte[] a=10;

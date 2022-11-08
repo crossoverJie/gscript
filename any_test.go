@@ -34,7 +34,7 @@ int v4 =fun3(1,2);
 println(v4);
 assertEqual(v4,3);
 
-int fun4(any a, any b){
+string fun4(any a, any b){
 	return a+b;
 }
 string v5 =fun4("10", "20");

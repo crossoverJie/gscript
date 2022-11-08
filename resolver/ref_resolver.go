@@ -60,6 +60,7 @@ func (s *RefResolver) ExitPrimary(ctx *parser.PrimaryContext) {
 		} else {
 			s.at.PutSymbolOfNode(ctx, variable)
 			symbolType = variable.GetType()
+			symbolType.SetArray(variable.IsArray())
 		}
 	}
 
@@ -219,7 +220,15 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 		if function != nil {
 			found = true
 			s.at.PutSymbolOfNode(ctx, function)
-			s.at.PutTypeOfNode(ctx, function.GetReturnType())
+			returnType := function.GetReturnType()
+			if returnType != nil {
+				// 兼容函数返回的是闭包变量 func int(int) f2 = f1();
+				newPrimitiveType := symbol.NewPrimitiveTypeWithType(returnType)
+				s.at.PutTypeOfNode(ctx, newPrimitiveType)
+			} else {
+				s.at.PutTypeOfNode(ctx, returnType)
+
+			}
 		}
 	}
 
@@ -255,7 +264,16 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 			if functionVariable != nil {
 				found = true
 				s.at.PutSymbolOfNode(ctx, functionVariable)
-				s.at.PutTypeOfNode(ctx, functionVariable.GetType())
+				if functionVariable.GetType() != nil {
+					declareFunctionType, ok := functionVariable.GetType().(*symbol.DeclareFunctionType)
+					if ok {
+						s.at.PutTypeOfNode(ctx, declareFunctionType.GetReturnType())
+					} else {
+						s.at.PutTypeOfNode(ctx, functionVariable.GetType())
+					}
+				} else {
+					s.at.PutTypeOfNode(ctx, functionVariable.GetType())
+				}
 			} else {
 				var paramStr strings.Builder
 				for _, t := range paramTypes {
@@ -270,6 +288,24 @@ func (s *RefResolver) ExitFunctionCall(ctx *parser.FunctionCallContext) {
 		}
 	}
 
+}
+
+// ExitArrayInitializer 数组初始化校验，int[] a={1,2,"1"};
+func (s *RefResolver) ExitArrayInitializer(ctx *parser.ArrayInitializerContext) {
+	arrayType := make([]symbol.Type, 0)
+	for _, context := range ctx.AllVariableInitializer() {
+		variableInitializerContext := context.(*parser.VariableInitializerContext)
+		exprContext := variableInitializerContext.Expr().(*parser.ExprContext)
+		exprType := s.at.GetTypeOfNode()[exprContext]
+		for _, exitType := range arrayType {
+			if !exitType.IsType(exprType) {
+				s.at.Log(ctx, fmt.Sprintf("cannot use %s as type %s array", exprType.GetName(), exitType.GetName()))
+				return
+			}
+		}
+
+		arrayType = append(arrayType, exprType)
+	}
 }
 
 func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
@@ -314,7 +350,9 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 		variable := s.at.FindVariable(scope, idName)
 		s.at.PutSymbolOfNode(ctx, variable)
 		symbolType := variable.GetType()
-		s.at.PutTypeOfNode(ctx, symbolType)
+		variable.SetArray(true)
+		newPrimitiveType := symbol.NewPrimitiveType(symbolType.GetName(), symbolType.IsArray())
+		s.at.PutTypeOfNode(ctx, newPrimitiveType)
 	}
 
 	if ctx.Primary() != nil {
@@ -346,11 +384,26 @@ func (s *RefResolver) ExitExpr(ctx *parser.ExprContext) {
 			deriveType := symbol.GetUpperType(ctx, type1, type2)
 			s.at.PutTypeOfNode(ctx, deriveType)
 		case parser.GScriptParserMOD:
-			if type1 == symbol.Int && type2 == symbol.Int {
+			if type1.IsType(symbol.Int) && type2.IsType(symbol.Int) {
 				s.at.PutTypeOfNode(ctx, symbol.Int)
 			} else {
 				s.at.Log(ctx, fmt.Sprintf("invalid operation: %s mod %s", type1.GetName(), type2.GetName()))
 			}
+		}
+	}
+	// n[0] 写入类型
+	if ctx.LBRACK() != nil && ctx.RBRACK() != nil && len(ctx.AllExpr()) == 2 {
+		exprContext := ctx.Expr(0).(*parser.ExprContext)
+		primaryContext := exprContext.Primary().(*parser.PrimaryContext)
+		if primaryContext.IDENTIFIER() != nil {
+			// 查出变量 n 的类型
+			scope := s.at.FindEncloseScopeOfNode(ctx)
+			variable := s.at.FindVariable(scope, primaryContext.IDENTIFIER().GetText())
+			getType := variable.GetType()
+			primitiveType := symbol.NewPrimitiveType(getType.GetName(), getType.IsArray())
+			primitiveType.SetArray(true)
+			s.at.PutTypeOfNode(ctx, primitiveType)
+
 		}
 	}
 }
@@ -372,14 +425,19 @@ func (s *RefResolver) ExitLiteral(ctx *parser.LiteralContext) {
 	if ctx.DECIMAL_LITERAL() != nil {
 		// 设置标识符类型
 		s.at.PutTypeOfNode(ctx, symbol.Int)
+		symbol.Int.SetArray(false)
 	} else if ctx.FLOAT_LITERAL() != nil {
 		s.at.PutTypeOfNode(ctx, symbol.Float)
+		symbol.Float.SetArray(false)
 	} else if ctx.String_() != nil {
 		s.at.PutTypeOfNode(ctx, symbol.String)
+		symbol.String.SetArray(false)
 	} else if ctx.BOOL_LITERAL() != nil {
 		s.at.PutTypeOfNode(ctx, symbol.Bool)
+		symbol.Bool.SetArray(false)
 	} else if ctx.Nil() != nil {
 		s.at.PutTypeOfNode(ctx, symbol.Nil)
+		symbol.Nil.SetArray(false)
 
 	}
 }

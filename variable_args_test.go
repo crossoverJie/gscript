@@ -7,7 +7,7 @@ import (
 
 func TestVariableArgs(t *testing.T) {
 	script := `
-int get(int ...a){
+int[] get(int ...a){
 	println(a);
 	return a;
 }
@@ -20,7 +20,7 @@ assertEqual(x,10);
 }
 func TestVariableArgs2(t *testing.T) {
 	script := `
-int get(int ...a){
+int[] get(int ...a){
 	println(a);
 	return a;
 }
